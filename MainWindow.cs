@@ -1,15 +1,15 @@
 ﻿namespace Minesweeper
 {
-    public partial class Form1 : Form
+    public partial class MainWindow : Form
     {
-        public Form1()
+        public MainWindow()
         {
             InitializeComponent();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            InitializeGameGrid();
+            InitializeGameGrid(9, 9);
         }
 
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
@@ -21,14 +21,12 @@
         {
 
         }
-        private void InitializeGameGrid()
+        private void InitializeGameGrid(int rows, int cols)
         {
-            
+
             tableGrid.Controls.Clear();
             tableGrid.ColumnStyles.Clear();
             tableGrid.RowStyles.Clear();
-            int rows = 9;
-            int cols = 9;
             tableGrid.RowCount = rows;
             tableGrid.ColumnCount = cols;
 
@@ -46,6 +44,9 @@
                     btn.Dock = DockStyle.Fill;
                     btn.BackColor = Color.LightGray;
                     btn.Margin = new Padding(0);
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatAppearance.BorderSize = 1;
+                    btn.FlatAppearance.BorderColor = Color.Gray;
                     btn.Tag = (row, col); // optional
                     btn.Click += Cell_Click;
 
@@ -79,6 +80,11 @@
                 // TODO: call GameEngine.RevealCell(row, col);
                 // update button UI based on result
             }
+        }
+
+        private void Menu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
         }
     }
 }
