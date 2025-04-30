@@ -2,25 +2,20 @@
 {
     public partial class MainWindow : Form
     {
-        public MainWindow()
+        private readonly Settings _settings;
+        private GameEngine _gameEngine;
+        public MainWindow(Settings settings)
         {
+            _settings = settings;
+            _gameEngine = new GameEngine(_settings.Rows, _settings.Cols, _settings.Mines);
             InitializeComponent();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            InitializeGameGrid(9, 9);
+            InitializeGameGrid(_settings.Rows, _settings.Cols);
         }
 
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void tableGrid_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
         private void InitializeGameGrid(int rows, int cols)
         {
 
@@ -31,10 +26,10 @@
             tableGrid.ColumnCount = cols;
 
             for (int i = 0; i < cols; i++)
-                tableGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / cols));
+                tableGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, _settings.CellSize));
 
             for (int i = 0; i < rows; i++)
-                tableGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / rows));
+                tableGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, _settings.CellSize));
 
             for (int row = 0; row < rows; row++)
             {
@@ -47,7 +42,7 @@
                     btn.FlatStyle = FlatStyle.Flat;
                     btn.FlatAppearance.BorderSize = 1;
                     btn.FlatAppearance.BorderColor = Color.Gray;
-                    btn.Tag = (row, col); // optional
+                    btn.Tag = (row, col);
                     btn.Click += Cell_Click;
 
                     tableGrid.Controls.Add(btn, col, row);
@@ -55,7 +50,7 @@
                     {
                         if (e.Button == MouseButtons.Right)
                         {
-                            btn.Text = "💣";
+                            btn.Text = btn.Text == "" ? "🚩" : "";
                         }
                     };
                     btn.MouseEnter += (s, e) =>
@@ -75,16 +70,65 @@
             {
                 int row = coords.Item1;
                 int col = coords.Item2;
-                MessageBox.Show($"Clicked cell at ({row}, {col})");
-
-                // TODO: call GameEngine.RevealCell(row, col);
-                // update button UI based on result
+                _gameEngine.RevealCell(row, col);
+                if (_gameEngine.CheckIfWin())
+                {
+                    ShowWin();
+                }
+                else
+                {
+                    UpdateGridUI();
+                }
             }
         }
-
-        private void Menu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            RestartGame();
+        }
+        private void UpdateGridUI()
+        {
+            for (int row = 0; row < _settings.Rows; row++)
+            {
+                for (int col = 0; col < _settings.Cols; col++)
+                {
+                    Button? btn = tableGrid.GetControlFromPosition(col, row) as Button;
+                    if (btn != null)
+                    {
+                        Cell cell = _gameEngine.Grid[row, col];
+                        if (cell.IsRevealed)
+                        {
+                            btn.BackColor = Color.White;
+                            btn.Enabled = false;
+                            if (cell.IsMine)
+                            {
+                                btn.BackColor = Color.Red;
+                                btn.Text = "💣";
+                                ShowLose();
+                                break;
+                            }
+                            else
+                            {
+                                btn.Text = cell.AdjacentMines > 0 ? cell.AdjacentMines.ToString() : "";
+                            }
+                            
+                        }
+                    }
+                    
+                }
+            }
+        }
+        private void RestartGame()
+        {
+            _gameEngine = new GameEngine(_settings.Rows, _settings.Cols, _settings.Mines);
+            InitializeGameGrid(_settings.Rows, _settings.Cols);
+        }
+        private void ShowLose()
+        {
+            MessageBox.Show("Game Over! You hit a mine.");
+        }
+        private void ShowWin()
+        {
+            MessageBox.Show("Congratulations! You cleared the field.");
         }
     }
 }
