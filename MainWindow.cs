@@ -50,6 +50,7 @@
                     {
                         if (e.Button == MouseButtons.Right)
                         {
+                            btn.ForeColor = Color.Red;
                             btn.Text = btn.Text == "" ? "🚩" : "";
                         }
                     };
@@ -71,14 +72,7 @@
                 int row = coords.Item1;
                 int col = coords.Item2;
                 _gameEngine.RevealCell(row, col);
-                if (_gameEngine.CheckIfWin())
-                {
-                    ShowWin();
-                }
-                else
-                {
-                    UpdateGridUI();
-                }
+                UpdateGridUI();
             }
         }
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -87,6 +81,7 @@
         }
         private void UpdateGridUI()
         {
+            
             for (int row = 0; row < _settings.Rows; row++)
             {
                 for (int col = 0; col < _settings.Cols; col++)
@@ -103,8 +98,6 @@
                             {
                                 btn.BackColor = Color.Red;
                                 btn.Text = "💣";
-                                ShowLose();
-                                break;
                             }
                             else
                             {
@@ -115,6 +108,18 @@
                     }
                     
                 }
+            }
+            if (_gameEngine.IsGameOver)
+            {
+                if (_gameEngine.IsGameWon)
+                {
+                    ShowWin();
+                }
+                else
+                {
+                    ShowLose();
+                }
+                return;
             }
         }
         private void RestartGame()
@@ -128,7 +133,7 @@
         }
         private void ShowWin()
         {
-            MessageBox.Show("Congratulations! You cleared the field.");
+            MessageBox.Show("Win! You cleared the field.");
         }
     }
 }
