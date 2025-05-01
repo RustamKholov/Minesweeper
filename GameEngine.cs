@@ -65,7 +65,7 @@ namespace Minesweeper
                     minesToPlace--;
                 }
             }
-            CalculateAdjacentMines();
+            BindAdjacentCells();
         }
         public ValueTuple<int, int> GetRandomAdjacentCell(int row, int col)
         {
@@ -79,41 +79,47 @@ namespace Minesweeper
             return (r, c);
         }
 
-        private void CalculateAdjacentMines()
+        private void BindAdjacentCells()
         {
-            for (int row = 0; row < _rows; row++)
-            {
-                for (int col = 0; col < _cols; col++)
+            for (int row = 0; row < _rows; row++) //
+            {                                       // foreach cell       
+                for (int col = 0; col < _cols; col++) //
                 {
-                    if (!Grid[row, col].IsMine)
-                    {
-                        int mineCount = 0;
-                        for (int r = row - 1; r <= row + 1; r++)
+                    for (int r = row - 1; r <= row + 1; r++) //
+                    {                                           // foreach neighbour
+                        for (int c = col - 1; c <= col + 1; c++) //
                         {
-                            for (int c = col - 1; c <= col + 1; c++)
+                            if (r >= 0 && r < _rows && c >= 0 && c < _cols) // border check
                             {
-                                if (r >= 0 && r < _rows && c >= 0 && c < _cols && Grid[r, c].IsMine) // border check
-                                {
-                                    mineCount++;
-                                }
+                                Grid[row, col].AddAdjacentCell(Grid[r, c]);    //bind
                             }
                         }
-                        Grid[row, col].AdjacentMines = mineCount;
                     }
                 }
             }
         }
         public void RevealCell(int row, int col)
         {
-            if (IsGameOver || Grid[row, col].IsRevealed || Grid[row, col].IsFlagged)
+            Cell currentCell = Grid[row, col];
+            if (currentCell.IsRevealed && currentCell.IsSecured)
+            {
+                foreach (Cell cell in currentCell.AdjacentCells)
+                {
+                    if (!cell.IsRevealed)
+                    {
+                        RevealCell(cell.Row, cell.Col);
+                    }
+                }
+            }
+            if (IsGameOver || currentCell.IsRevealed || currentCell.IsFlagged)
                 return;
             if (IsFirstClick)
             {
                 GenerateMines(row, col);
                 IsFirstClick = false;
             }
-            Grid[row, col].IsRevealed = true;
-            if (!Grid[row, col].IsMine)
+            currentCell.IsRevealed = true;
+            if (!currentCell.IsMine)
             {
                 _cellToReveal--;
                 if (_cellToReveal == 0)
@@ -121,20 +127,17 @@ namespace Minesweeper
                     IsGameOver = true; //win
                 }
             }
-            if (Grid[row, col].IsMine)
+            if (currentCell.IsMine)
             {
                 IsGameOver = true;  //lose
             }
-            else if (Grid[row, col].AdjacentMines == 0)
+            else if (currentCell.AdjacentMines == 0)
             {
-                for (int r = row - 1; r <= row + 1; r++)
+                foreach (Cell cell in currentCell.AdjacentCells)
                 {
-                    for (int c = col - 1; c <= col + 1; c++)
+                    if (!cell.IsRevealed && !cell.IsFlagged)
                     {
-                        if (r >= 0 && r < _rows && c >= 0 && c < _cols)
-                        {
-                            RevealCell(r, c);
-                        }
+                        RevealCell(cell.Row, cell.Col);
                     }
                 }
             }

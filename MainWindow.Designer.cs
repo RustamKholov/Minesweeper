@@ -48,7 +48,7 @@
             fieldBox.Size = new Size(376, 395);
             fieldBox.TabIndex = 0;
             fieldBox.TabStop = false;
-            fieldBox.Text = "FieldContainer";
+            fieldBox.Text = "Minefield";
             // 
             // tableGrid
             // 
@@ -80,7 +80,6 @@
             tableGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
             tableGrid.Size = new Size(360, 360);
             tableGrid.TabIndex = 0;
-         
             // 
             // InfoBox
             // 
@@ -101,7 +100,6 @@
             NavigationMenu.Size = new Size(382, 28);
             NavigationMenu.TabIndex = 2;
             NavigationMenu.Text = "menuStrip1";
-            
             // 
             // newGameToolStripMenuItem
             // 

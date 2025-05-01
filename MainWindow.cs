@@ -37,33 +37,58 @@
                 {
                     Button btn = new Button();
                     btn.Dock = DockStyle.Fill;
-                    btn.BackColor = Color.LightGray;
-                    btn.Margin = new Padding(0);
-                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatStyle = FlatStyle.Popup;
                     btn.FlatAppearance.BorderSize = 1;
                     btn.FlatAppearance.BorderColor = Color.Gray;
+                    btn.BackColor = Color.Silver;
+                    btn.Margin = new Padding(0);
+                    btn.Font = new Font("Arial", 14, FontStyle.Bold);
+                    
                     btn.Tag = (row, col);
                     btn.Click += Cell_Click;
-
+                    btn.MouseDown += Right_Click;
+                    btn.MouseEnter += Cell_Hover;
+                    
                     tableGrid.Controls.Add(btn, col, row);
-                    btn.MouseDown += (s, e) =>
-                    {
-                        if (e.Button == MouseButtons.Right)
-                        {
-                            btn.ForeColor = Color.Red;
-                            btn.Text = btn.Text == "" ? "🚩" : "";
-                        }
-                    };
-                    btn.MouseEnter += (s, e) =>
-                    {
-                        btn.BackColor = Color.Gray;
-                    };
-                    btn.MouseLeave += (s, e) =>
-                    {
-                        btn.BackColor = Color.LightGray;
-                    };
+
+
                 }
             }
+        }
+        private void Right_Click (object? sender, MouseEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is ValueTuple<int, int> coords)
+            {
+                int row = coords.Item1;
+                int col = coords.Item2;
+                var relatedCell = _gameEngine.Grid[row, col];
+                if (e.Button == MouseButtons.Right)
+                {
+                    if (btn.Text == "" && !relatedCell.IsRevealed)
+                    {
+                        relatedCell.IsFlagged = true;
+                        btn.ForeColor = Color.Red;
+                        btn.Text = "🚩";
+                    }
+                    else if (!relatedCell.IsRevealed)
+                    {
+                        btn.ForeColor = Color.Black;
+                        relatedCell.IsFlagged = false;
+                        btn.Text = "";
+                    }
+                }
+            }
+        }
+        private void Cell_Hover (object? sender, EventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is ValueTuple<int, int> coords)
+            {
+                int row = coords.Item1;
+                int col = coords.Item2;
+                var relatedCell = _gameEngine.Grid[row, col];
+                btn.FlatAppearance.MouseOverBackColor = btn.BackColor;
+                
+            }    
         }
         private void Cell_Click(object? sender, EventArgs e)
         {
@@ -71,8 +96,14 @@
             {
                 int row = coords.Item1;
                 int col = coords.Item2;
+                var currentCell = _gameEngine.Grid[row, col];
                 _gameEngine.RevealCell(row, col);
                 UpdateGridUI();
+                if (currentCell.IsRevealed)
+                {
+                    btn.FlatAppearance.MouseDownBackColor = Color.DarkGray;
+                }
+                
             }
         }
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -81,7 +112,7 @@
         }
         private void UpdateGridUI()
         {
-            
+
             for (int row = 0; row < _settings.Rows; row++)
             {
                 for (int col = 0; col < _settings.Cols; col++)
@@ -92,8 +123,15 @@
                         Cell cell = _gameEngine.Grid[row, col];
                         if (cell.IsRevealed)
                         {
-                            btn.BackColor = Color.White;
-                            btn.Enabled = false;
+                            btn.FlatStyle = FlatStyle.Flat;
+                            btn.FlatAppearance.BorderSize = 1;
+                            btn.FlatAppearance.BorderColor = Color.Gray;
+                            btn.BackColor = Color.LightGray;
+                            if (cell.AdjacentMines == 0)
+                            {
+                                btn.Click -= Cell_Click;
+                                btn.MouseDown -= Right_Click;
+                            }
                             if (cell.IsMine)
                             {
                                 btn.BackColor = Color.Red;
@@ -101,16 +139,30 @@
                             }
                             else
                             {
+                                btn.ForeColor = cell.AdjacentMines switch
+                                {
+                                    1 => Color.Blue,
+                                    2 => Color.Green,
+                                    3 => Color.Red,
+                                    4 => Color.DarkBlue,
+                                    5 => Color.DarkRed,
+                                    6 => Color.Cyan,
+                                    7 => Color.Black,
+                                    _ => btn.ForeColor
+                                };
                                 btn.Text = cell.AdjacentMines > 0 ? cell.AdjacentMines.ToString() : "";
+                                btn.MouseDown -= Right_Click;
                             }
-                            
+
                         }
                     }
-                    
+
                 }
             }
             if (_gameEngine.IsGameOver)
             {
+                DeactivateGrid();
+                RevealMines();
                 if (_gameEngine.IsGameWon)
                 {
                     ShowWin();
@@ -120,6 +172,51 @@
                     ShowLose();
                 }
                 return;
+            }
+        }
+        private void RevealMines()
+        {
+            for (int row = 0; row < _settings.Rows; row++)
+            {
+                for (int col = 0; col < _settings.Cols; col++)
+                {
+                    Button ? btn = tableGrid.GetControlFromPosition(col, row) as Button;
+                    if (btn != null)
+                    {
+                        Cell cell = _gameEngine.Grid[row, col];
+                        if (cell.IsFlagged && !cell.IsMine)
+                        {
+                            btn.BackColor = Color.Yellow;
+                            btn.Text = "❌";
+                        }
+                        else if (cell.IsFlagged && cell.IsMine)
+                        {
+                            btn.BackColor = Color.Green;
+                            btn.Text = "🚩";
+                        }
+                        else
+                        if (cell.IsMine)
+                        {
+                            btn.Text = "💣";
+                        }
+                    }
+                }
+            }
+        }
+        private void DeactivateGrid()
+        {
+            for (int row = 0; row < _settings.Rows; row++)
+            {
+                for (int col = 0; col < _settings.Cols; col++)
+                {
+                    Button? btn = tableGrid.GetControlFromPosition(col, row) as Button;
+                    if (btn != null)
+                    {
+                        btn.Click -= Cell_Click;
+                        btn.MouseDown -= Right_Click;
+                        
+                    }
+                }
             }
         }
         private void RestartGame()
@@ -135,5 +232,6 @@
         {
             MessageBox.Show("Win! You cleared the field.");
         }
+
     }
 }
