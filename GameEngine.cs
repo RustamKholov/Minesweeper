@@ -9,6 +9,7 @@ namespace Minesweeper
 {
     public class GameEngine
     {
+        public List<ICellObserver> Observers { get; set; } = new List<ICellObserver>();
         public Cell[,] Grid { get; private set; }
         public bool IsGameOver { get; private set; }
         public bool IsFirstClick { get; set; }
@@ -39,17 +40,11 @@ namespace Minesweeper
                     Grid[row, col] = new Cell(row, col);
                 }
             }
+            BindAdjacentCells();
         }
         public void GenerateMines(int safeRow, int safeCol)
         {
             Random random = new Random();
-            //// Two more random adjacent cells to the first click are safe
-            //List<(int, int)> safeCells = new List<(int, int)>();
-            //safeCells.Add((safeRow, safeCol));
-            //safeCells.Add(GetRandomAdjacentCell(safeRow, safeCol));
-            //int randomSafeCellIndex = random.Next(0, safeCells.Count);
-            //(int row, int col) safeCell3 = safeCells[randomSafeCellIndex];
-            //safeCells.Add(GetRandomAdjacentCell(safeCell3.row, safeCell3.col));
             
             int minesToPlace = _mines;
             while (minesToPlace > 0)
@@ -58,14 +53,13 @@ namespace Minesweeper
                 int col = random.Next(_cols);
                 //bool inBounds = row >= 0 && row < _rows && col >= 0 && col < _cols;
                 bool isNearSafeClick = Math.Abs(row - safeRow) <= 1 && Math.Abs(col - safeCol) <= 1;
-                // Ensure the mine is not placed on the first click or on an already occupied cell
+                // first click alsways has a 0 adjucent mine
                 if (!Grid[row, col].IsMine && !isNearSafeClick /*&& inBounds*/)
                 {
                     Grid[row, col].IsMine = true;
                     minesToPlace--;
                 }
             }
-            BindAdjacentCells();
         }
         public ValueTuple<int, int> GetRandomAdjacentCell(int row, int col)
         {
@@ -119,6 +113,7 @@ namespace Minesweeper
                 IsFirstClick = false;
             }
             currentCell.IsRevealed = true;
+            NotifyReveald(currentCell);
             if (!currentCell.IsMine)
             {
                 _cellToReveal--;
@@ -141,6 +136,63 @@ namespace Minesweeper
                     }
                 }
             }
+        }
+        public Cell GetCell(int row, int col)
+        {
+            if (row < 0 || row >= _rows || col < 0 || col >= _cols)
+            {
+                throw new ArgumentOutOfRangeException("Cell is out of bounds");
+            }
+            return Grid[row, col];
+        }
+        public void FlagCell(int row, int col)
+        {
+            Cell currentCell = Grid[row, col];
+            if (currentCell.IsRevealed)
+                return;
+            currentCell.IsFlagged = !currentCell.IsFlagged;
+            NotifyFlagged(currentCell);
+        }
+        public void FlagCell(Cell cell)
+        {
+            FlagCell(cell.Row, cell.Col);
+        }
+        //public void RestartGame()
+        //{
+        //    IsGameOver = false;
+        //    IsFirstClick = true;
+        //    _cellToReveal = _rows * _cols - _mines;
+        //    InitializeEmptyGrid();
+        //    foreach (var observer in Observers)
+        //    {
+        //        observer.UpdateRestart();
+        //    }
+        //}
+        public void Subscribe(ICellObserver observer)
+        {
+            Observers.Add(observer);
+        }
+        public void Unsubscribe(ICellObserver observer)
+        {
+            Observers.Remove(observer);
+        }
+        public void NotifyReveald(Cell cell)
+        {
+            foreach (var observer in Observers)
+            {
+                observer.UpdateRevealed(cell);
+            }
+        }
+        public void NotifyFlagged(Cell cell)
+        {
+            foreach (var observer in Observers)
+            {
+                observer.UpdateFlagged(cell);
+            }
+        }
+        public void UnsubscribeAll()
+        {
+            Observers.Clear();
         }
     }
 }

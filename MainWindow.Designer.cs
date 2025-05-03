@@ -66,7 +66,7 @@
             tableGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40F));
             tableGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40F));
             tableGrid.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
-            tableGrid.Location = new Point(10, 29);
+            tableGrid.Location = new Point(9, 29);
             tableGrid.Name = "tableGrid";
             tableGrid.RowCount = 9;
             tableGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
@@ -80,11 +80,12 @@
             tableGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
             tableGrid.Size = new Size(360, 360);
             tableGrid.TabIndex = 0;
+            tableGrid.Paint += tableGrid_Paint;
             // 
             // InfoBox
             // 
             InfoBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            InfoBox.Location = new Point(22, 80);
+            InfoBox.Location = new Point(23, 80);
             InfoBox.Name = "InfoBox";
             InfoBox.Size = new Size(367, 101);
             InfoBox.TabIndex = 1;
@@ -95,9 +96,10 @@
             // 
             NavigationMenu.ImageScalingSize = new Size(20, 20);
             NavigationMenu.Items.AddRange(new ToolStripItem[] { newGameToolStripMenuItem, optionsToolStripMenuItem, statisticToolStripMenuItem });
-            NavigationMenu.Location = new Point(10, 10);
+            NavigationMenu.Location = new Point(9, 10);
             NavigationMenu.Name = "NavigationMenu";
-            NavigationMenu.Size = new Size(382, 28);
+            NavigationMenu.Padding = new Padding(7, 2, 0, 2);
+            NavigationMenu.Size = new Size(383, 28);
             NavigationMenu.TabIndex = 2;
             NavigationMenu.Text = "menuStrip1";
             // 
@@ -124,13 +126,13 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(402, 611);
+            ClientSize = new Size(401, 611);
             Controls.Add(InfoBox);
             Controls.Add(fieldBox);
             Controls.Add(NavigationMenu);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Name = "MainWindow";
-            Padding = new Padding(10);
+            Padding = new Padding(9, 10, 9, 10);
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Minesweeper";
             Load += Form1_Load;

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Minesweeper
 {
-    public class Cell
-    {
+    public class Cell 
+    {        
         public bool IsMine { get; set; }
         public bool IsRevealed { get; set; }
         public bool IsFlagged { get; set; }
