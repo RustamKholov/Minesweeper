@@ -17,7 +17,7 @@ namespace Minesweeper
         private  int _difficulty;
         private  int _width;
         private  int _height;
-        private float _cellSize = 40f;
+        private float _cellSize = 35f;
         private Font _font;
         public int Rows { get => _rows; set => _rows = value;  }
         public int Cols { get => _cols; set => _cols = value;  }
@@ -33,7 +33,10 @@ namespace Minesweeper
             string fontPath = Path.Combine(Application.StartupPath,"Assets", "Fonts",  "mine-sweeper.ttf");
             pfc.AddFontFile(fontPath);
             FontFamily fontFamily = pfc.Families[0];
-            _font = new Font(fontFamily, 12);
+            //_font = new Font(fontFamily, 11);
+            _width = (int)(Cols * CellSize);
+            _height = (int)(Rows * CellSize);
+            _font = new Font("Verdana", 15, FontStyle.Bold);
         }
     }
 }

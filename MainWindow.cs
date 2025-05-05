@@ -1,11 +1,15 @@
-﻿namespace Minesweeper
+﻿using Timer = System.Windows.Forms.Timer;
+
+namespace Minesweeper
 {
     public partial class MainWindow : Form, ICellObserver
     {
-        private readonly Settings _settings;
+        private Settings _settings;
         private GameEngine _gameEngine;
         private bool _mousePressed = false;
         private Button? _pressedButton = null;
+
+
         public MainWindow(Settings settings)
         {
             _settings = settings;
@@ -14,19 +18,23 @@
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void MainWindow_Load(object sender, EventArgs e)
         {
             InitializeGameGrid(_settings.Rows, _settings.Cols);
         }
 
         private void InitializeGameGrid(int rows, int cols)
         {
+            ClientSize = new Size(_settings.Width + 60, _settings.Height + 200);
+            fieldBox.Size = new Size(_settings.Width + 30, _settings.Height + 30);
 
             tableGrid.Controls.Clear();
             tableGrid.ColumnStyles.Clear();
             tableGrid.RowStyles.Clear();
             tableGrid.RowCount = rows;
             tableGrid.ColumnCount = cols;
+            tableGrid.AutoSize = true;
+            tableGrid.MouseMove += Left_Clicked_Move;
 
             for (int i = 0; i < cols; i++)
                 tableGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, _settings.CellSize));
@@ -53,7 +61,7 @@
                     btn.MouseDown += Left_Click_Down;
                     btn.MouseUp += Left_Click_Up;
                     btn.MouseMove += Left_Clicked_Move;
-                   
+
 
                     tableGrid.Controls.Add(btn, col, row);
 
@@ -73,7 +81,7 @@
                 }
             }
         }
-        
+
 
 
         private void Left_Click_Down(object? sender, MouseEventArgs e)
@@ -87,12 +95,16 @@
         }
         private void Left_Clicked_Move(object? sender, MouseEventArgs e)
         {
-            if (_mousePressed && sender is Button btn && btn != _pressedButton)
+            if (!_mousePressed) return;
+
+            Point screenPos = Cursor.Position;
+            Point panelRelative = tableGrid.PointToClient(screenPos);
+            Control? hovered = tableGrid.GetChildAtPoint(panelRelative);
+            if (hovered is Button btn && btn != _pressedButton)
             {
                 if (_pressedButton != null)
-                {
                     DisplayDefaultButton(_pressedButton);
-                }
+
                 _pressedButton = btn;
                 DisplayButtonOnHold(btn);
             }
@@ -100,7 +112,7 @@
         private void Left_Click_Up(object? sender, MouseEventArgs e)
         {
             _mousePressed = false;
-            if ( _pressedButton != null)
+            if (_pressedButton != null)
             {
                 DisplayDefaultButton(_pressedButton);
                 _pressedButton = null;
@@ -119,6 +131,7 @@
                     btn.FlatStyle = FlatStyle.Flat;
                     btn.FlatAppearance.BorderSize = 0;
                     btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
+                    btn.BackgroundImageLayout = ImageLayout.Stretch;
                 }
                 else if (relatedCell != null && relatedCell.IsRevealed && relatedCell.AdjacentMines > 0)
                 {
@@ -129,6 +142,7 @@
                             relatedButton.FlatStyle = FlatStyle.Flat;
                             relatedButton.FlatAppearance.BorderSize = 0;
                             relatedButton.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
+                            relatedButton.BackgroundImageLayout = ImageLayout.Stretch;
                         }
                     }
                 }
@@ -161,7 +175,7 @@
                 }
             }
         }
-        
+
 
         private void Cell_Click(object? sender, EventArgs e)
         {
@@ -169,7 +183,6 @@
             {
                 int col = coords.Item1;
                 int row = coords.Item2;
-                var currentCell = _gameEngine.Grid[row, col];
                 _gameEngine.RevealCell(row, col);
                 ChechGameOver();
             }
@@ -212,7 +225,7 @@
         {
             btn.Click -= Cell_Click;
             btn.MouseDown -= Right_Click;
-            
+
         }
         #endregion
         private void UpdateRevealedUI(Cell cell)
@@ -284,7 +297,7 @@
                             btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
                             btn.BackgroundImageLayout = ImageLayout.Stretch;
                             btn.Image = Properties.Resources.Wrong_Mine;
-                            
+
                         }
                         else if (cell.IsMine)
                         {
@@ -307,9 +320,9 @@
                                     btn.Image = Properties.Resources.Mine;
                                     btn.ImageAlign = ContentAlignment.MiddleCenter; ;
                                 }
-                                
+
                             }
-                            
+
                         }
                     }
                 }
@@ -326,15 +339,15 @@
                     {
                         btn.Click -= Cell_Click;
                         btn.MouseDown -= Right_Click;
-                        
+
                     }
                 }
             }
         }
         private void RestartGame()
         {
+            _gameEngine = new GameEngine(_settings.Rows, _settings.Cols, _settings.Mines);
             _gameEngine.Subscribe(this);
-            _gameEngine.RestartGame();
             InitializeGameGrid(_settings.Rows, _settings.Cols);
         }
         private void ShowLose()
@@ -356,6 +369,22 @@
             UpdateFlagedUI(cell);
         }
 
-        
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            _settings = GameDifficulty.Hard;
+            RestartGame();
+        }
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            _settings = GameDifficulty.Medium;
+            RestartGame();
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            _settings = GameDifficulty.Easy;
+            RestartGame();
+        }
     }
 }
