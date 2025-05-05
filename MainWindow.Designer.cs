@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             fieldBox = new GroupBox();
             tableGrid = new TableLayoutPanel();
             InfoBox = new GroupBox();
@@ -35,8 +37,11 @@
             newGameToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
             statisticToolStripMenuItem = new ToolStripMenuItem();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            toolStripComboBox1 = new ToolStripComboBox();
             fieldBox.SuspendLayout();
             NavigationMenu.SuspendLayout();
+            contextMenuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // fieldBox
@@ -80,7 +85,6 @@
             tableGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
             tableGrid.Size = new Size(360, 360);
             tableGrid.TabIndex = 0;
-            tableGrid.Paint += tableGrid_Paint;
             // 
             // InfoBox
             // 
@@ -122,6 +126,18 @@
             statisticToolStripMenuItem.Size = new Size(75, 24);
             statisticToolStripMenuItem.Text = "Statistic";
             // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.ImageScalingSize = new Size(20, 20);
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripComboBox1 });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(182, 36);
+            // 
+            // toolStripComboBox1
+            // 
+            toolStripComboBox1.Name = "toolStripComboBox1";
+            toolStripComboBox1.Size = new Size(121, 28);
+            // 
             // MainWindow
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -131,6 +147,7 @@
             Controls.Add(fieldBox);
             Controls.Add(NavigationMenu);
             FormBorderStyle = FormBorderStyle.Fixed3D;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MainWindow";
             Padding = new Padding(9, 10, 9, 10);
             StartPosition = FormStartPosition.CenterScreen;
@@ -140,6 +157,7 @@
             fieldBox.PerformLayout();
             NavigationMenu.ResumeLayout(false);
             NavigationMenu.PerformLayout();
+            contextMenuStrip1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -153,5 +171,7 @@
         private ToolStripMenuItem newGameToolStripMenuItem;
         private ToolStripMenuItem optionsToolStripMenuItem;
         private ToolStripMenuItem statisticToolStripMenuItem;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripComboBox toolStripComboBox1;
     }
 }

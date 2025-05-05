@@ -4,6 +4,8 @@
     {
         private readonly Settings _settings;
         private GameEngine _gameEngine;
+        private bool _mousePressed = false;
+        private Button? _pressedButton = null;
         public MainWindow(Settings settings)
         {
             _settings = settings;
@@ -37,21 +39,23 @@
                 for (int col = 0; col < cols; col++)
                 {
                     Button btn = new Button();
-                    btn.Dock = DockStyle.Fill;
-                    btn.FlatStyle = FlatStyle.Popup;
-                    btn.FlatAppearance.BorderSize = 1;
-                    btn.FlatAppearance.BorderColor = Color.Gray;
-                    btn.BackColor = Color.Silver;
-                    btn.Margin = new Padding(0);
-                    btn.Font = new Font("Arial", 14, FontStyle.Bold);
 
+                    btn.Dock = DockStyle.Fill;
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatAppearance.BorderSize = 0;
+                    btn.BackgroundImage = Properties.Resources.Minesweeper_unopened_square;
+                    btn.BackgroundImageLayout = ImageLayout.Stretch;
+                    btn.Margin = new Padding(0);
+                    btn.Font = _settings.Font;
                     btn.Tag = (col, row);
                     btn.Click += Cell_Click;
                     btn.MouseDown += Right_Click;
-                    btn.MouseEnter += Cell_Hover;
+                    btn.MouseDown += Left_Click_Down;
+                    btn.MouseUp += Left_Click_Up;
+                    btn.MouseMove += Left_Clicked_Move;
+                   
 
                     tableGrid.Controls.Add(btn, col, row);
-
 
                 }
             }
@@ -69,17 +73,96 @@
                 }
             }
         }
+        
 
-        private void Cell_Hover(object? sender, EventArgs e)
+
+        private void Left_Click_Down(object? sender, MouseEventArgs e)
         {
-            if (sender is Button btn && btn.Tag is ValueTuple<int, int> coords)
+            if (e.Button == MouseButtons.Left && sender is Button btn)
+            {
+                _mousePressed = true;
+                _pressedButton = btn;
+                DisplayButtonOnHold(btn);
+            }
+        }
+        private void Left_Clicked_Move(object? sender, MouseEventArgs e)
+        {
+            if (_mousePressed && sender is Button btn && btn != _pressedButton)
+            {
+                if (_pressedButton != null)
+                {
+                    DisplayDefaultButton(_pressedButton);
+                }
+                _pressedButton = btn;
+                DisplayButtonOnHold(btn);
+            }
+        }
+        private void Left_Click_Up(object? sender, MouseEventArgs e)
+        {
+            _mousePressed = false;
+            if ( _pressedButton != null)
+            {
+                DisplayDefaultButton(_pressedButton);
+                _pressedButton = null;
+            }
+        }
+
+        private void DisplayButtonOnHold(Button btn)
+        {
+            if (btn.Tag is ValueTuple<int, int> coords)
             {
                 int col = coords.Item1;
                 int row = coords.Item2;
-                var relatedCell = _gameEngine.Grid[row, col];
-                btn.FlatAppearance.MouseOverBackColor = btn.BackColor;
+                Cell relatedCell = _gameEngine.GetCell(row, col);
+                if (relatedCell != null && !relatedCell.IsRevealed && !relatedCell.IsFlagged)
+                {
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatAppearance.BorderSize = 0;
+                    btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
+                }
+                else if (relatedCell != null && relatedCell.IsRevealed && relatedCell.AdjacentMines > 0)
+                {
+                    foreach (Cell cell in relatedCell.AdjacentCells)
+                    {
+                        if (!cell.IsRevealed && !cell.IsFlagged && tableGrid.GetControlFromPosition(cell.Col, cell.Row) is Button relatedButton)
+                        {
+                            relatedButton.FlatStyle = FlatStyle.Flat;
+                            relatedButton.FlatAppearance.BorderSize = 0;
+                            relatedButton.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
+                        }
+                    }
+                }
             }
         }
+        private void DisplayDefaultButton(Button btn)
+        {
+            if (btn.Tag is ValueTuple<int, int> coords)
+            {
+                int col = coords.Item1;
+                int row = coords.Item2;
+                Cell relatedCell = _gameEngine.GetCell(row, col);
+                if (relatedCell != null && !relatedCell.IsRevealed && !relatedCell.IsFlagged)
+                {
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatAppearance.BorderSize = 0;
+                    btn.BackgroundImage = Properties.Resources.Minesweeper_unopened_square;
+                }
+                else if (relatedCell != null && relatedCell.IsRevealed && relatedCell.AdjacentMines > 0)
+                {
+                    foreach (Cell cell in relatedCell.AdjacentCells)
+                    {
+                        if (!cell.IsRevealed && !cell.IsFlagged && tableGrid.GetControlFromPosition(cell.Col, cell.Row) is Button relatedButton)
+                        {
+                            relatedButton.FlatStyle = FlatStyle.Flat;
+                            relatedButton.FlatAppearance.BorderSize = 0;
+                            relatedButton.BackgroundImage = Properties.Resources.Minesweeper_unopened_square;
+                        }
+                    }
+                }
+            }
+        }
+        
+
         private void Cell_Click(object? sender, EventArgs e)
         {
             if (sender is Button btn && btn.Tag is ValueTuple<int, int> coords)
@@ -89,7 +172,6 @@
                 var currentCell = _gameEngine.Grid[row, col];
                 _gameEngine.RevealCell(row, col);
                 ChechGameOver();
-                //UpdateGridUI();
             }
         }
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -100,14 +182,16 @@
         private void ButtonRevealed(Button btn)
         {
             btn.FlatStyle = FlatStyle.Flat;
-            btn.FlatAppearance.BorderSize = 1;
+            btn.FlatAppearance.BorderSize = 0;
             btn.FlatAppearance.BorderColor = Color.Gray;
-            btn.BackColor = Color.LightGray;
+            btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
         }
         private void RevealdButtonIsMine(Button btn)
         {
-            btn.BackColor = Color.Red;
-            btn.Text = "💣";
+            btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square_mine;
+            btn.BackgroundImageLayout = ImageLayout.Stretch;
+            btn.Image = Properties.Resources.Mine;
+            btn.ImageAlign = ContentAlignment.MiddleCenter;
         }
         private void RevealdButtonIsNotMine(Button btn, Cell cell)
         {
@@ -128,6 +212,7 @@
         {
             btn.Click -= Cell_Click;
             btn.MouseDown -= Right_Click;
+            
         }
         #endregion
         private void UpdateRevealedUI(Cell cell)
@@ -156,13 +241,12 @@
             {
                 if (cell.IsFlagged)
                 {
-                    btn.ForeColor = Color.Red;
-                    btn.Text = "🚩";
+                    btn.BackgroundImage = Properties.Resources.Minesweeper_flag;
+                    btn.BackgroundImageLayout = ImageLayout.Stretch;
                 }
                 else
                 {
-                    btn.ForeColor = Color.Black;
-                    btn.Text = "";
+                    btn.BackgroundImage = Properties.Resources.Minesweeper_unopened_square;
                 }
             }
         }
@@ -170,8 +254,10 @@
         {
             if (_gameEngine.IsGameOver)
             {
+                _gameEngine.UnsubscribeAll();
                 DeactivateGrid();
                 ShowAllMines();
+
                 if (_gameEngine.IsGameWon)
                 {
                     ShowWin();
@@ -195,18 +281,35 @@
                         Cell cell = _gameEngine.Grid[row, col];
                         if (cell.IsFlagged && !cell.IsMine)
                         {
-                            btn.ForeColor = Color.Red;
-                            btn.Text = "❌";
+                            btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
+                            btn.BackgroundImageLayout = ImageLayout.Stretch;
+                            btn.Image = Properties.Resources.Wrong_Mine;
+                            
                         }
-                        else if (cell.IsFlagged && cell.IsMine)
+                        else if (cell.IsMine)
                         {
-                            btn.ForeColor = Color.Green;
-                            btn.Text = "🚩";
-                        }
-                        else
-                        if (cell.IsMine)
-                        {
-                            btn.Text = "💣";
+                            if (cell.IsRevealed)
+                            {
+                                btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square_mine;
+                                btn.Image = Properties.Resources.Mine;
+                                btn.ImageAlign = ContentAlignment.MiddleCenter;
+                            }
+                            else
+                            {
+                                if (_gameEngine.IsGameWon)
+                                {
+                                    btn.BackgroundImage = Properties.Resources.Minesweeper_flag;
+                                    btn.BackgroundImageLayout = ImageLayout.Stretch;
+                                }
+                                else
+                                {
+                                    btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
+                                    btn.Image = Properties.Resources.Mine;
+                                    btn.ImageAlign = ContentAlignment.MiddleCenter; ;
+                                }
+                                
+                            }
+                            
                         }
                     }
                 }
@@ -223,16 +326,15 @@
                     {
                         btn.Click -= Cell_Click;
                         btn.MouseDown -= Right_Click;
-
+                        
                     }
                 }
             }
         }
         private void RestartGame()
         {
-            _gameEngine.UnsubscribeAll();
-            _gameEngine = new GameEngine(_settings.Rows, _settings.Cols, _settings.Mines);
             _gameEngine.Subscribe(this);
+            _gameEngine.RestartGame();
             InitializeGameGrid(_settings.Rows, _settings.Cols);
         }
         private void ShowLose()
@@ -254,9 +356,6 @@
             UpdateFlagedUI(cell);
         }
 
-        private void tableGrid_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
+        
     }
 }

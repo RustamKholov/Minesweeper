@@ -157,17 +157,13 @@ namespace Minesweeper
         {
             FlagCell(cell.Row, cell.Col);
         }
-        //public void RestartGame()
-        //{
-        //    IsGameOver = false;
-        //    IsFirstClick = true;
-        //    _cellToReveal = _rows * _cols - _mines;
-        //    InitializeEmptyGrid();
-        //    foreach (var observer in Observers)
-        //    {
-        //        observer.UpdateRestart();
-        //    }
-        //}
+        public void RestartGame()
+        {
+            IsGameOver = false;
+            IsFirstClick = true;
+            _cellToReveal = _rows * _cols - _mines;
+            InitializeEmptyGrid();
+        }
         public void Subscribe(ICellObserver observer)
         {
             Observers.Add(observer);
