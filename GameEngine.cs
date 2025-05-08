@@ -10,6 +10,7 @@ namespace Minesweeper
     public class GameEngine
     {
         public List<ICellObserver> Observers { get; set; } = new List<ICellObserver>();
+        
         public Cell[,] Grid { get; private set; }
         public bool IsGameOver { get; private set; }
         public bool IsFirstClick { get; set; }
@@ -17,8 +18,12 @@ namespace Minesweeper
         private int _cols;
         private int _mines;
         private int _cellToReveal;
+        private int _flaggedCells = 0;
+        private GameTimer _gameTimer;
+        public GameTimer GameTimer => _gameTimer;
         public bool IsGameWon => _cellToReveal == 0;
-
+        public int MinesToFlagg => _mines - _flaggedCells;
+        
         public GameEngine(int rows, int cols, int mines)
         {
             _rows = rows;
@@ -28,6 +33,7 @@ namespace Minesweeper
             IsFirstClick = true;
             Grid = new Cell[rows, cols];
             _cellToReveal = rows * cols - mines;
+            _gameTimer = new GameTimer();
             InitializeEmptyGrid();
         }
 
@@ -111,6 +117,7 @@ namespace Minesweeper
             {
                 GenerateMines(row, col);
                 IsFirstClick = false;
+                _gameTimer.StartTimer();
             }
             currentCell.IsRevealed = true;
             NotifyReveald(currentCell);
@@ -119,12 +126,12 @@ namespace Minesweeper
                 _cellToReveal--;
                 if (_cellToReveal == 0)
                 {
-                    IsGameOver = true; //win
+                    GameOver();
                 }
             }
             if (currentCell.IsMine)
             {
-                IsGameOver = true;  //lose
+                GameOver();
             }
             else if (currentCell.AdjacentMines == 0)
             {
@@ -150,18 +157,36 @@ namespace Minesweeper
             Cell currentCell = Grid[row, col];
             if (currentCell.IsRevealed)
                 return;
-            currentCell.IsFlagged = !currentCell.IsFlagged;
-            NotifyFlagged(currentCell);
+            if (!currentCell.IsFlagged)
+            {
+                _flaggedCells++;
+                currentCell.IsFlagged = true;
+            }
+            else
+            {
+                _flaggedCells--;
+                currentCell.IsFlagged = false;
+            }
+                NotifyFlagged(currentCell);
         }
         public void FlagCell(Cell cell)
         {
             FlagCell(cell.Row, cell.Col);
         }
+        public void GameOver()
+        {
+            _gameTimer.StopTimer();
+            IsGameOver = true;
+            UnsubscribeAll();
+            _gameTimer.UnsubscribeAll();
+        }
         public void RestartGame()
         {
+            GameOver();
             IsGameOver = false;
             IsFirstClick = true;
             _cellToReveal = _rows * _cols - _mines;
+            _flaggedCells = 0;
             InitializeEmptyGrid();
         }
         public void Subscribe(ICellObserver observer)

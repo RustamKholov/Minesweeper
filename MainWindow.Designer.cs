@@ -29,9 +29,13 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            fieldBox = new GroupBox();
             tableGrid = new TableLayoutPanel();
             InfoBox = new GroupBox();
+            SmileButton = new Button();
+            Mines_Panel = new Panel();
+            Mines_Label = new Label();
+            Timer_Panel = new Panel();
+            Game_Timer_Label = new Label();
             NavigationMenu = new MenuStrip();
             newGameToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
@@ -39,28 +43,65 @@
             toolStripMenuItem2 = new ToolStripMenuItem();
             toolStripMenuItem3 = new ToolStripMenuItem();
             statisticToolStripMenuItem = new ToolStripMenuItem();
-            fieldBox.SuspendLayout();
+            InfoBox.SuspendLayout();
+            Mines_Panel.SuspendLayout();
+            Timer_Panel.SuspendLayout();
             NavigationMenu.SuspendLayout();
             SuspendLayout();
-            // 
-            // fieldBox
-            // 
-            resources.ApplyResources(fieldBox, "fieldBox");
-            fieldBox.Controls.Add(tableGrid);
-            fieldBox.Name = "fieldBox";
-            fieldBox.TabStop = false;
             // 
             // tableGrid
             // 
             resources.ApplyResources(tableGrid, "tableGrid");
+            tableGrid.BackColor = Color.Transparent;
             tableGrid.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             tableGrid.Name = "tableGrid";
             // 
             // InfoBox
             // 
             resources.ApplyResources(InfoBox, "InfoBox");
+            InfoBox.Controls.Add(SmileButton);
+            InfoBox.Controls.Add(Mines_Panel);
+            InfoBox.Controls.Add(Timer_Panel);
             InfoBox.Name = "InfoBox";
             InfoBox.TabStop = false;
+            // 
+            // SmileButton
+            // 
+            resources.ApplyResources(SmileButton, "SmileButton");
+            SmileButton.BackgroundImage = Properties.Resources.Smile;
+            SmileButton.Name = "SmileButton";
+            SmileButton.UseVisualStyleBackColor = true;
+            SmileButton.Click += SmileButton_Click;
+            // 
+            // Mines_Panel
+            // 
+            resources.ApplyResources(Mines_Panel, "Mines_Panel");
+            Mines_Panel.BackColor = Color.Black;
+            Mines_Panel.BorderStyle = BorderStyle.FixedSingle;
+            Mines_Panel.Controls.Add(Mines_Label);
+            Mines_Panel.Name = "Mines_Panel";
+            // 
+            // Mines_Label
+            // 
+            resources.ApplyResources(Mines_Label, "Mines_Label");
+            Mines_Label.BackColor = Color.Transparent;
+            Mines_Label.ForeColor = Color.Red;
+            Mines_Label.Name = "Mines_Label";
+            // 
+            // Timer_Panel
+            // 
+            Timer_Panel.BackColor = Color.Black;
+            Timer_Panel.BorderStyle = BorderStyle.FixedSingle;
+            Timer_Panel.Controls.Add(Game_Timer_Label);
+            resources.ApplyResources(Timer_Panel, "Timer_Panel");
+            Timer_Panel.Name = "Timer_Panel";
+            // 
+            // Game_Timer_Label
+            // 
+            resources.ApplyResources(Game_Timer_Label, "Game_Timer_Label");
+            Game_Timer_Label.BackColor = Color.Transparent;
+            Game_Timer_Label.ForeColor = Color.Red;
+            Game_Timer_Label.Name = "Game_Timer_Label";
             // 
             // NavigationMenu
             // 
@@ -108,14 +149,16 @@
             // 
             resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(InfoBox);
-            Controls.Add(fieldBox);
+            Controls.Add(tableGrid);
             Controls.Add(NavigationMenu);
+            Controls.Add(InfoBox);
             DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.Fixed3D;
             Name = "MainWindow";
             Load += MainWindow_Load;
-            fieldBox.ResumeLayout(false);
-            fieldBox.PerformLayout();
+            InfoBox.ResumeLayout(false);
+            Mines_Panel.ResumeLayout(false);
+            Timer_Panel.ResumeLayout(false);
             NavigationMenu.ResumeLayout(false);
             NavigationMenu.PerformLayout();
             ResumeLayout(false);
@@ -123,9 +166,6 @@
         }
 
         #endregion
-
-        private GroupBox fieldBox;
-        private TableLayoutPanel tableGrid;
         private GroupBox InfoBox;
         private MenuStrip NavigationMenu;
         private ToolStripMenuItem newGameToolStripMenuItem;
@@ -134,5 +174,11 @@
         private ToolStripMenuItem toolStripMenuItem1;
         private ToolStripMenuItem toolStripMenuItem2;
         private ToolStripMenuItem toolStripMenuItem3;
+        private Label Game_Timer_Label;
+        private TableLayoutPanel tableGrid;
+        private Panel Timer_Panel;
+        private Panel Mines_Panel;
+        private Label Mines_Label;
+        private Button SmileButton;
     }
 }

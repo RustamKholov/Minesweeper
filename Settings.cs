@@ -36,7 +36,7 @@ namespace Minesweeper
             //_font = new Font(fontFamily, 11);
             _width = (int)(Cols * CellSize);
             _height = (int)(Rows * CellSize);
-            _font = new Font("Verdana", 15, FontStyle.Bold);
+            _font = new Font("Sagoe", 13, FontStyle.Bold);
         }
     }
 }

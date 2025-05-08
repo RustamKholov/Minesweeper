@@ -2,31 +2,39 @@
 
 namespace Minesweeper
 {
-    public partial class MainWindow : Form, ICellObserver
+    public partial class MainWindow : Form, ICellObserver, ITimerObserver
     {
         private Settings _settings;
         private GameEngine _gameEngine;
         private bool _mousePressed = false;
         private Button? _pressedButton = null;
+        private Image _lastSmile = Properties.Resources.Smile;
 
-
-        public MainWindow(Settings settings)
+        public MainWindow(Settings settings, GameEngine gameEngine)
         {
             _settings = settings;
-            _gameEngine = new GameEngine(_settings.Rows, _settings.Cols, _settings.Mines);
-            _gameEngine.Subscribe(this);
+            _gameEngine = gameEngine;
+            SubscribeComponents();
             InitializeComponent();
+            
         }
-
+        private void SubscribeComponents()
+        {
+            _gameEngine.Subscribe(this);
+            _gameEngine.GameTimer.Subscribe(this);
+        }
         private void MainWindow_Load(object sender, EventArgs e)
         {
             InitializeGameGrid(_settings.Rows, _settings.Cols);
+            SmileButton.FlatStyle = FlatStyle.Flat;
+            SmileButton.FlatAppearance.BorderSize = 0;
+            SmileButton.MouseDown += Smile_Button_Pressed;
+            SmileButton.MouseUp += Smile_Button_Released;
+            
         }
 
         private void InitializeGameGrid(int rows, int cols)
         {
-            ClientSize = new Size(_settings.Width + 60, _settings.Height + 200);
-            fieldBox.Size = new Size(_settings.Width + 30, _settings.Height + 30);
 
             tableGrid.Controls.Clear();
             tableGrid.ColumnStyles.Clear();
@@ -34,7 +42,10 @@ namespace Minesweeper
             tableGrid.RowCount = rows;
             tableGrid.ColumnCount = cols;
             tableGrid.AutoSize = true;
-            tableGrid.MouseMove += Left_Clicked_Move;
+            tableGrid.Padding = new Padding(0);
+            Mines_Label.Text = _settings.Mines.ToString("000");
+            
+
 
             for (int i = 0; i < cols; i++)
                 tableGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, _settings.CellSize));
@@ -60,12 +71,27 @@ namespace Minesweeper
                     btn.MouseDown += Right_Click;
                     btn.MouseDown += Left_Click_Down;
                     btn.MouseUp += Left_Click_Up;
-                    btn.MouseMove += Left_Clicked_Move;
-
+                    btn.MouseMove += Mouse_Move_With_Left_Click;
 
                     tableGrid.Controls.Add(btn, col, row);
 
                 }
+                
+            }
+        }
+        private void Smile_Button_Pressed(object? sender, EventArgs e)
+        {
+            if (sender is Button btn)
+            {
+                _lastSmile = btn.BackgroundImage ?? _lastSmile;
+                btn.BackgroundImage = Properties.Resources.Smile_pressed;
+            }
+        }
+        private void Smile_Button_Released(object? sender, EventArgs e)
+        {
+            if (sender is Button btn)
+            {
+                btn.BackgroundImage = _lastSmile;
             }
         }
         private void Right_Click(object? sender, MouseEventArgs e)
@@ -90,16 +116,27 @@ namespace Minesweeper
             {
                 _mousePressed = true;
                 _pressedButton = btn;
+                SmileButton.BackgroundImage = Properties.Resources.Scared;
                 DisplayButtonOnHold(btn);
             }
         }
-        private void Left_Clicked_Move(object? sender, MouseEventArgs e)
+        private void Mouse_Move_With_Left_Click(object? sender, MouseEventArgs e)
         {
+            
             if (!_mousePressed) return;
 
-            Point screenPos = Cursor.Position;
-            Point panelRelative = tableGrid.PointToClient(screenPos);
-            Control? hovered = tableGrid.GetChildAtPoint(panelRelative);
+            SmileButton.BackgroundImage = Properties.Resources.Scared;
+            Point realtivePosition = Cursor.Position;
+            Point clientPoint = tableGrid.PointToClient(realtivePosition);
+            int col = (int)(clientPoint.X / _settings.CellSize);
+            int row = (int)(clientPoint.Y / _settings.CellSize);
+
+            
+
+            if (col < 0 || col >= _settings.Cols || row < 0 || row >= _settings.Rows)
+                return;
+
+            Control? hovered = tableGrid.GetControlFromPosition(col, row);
             if (hovered is Button btn && btn != _pressedButton)
             {
                 if (_pressedButton != null)
@@ -112,6 +149,7 @@ namespace Minesweeper
         private void Left_Click_Up(object? sender, MouseEventArgs e)
         {
             _mousePressed = false;
+            SmileButton.BackgroundImage = Properties.Resources.Smile;
             if (_pressedButton != null)
             {
                 DisplayDefaultButton(_pressedButton);
@@ -181,15 +219,16 @@ namespace Minesweeper
         {
             if (sender is Button btn && btn.Tag is ValueTuple<int, int> coords)
             {
+
                 int col = coords.Item1;
                 int row = coords.Item2;
                 _gameEngine.RevealCell(row, col);
-                ChechGameOver();
+                CheckGameOver();
             }
         }
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RestartGame();
+            NewGame();
         }
         #region ButtonsRevealingUI
         private void ButtonRevealed(Button btn)
@@ -263,14 +302,12 @@ namespace Minesweeper
                 }
             }
         }
-        public void ChechGameOver()
+        public void CheckGameOver()
         {
             if (_gameEngine.IsGameOver)
             {
-                _gameEngine.UnsubscribeAll();
                 DeactivateGrid();
                 ShowAllMines();
-
                 if (_gameEngine.IsGameWon)
                 {
                     ShowWin();
@@ -330,6 +367,7 @@ namespace Minesweeper
         }
         private void DeactivateGrid()
         {
+            _mousePressed = false;
             for (int row = 0; row < _settings.Rows; row++)
             {
                 for (int col = 0; col < _settings.Cols; col++)
@@ -337,26 +375,40 @@ namespace Minesweeper
                     Button? btn = tableGrid.GetControlFromPosition(col, row) as Button;
                     if (btn != null)
                     {
+                        btn.MouseUp -= Left_Click_Up;
                         btn.Click -= Cell_Click;
                         btn.MouseDown -= Right_Click;
-
+                        btn.MouseDown -= Left_Click_Down;
+                        btn.MouseMove -= Mouse_Move_With_Left_Click;
+                        
                     }
                 }
             }
         }
-        private void RestartGame()
+        private void RebuildGame()
         {
             _gameEngine = new GameEngine(_settings.Rows, _settings.Cols, _settings.Mines);
-            _gameEngine.Subscribe(this);
+            SubscribeComponents();
             InitializeGameGrid(_settings.Rows, _settings.Cols);
+        }
+        private void NewGame()
+        {
+            _gameEngine.RestartGame();
+            SubscribeComponents();
+            InitializeGameGrid(_settings.Rows, _settings.Cols);
+            Game_Timer_Label.Text = "000";
+            Mines_Label.Text = _settings.Mines.ToString("000");
+            SmileButton.BackgroundImage = Properties.Resources.Smile;
         }
         private void ShowLose()
         {
-            MessageBox.Show("Game Over! You hit a mine.");
+            SmileButton.BackgroundImage = Properties.Resources.Fail;
+            MessageBox.Show("Game Over! You hit a mine.", "Game Over", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         private void ShowWin()
         {
-            MessageBox.Show("Win! You cleared the field.");
+            SmileButton.BackgroundImage = Properties.Resources.Success;
+            MessageBox.Show("Congratulations! You won!", "You Win", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void UpdateRevealed(Cell cell)
@@ -367,24 +419,35 @@ namespace Minesweeper
         public void UpdateFlagged(Cell cell)
         {
             UpdateFlagedUI(cell);
+            Mines_Label.Text = _gameEngine.MinesToFlagg.ToString("000");
         }
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
             _settings = GameDifficulty.Hard;
-            RestartGame();
+            RebuildGame();
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             _settings = GameDifficulty.Medium;
-            RestartGame();
+            RebuildGame();
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
             _settings = GameDifficulty.Easy;
-            RestartGame();
+            RebuildGame();
+        }
+
+        public void UpdateTime(int time)
+        {
+            Game_Timer_Label.Text = time.ToString("000");
+        }
+
+        private void SmileButton_Click(object sender, EventArgs e)
+        {
+            NewGame();
         }
     }
 }

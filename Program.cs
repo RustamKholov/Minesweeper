@@ -8,8 +8,9 @@ namespace Minesweeper
         [STAThread]
         static void Main()
         {
+            GameDependencies GameDependencies = new GameDependencies();
             ApplicationConfiguration.Initialize();
-            Application.Run(new MainWindow(new Settings()));
+            Application.Run(GameDependencies.CreateMainWindow());
         }
     }
 }
