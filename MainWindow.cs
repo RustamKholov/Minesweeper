@@ -10,7 +10,6 @@ namespace Minesweeper
         private bool _mousePressed = false;
         private Button? _pressedButton = null;
         private Image _lastSmile = Properties.Resources.Smile;
-        
 
         public MainWindow(Settings settings, GameEngine gameEngine)
         {
@@ -226,6 +225,7 @@ namespace Minesweeper
                 int col = coords.Item1;
                 int row = coords.Item2;
                 _gameEngine.RevealCell(row, col);
+                _gameEngine.ClicksPerformed++;
                 CheckGameOver();
             }
         }
@@ -383,27 +383,26 @@ namespace Minesweeper
                         btn.MouseDown -= Right_Click_Field;
                         btn.MouseDown -= Left_Click_Down;
                         btn.MouseMove -= Mouse_Move_With_Left_Click;
-
                     }
                 }
             }
         }
-        private void RebuildGame()
-        {
-            
-            _gameEngine.Dispose();
-            _gameEngine = new GameEngine(_settings.Rows, _settings.Cols, _settings.Mines);
-            SetDefaultLabels();
-            SubscribeComponents();
-            InitializeGameGrid(_settings.Rows, _settings.Cols);
-        }
         private void NewGame()
         {
-            SubscribeComponents();
-            InitializeGameGrid(_settings.Rows, _settings.Cols);
+            _gameEngine.RestartGame();
             SetDefaultLabels();
-            SmileButton.BackgroundImage = Properties.Resources.Smile;
+            SubscribeComponents();
+            _lastSmile = Properties.Resources.Smile;
+            InitializeGameGrid(_settings.Rows, _settings.Cols);
+            
         }
+        private void RebuildGame()
+        {
+            _gameEngine.Dispose();
+            _gameEngine = new GameEngine(_settings);
+            NewGame();
+        }
+        
         private void SetDefaultLabels()
         {
             Game_Timer_Label.Text = "000";
@@ -411,6 +410,7 @@ namespace Minesweeper
         }
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
+            _gameEngine.CreateRecord();
             _gameEngine.Dispose();
             _gameEngine.GameTimer.UnsubscribeAll();
             _gameEngine.Unsubscribe(this);
@@ -467,7 +467,7 @@ namespace Minesweeper
 
         private void statisticToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OptionsForm optionsForm = new OptionsForm();
+            StatisticForm optionsForm = new StatisticForm(_gameEngine);
             optionsForm.ShowDialog();
             
         }

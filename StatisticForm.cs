@@ -10,16 +10,24 @@ using System.Windows.Forms;
 
 namespace Minesweeper
 {
-    public partial class OptionsForm : Form
+    public partial class StatisticForm : Form
     {
-        public OptionsForm()
+        private GameEngine _gameEngine;
+
+        public StatisticForm(GameEngine gameEngine)
         {
+            _gameEngine = gameEngine;
             InitializeComponent();
         }
 
         private void OptionsForm_Load(object sender, EventArgs e)
         {
-            
+            foreach (var record in _gameEngine.DataBase.RecordsList)
+            {
+                recordBindingSource.Add(record);
+            }
         }
+
+        
     }
 }

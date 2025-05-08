@@ -14,8 +14,10 @@ namespace Minesweeper
     {
         private Timer _timer;
         private int _elapsedTime = 0;
+        private int _secondsInLastGame = 0;
         private bool _isRunning = false;
         public List<ITimerObserver> TimerObservers { get; set; } = new List<ITimerObserver>();
+        public int SecondInLastGame => _secondsInLastGame;
         public GameTimer()
         {
             _timer = new Timer();
@@ -39,6 +41,7 @@ namespace Minesweeper
         {
             if (!_isRunning) return; // Prevent stopping if not running
             _timer.Stop();
+            _secondsInLastGame = _elapsedTime;
             _elapsedTime = 0;
             _isRunning = false;
         }

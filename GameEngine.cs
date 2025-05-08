@@ -1,38 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Minesweeper
 {
     public class GameEngine : IDisposable
     {
-        public List<ICellObserver> Observers { get; set; } = new List<ICellObserver>();
-        
-        public Cell[,] Grid { get; private set; }
-        public bool IsGameOver { get; private set; }
-        public bool IsFirstClick { get; set; }
         private int _rows;
         private int _cols;
         private int _mines;
         private int _cellToReveal;
         private int _flaggedCells = 0;
+        private int _flaggsSet = 0;
+        private int _tilesUncovered = 0;
+        private int _clicksPerformed = 0;
+        private Settings _settings;
+        private DataBase _dataBase;
+        private bool _gameSaved = false;
+        private GameStatus _status = GameStatus.NotStarted;
+        public List<ICellObserver> Observers { get; set; } = new List<ICellObserver>();
+        
+        public Cell[,] Grid { get; private set; }
+        public bool IsGameOver { get; private set; }
+        public bool IsFirstClick { get; set; }
+        public int ClicksPerformed {get => _clicksPerformed; set { _clicksPerformed = value; }}
+
+
         private GameTimer _gameTimer;
+        public DataBase DataBase => _dataBase;
         public GameTimer GameTimer => _gameTimer;
         public bool IsGameWon => _cellToReveal == 0;
         public int MinesToFlagg => _mines - _flaggedCells;
         
-        public GameEngine(int rows, int cols, int mines)
+        public GameEngine(Settings settings)
         {
-            _rows = rows;
-            _cols = cols;
-            _mines = mines;
+            _rows = settings.Rows;
+            _cols = settings.Cols;
+            _mines = settings.Mines;
+            _settings = settings;
+            _dataBase = new DataBase();
             IsGameOver = false;
             IsFirstClick = true;
-            Grid = new Cell[rows, cols];
-            _cellToReveal = rows * cols - mines;
+            Grid = new Cell[_rows, _cols];
+            _cellToReveal = _rows * _cols - _mines;
             _gameTimer = new GameTimer();
             InitializeEmptyGrid();
         }
@@ -101,7 +108,7 @@ namespace Minesweeper
         public void RevealCell(int row, int col)
         {
             Cell currentCell = Grid[row, col];
-            if (currentCell.IsRevealed && currentCell.IsSecured)
+            if (currentCell.IsRevealed && currentCell.IsSecured && !IsFirstClick)
             {
                 foreach (Cell cell in currentCell.AdjacentCells)
                 {
@@ -111,26 +118,33 @@ namespace Minesweeper
                     }
                 }
             }
-            if (IsGameOver || currentCell.IsRevealed || currentCell.IsFlagged)
-                return;
+            if (IsGameOver || currentCell.IsRevealed || currentCell.IsFlagged) 
+            { 
+                return; 
+            }
+                
             if (IsFirstClick)
             {
                 GenerateMines(row, col);
                 IsFirstClick = false;
+                _status = GameStatus.Started;
                 _gameTimer.StartTimer();
             }
             currentCell.IsRevealed = true;
+            _tilesUncovered++;
             NotifyReveald(currentCell);
             if (!currentCell.IsMine)
             {
                 _cellToReveal--;
                 if (_cellToReveal == 0)
                 {
+                    _status = GameStatus.Win;
                     GameOver();
                 }
             }
             if (currentCell.IsMine)
             {
+                _status = GameStatus.Lose;
                 GameOver();
             }
             else if (currentCell.AdjacentMines == 0)
@@ -160,6 +174,7 @@ namespace Minesweeper
             if (!currentCell.IsFlagged)
             {
                 _flaggedCells++;
+                _flaggsSet++;
                 currentCell.IsFlagged = true;
             }
             else
@@ -177,6 +192,7 @@ namespace Minesweeper
         {
             _gameTimer.StopTimer();
             IsGameOver = true;
+            CreateRecord();
             UnsubscribeAll();
             _gameTimer.UnsubscribeAll();
         }
@@ -187,7 +203,12 @@ namespace Minesweeper
             IsFirstClick = true;
             _cellToReveal = _rows * _cols - _mines;
             _flaggedCells = 0;
+            _flaggsSet = 0;
+            _tilesUncovered = 0;
+            _clicksPerformed = 0;
             InitializeEmptyGrid();
+            _status = GameStatus.NotStarted;
+            _gameSaved = false;
         }
         public void Subscribe(ICellObserver observer)
         {
@@ -215,7 +236,25 @@ namespace Minesweeper
         {
             Observers.Clear();
         }
-
+        public void CreateRecord()
+        {
+            if (_status == GameStatus.NotStarted || _gameSaved)
+            {
+                return;
+            }
+            Record record = new Record()
+            {
+                secondsInGame = _gameTimer.SecondInLastGame,
+                difficulty = _settings.Difficulty,
+                status = _status == GameStatus.Started ? GameStatus.Abandoned : _status,
+                tilesUncovered = _tilesUncovered,
+                clicksPerformed = _clicksPerformed,
+                flaggsSet = _flaggsSet,
+            };
+            _dataBase.AddRecord(record);
+            _dataBase.SaveToCSV();
+            _gameSaved = true;
+        }
         public void Dispose()
         {
             UnsubscribeAll();

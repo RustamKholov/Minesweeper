@@ -12,11 +12,11 @@ namespace Minesweeper
         
         public GameEngine GameEngine { get; private set; }
         public Settings Settings { get; private set; }
-
+        
         public GameDependencies()
         {
             Settings = new Settings();
-            GameEngine = new GameEngine(Settings.Rows, Settings.Cols, Settings.Mines);
+            GameEngine = new GameEngine(Settings);
         }
         public MainWindow CreateMainWindow()
         {

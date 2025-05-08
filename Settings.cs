@@ -14,7 +14,7 @@ namespace Minesweeper
         private int _rows = 9;
         private int _cols = 9;
         private int _mines = 10;
-        private  int _difficulty;
+        private  Difficulty _difficulty = Difficulty.Easy;
         private  int _width;
         private  int _height;
         private float _cellSize = 35f;
@@ -24,7 +24,7 @@ namespace Minesweeper
         public int Width { get => _width; set => _width = value;  }
         public int Height { get => _height; set => _height = value;  }
         public int Mines { get => _mines; set => _mines = value; }
-        public int Difficulty { get => _difficulty; set => _difficulty = value; }
+        public Difficulty Difficulty { get => _difficulty; set => _difficulty = value; }
         public float CellSize { get => _cellSize; set => _cellSize = value; }
         public Font Font { get => _font; set => _font = value; }
         public Settings()
