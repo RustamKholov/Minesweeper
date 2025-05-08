@@ -10,7 +10,7 @@ using Timer = System.Windows.Forms.Timer;
 namespace Minesweeper
 {
     
-    public class GameTimer
+    public class GameTimer : IDisposable
     {
         private Timer _timer;
         private int _elapsedTime = 0;
@@ -66,6 +66,13 @@ namespace Minesweeper
             {
                 observer.UpdateTime(_elapsedTime);
             }
+        }
+
+        public void Dispose()
+        {
+            UnsubscribeAll();
+            _timer.Dispose();
+            TimerObservers.Clear();
         }
     }
 }

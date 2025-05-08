@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Minesweeper
 {
-    public class GameEngine
+    public class GameEngine : IDisposable
     {
         public List<ICellObserver> Observers { get; set; } = new List<ICellObserver>();
         
@@ -214,6 +214,14 @@ namespace Minesweeper
         public void UnsubscribeAll()
         {
             Observers.Clear();
+        }
+
+        public void Dispose()
+        {
+            UnsubscribeAll();
+            _gameTimer.UnsubscribeAll();
+            Observers.Clear();
+            _gameTimer.Dispose();
         }
     }
 }

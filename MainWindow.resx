@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="tableGrid.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="tableGrid.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left</value>
@@ -162,8 +165,78 @@
   <data name="tableGrid.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
     <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls /&gt;&lt;Columns Styles="Absolute,40,Absolute,40,Absolute,40,Absolute,40,Absolute,40,Absolute,40,Absolute,40,Absolute,40,Absolute,40" /&gt;&lt;Rows Styles="Absolute,47,Absolute,47,Absolute,47,Absolute,47,Absolute,47,Absolute,47,Absolute,47,Absolute,47,Absolute,47" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
+  <metadata name="Mines_Panel.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="Timer_Panel.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <data name="InfoBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
+  </data>
+  <data name="InfoBox.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="&gt;&gt;SmileButton.Name" xml:space="preserve">
+    <value>SmileButton</value>
+  </data>
+  <data name="&gt;&gt;SmileButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SmileButton.Parent" xml:space="preserve">
+    <value>InfoBox</value>
+  </data>
+  <data name="&gt;&gt;SmileButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;Mines_Panel.Name" xml:space="preserve">
+    <value>Mines_Panel</value>
+  </data>
+  <data name="&gt;&gt;Mines_Panel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Mines_Panel.Parent" xml:space="preserve">
+    <value>InfoBox</value>
+  </data>
+  <data name="&gt;&gt;Mines_Panel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;Timer_Panel.Name" xml:space="preserve">
+    <value>Timer_Panel</value>
+  </data>
+  <data name="&gt;&gt;Timer_Panel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Timer_Panel.Parent" xml:space="preserve">
+    <value>InfoBox</value>
+  </data>
+  <data name="&gt;&gt;Timer_Panel.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="InfoBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>23, 73</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="InfoBox.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="InfoBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>373, 114</value>
+  </data>
+  <data name="InfoBox.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;InfoBox.Name" xml:space="preserve">
+    <value>InfoBox</value>
+  </data>
+  <data name="&gt;&gt;InfoBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;InfoBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;InfoBox.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="SmileButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>None</value>
@@ -181,7 +254,7 @@
     <value>Segoe UI, 16pt</value>
   </data>
   <data name="SmileButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>158, 38</value>
+    <value>164, 40</value>
   </data>
   <data name="SmileButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>50, 50</value>
@@ -204,8 +277,44 @@
   <metadata name="Mines_Panel.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="Mines_Label.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <data name="Mines_Panel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
+  </data>
+  <data name="&gt;&gt;Mines_Label.Name" xml:space="preserve">
+    <value>Mines_Label</value>
+  </data>
+  <data name="&gt;&gt;Mines_Label.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Mines_Label.Parent" xml:space="preserve">
+    <value>Mines_Panel</value>
+  </data>
+  <data name="&gt;&gt;Mines_Label.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="Mines_Panel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>267, 34</value>
+  </data>
+  <data name="Mines_Panel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>91, 54</value>
+  </data>
+  <data name="Mines_Panel.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;Mines_Panel.Name" xml:space="preserve">
+    <value>Mines_Panel</value>
+  </data>
+  <data name="&gt;&gt;Mines_Panel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Mines_Panel.Parent" xml:space="preserve">
+    <value>InfoBox</value>
+  </data>
+  <data name="&gt;&gt;Mines_Panel.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <metadata name="Mines_Label.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -246,30 +355,45 @@
   <data name="&gt;&gt;Mines_Label.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="Mines_Panel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>254, 34</value>
-  </data>
-  <data name="Mines_Panel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>91, 54</value>
-  </data>
-  <data name="Mines_Panel.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;Mines_Panel.Name" xml:space="preserve">
-    <value>Mines_Panel</value>
-  </data>
-  <data name="&gt;&gt;Mines_Panel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;Mines_Panel.Parent" xml:space="preserve">
-    <value>InfoBox</value>
-  </data>
-  <data name="&gt;&gt;Mines_Panel.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <metadata name="Timer_Panel.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="Game_Timer_Label.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="&gt;&gt;Game_Timer_Label.Name" xml:space="preserve">
+    <value>Game_Timer_Label</value>
+  </data>
+  <data name="&gt;&gt;Game_Timer_Label.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Game_Timer_Label.Parent" xml:space="preserve">
+    <value>Timer_Panel</value>
+  </data>
+  <data name="&gt;&gt;Game_Timer_Label.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="Timer_Panel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>18, 37</value>
+  </data>
+  <data name="Timer_Panel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>91, 54</value>
+  </data>
+  <data name="Timer_Panel.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;Timer_Panel.Name" xml:space="preserve">
+    <value>Timer_Panel</value>
+  </data>
+  <data name="&gt;&gt;Timer_Panel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Timer_Panel.Parent" xml:space="preserve">
+    <value>InfoBox</value>
+  </data>
+  <data name="&gt;&gt;Timer_Panel.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <metadata name="Game_Timer_Label.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -306,52 +430,6 @@
   <data name="&gt;&gt;Game_Timer_Label.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="Timer_Panel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>18, 37</value>
-  </data>
-  <data name="Timer_Panel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>91, 54</value>
-  </data>
-  <data name="Timer_Panel.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;Timer_Panel.Name" xml:space="preserve">
-    <value>Timer_Panel</value>
-  </data>
-  <data name="&gt;&gt;Timer_Panel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;Timer_Panel.Parent" xml:space="preserve">
-    <value>InfoBox</value>
-  </data>
-  <data name="&gt;&gt;Timer_Panel.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="InfoBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>23, 73</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="InfoBox.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="InfoBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>360, 111</value>
-  </data>
-  <data name="InfoBox.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;InfoBox.Name" xml:space="preserve">
-    <value>InfoBox</value>
-  </data>
-  <data name="&gt;&gt;InfoBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;InfoBox.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;InfoBox.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <metadata name="NavigationMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
@@ -360,6 +438,45 @@
   </data>
   <data name="newGameToolStripMenuItem.Text" xml:space="preserve">
     <value>New Game</value>
+  </data>
+  <data name="optionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>83, 24</value>
+  </data>
+  <data name="optionsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Difficulty</value>
+  </data>
+  <data name="statisticToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 24</value>
+  </data>
+  <data name="statisticToolStripMenuItem.Text" xml:space="preserve">
+    <value>Statistic</value>
+  </data>
+  <data name="NavigationMenu.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 11</value>
+  </data>
+  <data name="NavigationMenu.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>7, 3, 0, 3</value>
+  </data>
+  <data name="NavigationMenu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>390, 30</value>
+  </data>
+  <data name="NavigationMenu.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="NavigationMenu.Text" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;NavigationMenu.Name" xml:space="preserve">
+    <value>NavigationMenu</value>
+  </data>
+  <data name="&gt;&gt;NavigationMenu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;NavigationMenu.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;NavigationMenu.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="toolStripMenuItem1.AccessibleName" xml:space="preserve">
     <value>Easy</value>
@@ -391,45 +508,6 @@
   <data name="toolStripMenuItem3.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>TopLeft</value>
   </data>
-  <data name="optionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 24</value>
-  </data>
-  <data name="optionsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Difficulty</value>
-  </data>
-  <data name="statisticToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 24</value>
-  </data>
-  <data name="statisticToolStripMenuItem.Text" xml:space="preserve">
-    <value>Statistic</value>
-  </data>
-  <data name="NavigationMenu.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 11</value>
-  </data>
-  <data name="NavigationMenu.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>7, 3, 0, 3</value>
-  </data>
-  <data name="NavigationMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>394, 30</value>
-  </data>
-  <data name="NavigationMenu.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="NavigationMenu.Text" xml:space="preserve">
-    <value>menuStrip1</value>
-  </data>
-  <data name="&gt;&gt;NavigationMenu.Name" xml:space="preserve">
-    <value>NavigationMenu</value>
-  </data>
-  <data name="&gt;&gt;NavigationMenu.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;NavigationMenu.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;NavigationMenu.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -443,7 +521,7 @@
     <value>GrowAndShrink</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>412, 679</value>
+    <value>408, 679</value>
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt</value>

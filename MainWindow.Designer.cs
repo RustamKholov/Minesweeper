@@ -144,6 +144,7 @@
             // 
             statisticToolStripMenuItem.Name = "statisticToolStripMenuItem";
             resources.ApplyResources(statisticToolStripMenuItem, "statisticToolStripMenuItem");
+            statisticToolStripMenuItem.Click += statisticToolStripMenuItem_Click;
             // 
             // MainWindow
             // 
@@ -156,6 +157,7 @@
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Name = "MainWindow";
             Load += MainWindow_Load;
+            FormClosing += MainWindow_FormClosing;
             InfoBox.ResumeLayout(false);
             Mines_Panel.ResumeLayout(false);
             Timer_Panel.ResumeLayout(false);

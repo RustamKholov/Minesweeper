@@ -1,4 +1,5 @@
-﻿using Timer = System.Windows.Forms.Timer;
+﻿using System.Threading.Tasks;
+using Timer = System.Windows.Forms.Timer;
 
 namespace Minesweeper
 {
@@ -9,6 +10,7 @@ namespace Minesweeper
         private bool _mousePressed = false;
         private Button? _pressedButton = null;
         private Image _lastSmile = Properties.Resources.Smile;
+        
 
         public MainWindow(Settings settings, GameEngine gameEngine)
         {
@@ -16,7 +18,7 @@ namespace Minesweeper
             _gameEngine = gameEngine;
             SubscribeComponents();
             InitializeComponent();
-            
+
         }
         private void SubscribeComponents()
         {
@@ -26,11 +28,14 @@ namespace Minesweeper
         private void MainWindow_Load(object sender, EventArgs e)
         {
             InitializeGameGrid(_settings.Rows, _settings.Cols);
+            
+            Mines_Label.Text = _settings.Mines.ToString("000");
+
             SmileButton.FlatStyle = FlatStyle.Flat;
             SmileButton.FlatAppearance.BorderSize = 0;
             SmileButton.MouseDown += Smile_Button_Pressed;
             SmileButton.MouseUp += Smile_Button_Released;
-            
+
         }
 
         private void InitializeGameGrid(int rows, int cols)
@@ -43,9 +48,6 @@ namespace Minesweeper
             tableGrid.ColumnCount = cols;
             tableGrid.AutoSize = true;
             tableGrid.Padding = new Padding(0);
-            Mines_Label.Text = _settings.Mines.ToString("000");
-            
-
 
             for (int i = 0; i < cols; i++)
                 tableGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, _settings.CellSize));
@@ -53,6 +55,10 @@ namespace Minesweeper
             for (int i = 0; i < rows; i++)
                 tableGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, _settings.CellSize));
 
+            FillGridWithButtons(rows, cols);
+        }
+        private void FillGridWithButtons(int rows, int cols)
+        {
             for (int row = 0; row < rows; row++)
             {
                 for (int col = 0; col < cols; col++)
@@ -67,16 +73,14 @@ namespace Minesweeper
                     btn.Margin = new Padding(0);
                     btn.Font = _settings.Font;
                     btn.Tag = (col, row);
-                    btn.Click += Cell_Click;
-                    btn.MouseDown += Right_Click;
+                    btn.Click += Tile_Click;
+                    btn.MouseDown += Right_Click_Field;
                     btn.MouseDown += Left_Click_Down;
                     btn.MouseUp += Left_Click_Up;
                     btn.MouseMove += Mouse_Move_With_Left_Click;
 
                     tableGrid.Controls.Add(btn, col, row);
-
                 }
-                
             }
         }
         private void Smile_Button_Pressed(object? sender, EventArgs e)
@@ -94,7 +98,7 @@ namespace Minesweeper
                 btn.BackgroundImage = _lastSmile;
             }
         }
-        private void Right_Click(object? sender, MouseEventArgs e)
+        private void Right_Click_Field(object? sender, MouseEventArgs e)
         {
             if (sender is Button btn && btn.Tag is ValueTuple<int, int> coords)
             {
@@ -122,7 +126,7 @@ namespace Minesweeper
         }
         private void Mouse_Move_With_Left_Click(object? sender, MouseEventArgs e)
         {
-            
+
             if (!_mousePressed) return;
 
             SmileButton.BackgroundImage = Properties.Resources.Scared;
@@ -131,7 +135,7 @@ namespace Minesweeper
             int col = (int)(clientPoint.X / _settings.CellSize);
             int row = (int)(clientPoint.Y / _settings.CellSize);
 
-            
+
 
             if (col < 0 || col >= _settings.Cols || row < 0 || row >= _settings.Rows)
                 return;
@@ -215,11 +219,10 @@ namespace Minesweeper
         }
 
 
-        private void Cell_Click(object? sender, EventArgs e)
+        private void Tile_Click(object? sender, EventArgs e)
         {
             if (sender is Button btn && btn.Tag is ValueTuple<int, int> coords)
             {
-
                 int col = coords.Item1;
                 int row = coords.Item2;
                 _gameEngine.RevealCell(row, col);
@@ -262,8 +265,8 @@ namespace Minesweeper
         }
         private void RevealdButtonZeroMines(Button btn)
         {
-            btn.Click -= Cell_Click;
-            btn.MouseDown -= Right_Click;
+            btn.Click -= Tile_Click;
+            btn.MouseDown -= Right_Click_Field;
 
         }
         #endregion
@@ -376,29 +379,41 @@ namespace Minesweeper
                     if (btn != null)
                     {
                         btn.MouseUp -= Left_Click_Up;
-                        btn.Click -= Cell_Click;
-                        btn.MouseDown -= Right_Click;
+                        btn.Click -= Tile_Click;
+                        btn.MouseDown -= Right_Click_Field;
                         btn.MouseDown -= Left_Click_Down;
                         btn.MouseMove -= Mouse_Move_With_Left_Click;
-                        
+
                     }
                 }
             }
         }
         private void RebuildGame()
         {
+            
+            _gameEngine.Dispose();
             _gameEngine = new GameEngine(_settings.Rows, _settings.Cols, _settings.Mines);
+            SetDefaultLabels();
             SubscribeComponents();
             InitializeGameGrid(_settings.Rows, _settings.Cols);
         }
         private void NewGame()
         {
-            _gameEngine.RestartGame();
             SubscribeComponents();
             InitializeGameGrid(_settings.Rows, _settings.Cols);
+            SetDefaultLabels();
+            SmileButton.BackgroundImage = Properties.Resources.Smile;
+        }
+        private void SetDefaultLabels()
+        {
             Game_Timer_Label.Text = "000";
             Mines_Label.Text = _settings.Mines.ToString("000");
-            SmileButton.BackgroundImage = Properties.Resources.Smile;
+        }
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _gameEngine.Dispose();
+            _gameEngine.GameTimer.UnsubscribeAll();
+            _gameEngine.Unsubscribe(this);
         }
         private void ShowLose()
         {
@@ -449,5 +464,13 @@ namespace Minesweeper
         {
             NewGame();
         }
+
+        private void statisticToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OptionsForm optionsForm = new OptionsForm();
+            optionsForm.ShowDialog();
+            
+        }
+        
     }
 }
