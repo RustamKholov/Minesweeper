@@ -22,12 +22,45 @@ namespace Minesweeper
 
         private void OptionsForm_Load(object sender, EventArgs e)
         {
-            foreach (var record in _gameEngine.DataBase.RecordsList)
+            LoadFromCSV();
+            LoadFromSQLite();
+        }
+        private void LoadFromCSV()
+        {
+            foreach (var record in _gameEngine.CSVDataBase.RecordsList)
             {
-                recordBindingSource.Add(record);
+                csvRecordBinding.Add(record);
+            }
+        }
+        private void LoadFromSQLite()
+        {
+            foreach (var record in _gameEngine.SQLiteDataBase.GetRecords())
+            {
+                sqlRecordBinding.Add(record);
             }
         }
 
-        
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            if(sender is RadioButton radioButton)
+            {
+                csv_records_grid.Enabled = true;
+                csv_records_grid.Visible = true;
+                sql_database_grid.Enabled = false;
+                sql_database_grid.Visible = false;
+            }
+        }
+
+        private void sqlite_database_button_CheckedChanged(object sender, EventArgs e)
+        {
+            
+            if (sender is RadioButton radioButton)
+            {
+                csv_records_grid.Enabled = false;
+                csv_records_grid.Visible = false;
+                sql_database_grid.Enabled = true;
+                sql_database_grid.Visible = true;
+            }
+        }
     }
 }

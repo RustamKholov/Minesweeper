@@ -12,7 +12,8 @@ namespace Minesweeper
         private int _tilesUncovered = 0;
         private int _clicksPerformed = 0;
         private Settings _settings;
-        private DataBase _dataBase;
+        private DataBaseCSV _dataBase;
+        private RecordsSQLManager _sqlManager;
         private bool _gameSaved = false;
         private GameStatus _status = GameStatus.NotStarted;
         public List<ICellObserver> Observers { get; set; } = new List<ICellObserver>();
@@ -24,7 +25,8 @@ namespace Minesweeper
 
 
         private GameTimer _gameTimer;
-        public DataBase DataBase => _dataBase;
+        public DataBaseCSV CSVDataBase => _dataBase;
+        public RecordsSQLManager SQLiteDataBase => _sqlManager;
         public GameTimer GameTimer => _gameTimer;
         public bool IsGameWon => _cellToReveal == 0;
         public int MinesToFlagg => _mines - _flaggedCells;
@@ -35,7 +37,8 @@ namespace Minesweeper
             _cols = settings.Cols;
             _mines = settings.Mines;
             _settings = settings;
-            _dataBase = new DataBase();
+            _dataBase = new DataBaseCSV();
+            _sqlManager = new RecordsSQLManager();
             IsGameOver = false;
             IsFirstClick = true;
             Grid = new Cell[_rows, _cols];
@@ -251,6 +254,7 @@ namespace Minesweeper
                 clicksPerformed = _clicksPerformed,
                 flaggsSet = _flaggsSet,
             };
+            _sqlManager.SaveRecord(record);
             _dataBase.AddRecord(record);
             _dataBase.SaveToCSV();
             _gameSaved = true;

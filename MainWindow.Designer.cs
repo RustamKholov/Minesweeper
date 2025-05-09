@@ -43,6 +43,7 @@
             toolStripMenuItem2 = new ToolStripMenuItem();
             toolStripMenuItem3 = new ToolStripMenuItem();
             statisticToolStripMenuItem = new ToolStripMenuItem();
+            recordsToolStripMenuItem = new ToolStripMenuItem();
             InfoBox.SuspendLayout();
             Mines_Panel.SuspendLayout();
             Timer_Panel.SuspendLayout();
@@ -105,6 +106,7 @@
             // 
             // NavigationMenu
             // 
+            NavigationMenu.BackColor = SystemColors.Control;
             NavigationMenu.ImageScalingSize = new Size(20, 20);
             NavigationMenu.Items.AddRange(new ToolStripItem[] { newGameToolStripMenuItem, optionsToolStripMenuItem, statisticToolStripMenuItem });
             resources.ApplyResources(NavigationMenu, "NavigationMenu");
@@ -142,9 +144,15 @@
             // 
             // statisticToolStripMenuItem
             // 
+            statisticToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { recordsToolStripMenuItem });
             statisticToolStripMenuItem.Name = "statisticToolStripMenuItem";
             resources.ApplyResources(statisticToolStripMenuItem, "statisticToolStripMenuItem");
-            statisticToolStripMenuItem.Click += statisticToolStripMenuItem_Click;
+            // 
+            // recordsToolStripMenuItem
+            // 
+            recordsToolStripMenuItem.Name = "recordsToolStripMenuItem";
+            resources.ApplyResources(recordsToolStripMenuItem, "recordsToolStripMenuItem");
+            recordsToolStripMenuItem.Click += recordsToolStripMenuItem_Click;
             // 
             // MainWindow
             // 
@@ -154,10 +162,10 @@
             Controls.Add(NavigationMenu);
             Controls.Add(InfoBox);
             DoubleBuffered = true;
-            FormBorderStyle = FormBorderStyle.Fixed3D;
+            MainMenuStrip = NavigationMenu;
             Name = "MainWindow";
-            Load += MainWindow_Load;
             FormClosing += MainWindow_FormClosing;
+            Load += MainWindow_Load;
             InfoBox.ResumeLayout(false);
             Mines_Panel.ResumeLayout(false);
             Timer_Panel.ResumeLayout(false);
@@ -182,5 +190,6 @@
         private Panel Mines_Panel;
         private Label Mines_Label;
         private Button SmileButton;
+        private ToolStripMenuItem recordsToolStripMenuItem;
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Minesweeper
 {
 
-    public class DataBase
+    public class DataBaseCSV
     {
         private int _nextId = 1;
         private readonly string _titles = "ID,Seconds,Difficulty,Status,Tiles_Uncovered,Clicks_Performed,Flaggs_Set";
@@ -17,7 +17,7 @@ namespace Minesweeper
 
         public bool Edited { get; private set; } = false;
 
-        public DataBase(string path = "recordsDB.csv")
+        public DataBaseCSV(string path = "recordsDB.csv")
         {
             _csvPath = path;
             InitializeDataBase();
