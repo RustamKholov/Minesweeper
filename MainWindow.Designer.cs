@@ -44,6 +44,7 @@
             toolStripMenuItem3 = new ToolStripMenuItem();
             statisticToolStripMenuItem = new ToolStripMenuItem();
             recordsToolStripMenuItem = new ToolStripMenuItem();
+            statisticToolStripMenuItem1 = new ToolStripMenuItem();
             InfoBox.SuspendLayout();
             Mines_Panel.SuspendLayout();
             Timer_Panel.SuspendLayout();
@@ -144,7 +145,7 @@
             // 
             // statisticToolStripMenuItem
             // 
-            statisticToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { recordsToolStripMenuItem });
+            statisticToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { recordsToolStripMenuItem, statisticToolStripMenuItem1 });
             statisticToolStripMenuItem.Name = "statisticToolStripMenuItem";
             resources.ApplyResources(statisticToolStripMenuItem, "statisticToolStripMenuItem");
             // 
@@ -154,10 +155,16 @@
             resources.ApplyResources(recordsToolStripMenuItem, "recordsToolStripMenuItem");
             recordsToolStripMenuItem.Click += recordsToolStripMenuItem_Click;
             // 
+            // statisticToolStripMenuItem1
+            // 
+            statisticToolStripMenuItem1.Name = "statisticToolStripMenuItem1";
+            resources.ApplyResources(statisticToolStripMenuItem1, "statisticToolStripMenuItem1");
+            statisticToolStripMenuItem1.Click += statisticToolStripMenuItem1_Click;
+            // 
             // MainWindow
             // 
             resources.ApplyResources(this, "$this");
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.Dpi;
             Controls.Add(tableGrid);
             Controls.Add(NavigationMenu);
             Controls.Add(InfoBox);
@@ -191,5 +198,6 @@
         private Label Mines_Label;
         private Button SmileButton;
         private ToolStripMenuItem recordsToolStripMenuItem;
+        private ToolStripMenuItem statisticToolStripMenuItem1;
     }
 }

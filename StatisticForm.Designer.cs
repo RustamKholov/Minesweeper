@@ -30,6 +30,13 @@
         {
             components = new System.ComponentModel.Container();
             csv_records_grid = new DataGridView();
+            iDDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            secondsInGameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            difficultyDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            statusDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            tilesUncoveredDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            clicksPerformedDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            flaggsSetDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             csvRecordBinding = new BindingSource(components);
             csv_radio_button = new RadioButton();
             sqlite_database_button = new RadioButton();
@@ -42,13 +49,6 @@
             clicksPerformedDataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
             flaggsSetDataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
             sqlRecordBinding = new BindingSource(components);
-            iDDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            secondsInGameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            difficultyDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            statusDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            tilesUncoveredDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            clicksPerformedDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            flaggsSetDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)csv_records_grid).BeginInit();
             ((System.ComponentModel.ISupportInitialize)csvRecordBinding).BeginInit();
             ((System.ComponentModel.ISupportInitialize)sql_database_grid).BeginInit();
@@ -64,13 +64,75 @@
             csv_records_grid.Columns.AddRange(new DataGridViewColumn[] { iDDataGridViewTextBoxColumn, secondsInGameDataGridViewTextBoxColumn, difficultyDataGridViewTextBoxColumn, statusDataGridViewTextBoxColumn, tilesUncoveredDataGridViewTextBoxColumn, clicksPerformedDataGridViewTextBoxColumn, flaggsSetDataGridViewTextBoxColumn });
             csv_records_grid.DataSource = csvRecordBinding;
             csv_records_grid.ImeMode = ImeMode.NoControl;
-            csv_records_grid.Location = new Point(0, 35);
-            csv_records_grid.Margin = new Padding(3, 4, 3, 4);
+            csv_records_grid.Location = new Point(0, 26);
             csv_records_grid.Name = "csv_records_grid";
             csv_records_grid.ReadOnly = true;
             csv_records_grid.RowHeadersWidth = 51;
-            csv_records_grid.Size = new Size(844, 420);
+            csv_records_grid.Size = new Size(499, 209);
             csv_records_grid.TabIndex = 0;
+            // 
+            // iDDataGridViewTextBoxColumn
+            // 
+            iDDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
+            iDDataGridViewTextBoxColumn.HeaderText = "ID";
+            iDDataGridViewTextBoxColumn.MinimumWidth = 6;
+            iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
+            iDDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // secondsInGameDataGridViewTextBoxColumn
+            // 
+            secondsInGameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            secondsInGameDataGridViewTextBoxColumn.DataPropertyName = "secondsInGame";
+            secondsInGameDataGridViewTextBoxColumn.HeaderText = "secondsInGame";
+            secondsInGameDataGridViewTextBoxColumn.MinimumWidth = 6;
+            secondsInGameDataGridViewTextBoxColumn.Name = "secondsInGameDataGridViewTextBoxColumn";
+            secondsInGameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // difficultyDataGridViewTextBoxColumn
+            // 
+            difficultyDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            difficultyDataGridViewTextBoxColumn.DataPropertyName = "difficulty";
+            difficultyDataGridViewTextBoxColumn.HeaderText = "difficulty";
+            difficultyDataGridViewTextBoxColumn.MinimumWidth = 6;
+            difficultyDataGridViewTextBoxColumn.Name = "difficultyDataGridViewTextBoxColumn";
+            difficultyDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // statusDataGridViewTextBoxColumn
+            // 
+            statusDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            statusDataGridViewTextBoxColumn.DataPropertyName = "status";
+            statusDataGridViewTextBoxColumn.HeaderText = "status";
+            statusDataGridViewTextBoxColumn.MinimumWidth = 6;
+            statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
+            statusDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // tilesUncoveredDataGridViewTextBoxColumn
+            // 
+            tilesUncoveredDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            tilesUncoveredDataGridViewTextBoxColumn.DataPropertyName = "tilesUncovered";
+            tilesUncoveredDataGridViewTextBoxColumn.HeaderText = "tilesUncovered";
+            tilesUncoveredDataGridViewTextBoxColumn.MinimumWidth = 6;
+            tilesUncoveredDataGridViewTextBoxColumn.Name = "tilesUncoveredDataGridViewTextBoxColumn";
+            tilesUncoveredDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // clicksPerformedDataGridViewTextBoxColumn
+            // 
+            clicksPerformedDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            clicksPerformedDataGridViewTextBoxColumn.DataPropertyName = "clicksPerformed";
+            clicksPerformedDataGridViewTextBoxColumn.HeaderText = "clicksPerformed";
+            clicksPerformedDataGridViewTextBoxColumn.MinimumWidth = 6;
+            clicksPerformedDataGridViewTextBoxColumn.Name = "clicksPerformedDataGridViewTextBoxColumn";
+            clicksPerformedDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // flaggsSetDataGridViewTextBoxColumn
+            // 
+            flaggsSetDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            flaggsSetDataGridViewTextBoxColumn.DataPropertyName = "flaggsSet";
+            flaggsSetDataGridViewTextBoxColumn.HeaderText = "flaggsSet";
+            flaggsSetDataGridViewTextBoxColumn.MinimumWidth = 6;
+            flaggsSetDataGridViewTextBoxColumn.Name = "flaggsSetDataGridViewTextBoxColumn";
+            flaggsSetDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // csvRecordBinding
             // 
@@ -80,23 +142,25 @@
             // 
             csv_radio_button.AutoSize = true;
             csv_radio_button.Checked = true;
-            csv_radio_button.Location = new Point(254, 5);
+            csv_radio_button.Location = new Point(116, 2);
+            csv_radio_button.Margin = new Padding(3, 2, 3, 2);
             csv_radio_button.Name = "csv_radio_button";
-            csv_radio_button.Size = new Size(149, 24);
+            csv_radio_button.Size = new Size(97, 19);
             csv_radio_button.TabIndex = 1;
             csv_radio_button.TabStop = true;
-            csv_radio_button.Text = "CSV CSVDataBase";
+            csv_radio_button.Text = "CSV DataBase";
             csv_radio_button.UseVisualStyleBackColor = true;
             csv_radio_button.CheckedChanged += radioButton1_CheckedChanged;
             // 
             // sqlite_database_button
             // 
             sqlite_database_button.AutoSize = true;
-            sqlite_database_button.Location = new Point(443, 5);
+            sqlite_database_button.Location = new Point(261, 2);
+            sqlite_database_button.Margin = new Padding(3, 2, 3, 2);
             sqlite_database_button.Name = "sqlite_database_button";
-            sqlite_database_button.Size = new Size(166, 24);
+            sqlite_database_button.Size = new Size(110, 19);
             sqlite_database_button.TabIndex = 2;
-            sqlite_database_button.Text = "SQLite CSVDataBase";
+            sqlite_database_button.Text = "SQLite DataBase";
             sqlite_database_button.UseVisualStyleBackColor = true;
             sqlite_database_button.CheckedChanged += sqlite_database_button_CheckedChanged;
             // 
@@ -109,11 +173,12 @@
             sql_database_grid.Columns.AddRange(new DataGridViewColumn[] { iDDataGridViewTextBoxColumn1, secondsInGameDataGridViewTextBoxColumn1, difficultyDataGridViewTextBoxColumn1, statusDataGridViewTextBoxColumn1, tilesUncoveredDataGridViewTextBoxColumn1, clicksPerformedDataGridViewTextBoxColumn1, flaggsSetDataGridViewTextBoxColumn1 });
             sql_database_grid.DataSource = sqlRecordBinding;
             sql_database_grid.Enabled = false;
-            sql_database_grid.Location = new Point(0, 35);
+            sql_database_grid.Location = new Point(0, 26);
+            sql_database_grid.Margin = new Padding(3, 2, 3, 2);
             sql_database_grid.Name = "sql_database_grid";
             sql_database_grid.ReadOnly = true;
             sql_database_grid.RowHeadersWidth = 51;
-            sql_database_grid.Size = new Size(844, 420);
+            sql_database_grid.Size = new Size(499, 209);
             sql_database_grid.TabIndex = 3;
             sql_database_grid.Visible = false;
             // 
@@ -177,84 +242,20 @@
             // 
             sqlRecordBinding.DataSource = typeof(Record);
             // 
-            // iDDataGridViewTextBoxColumn
-            // 
-            iDDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
-            iDDataGridViewTextBoxColumn.HeaderText = "ID";
-            iDDataGridViewTextBoxColumn.MinimumWidth = 6;
-            iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
-            iDDataGridViewTextBoxColumn.ReadOnly = true;
-            iDDataGridViewTextBoxColumn.SortMode = DataGridViewColumnSortMode.Programmatic;
-            // 
-            // secondsInGameDataGridViewTextBoxColumn
-            // 
-            secondsInGameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            secondsInGameDataGridViewTextBoxColumn.DataPropertyName = "secondsInGame";
-            secondsInGameDataGridViewTextBoxColumn.HeaderText = "secondsInGame";
-            secondsInGameDataGridViewTextBoxColumn.MinimumWidth = 6;
-            secondsInGameDataGridViewTextBoxColumn.Name = "secondsInGameDataGridViewTextBoxColumn";
-            secondsInGameDataGridViewTextBoxColumn.ReadOnly = true;
-            secondsInGameDataGridViewTextBoxColumn.SortMode = DataGridViewColumnSortMode.Programmatic;
-            // 
-            // difficultyDataGridViewTextBoxColumn
-            // 
-            difficultyDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            difficultyDataGridViewTextBoxColumn.DataPropertyName = "difficulty";
-            difficultyDataGridViewTextBoxColumn.HeaderText = "difficulty";
-            difficultyDataGridViewTextBoxColumn.MinimumWidth = 6;
-            difficultyDataGridViewTextBoxColumn.Name = "difficultyDataGridViewTextBoxColumn";
-            difficultyDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // statusDataGridViewTextBoxColumn
-            // 
-            statusDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            statusDataGridViewTextBoxColumn.DataPropertyName = "status";
-            statusDataGridViewTextBoxColumn.HeaderText = "status";
-            statusDataGridViewTextBoxColumn.MinimumWidth = 6;
-            statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
-            statusDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // tilesUncoveredDataGridViewTextBoxColumn
-            // 
-            tilesUncoveredDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            tilesUncoveredDataGridViewTextBoxColumn.DataPropertyName = "tilesUncovered";
-            tilesUncoveredDataGridViewTextBoxColumn.HeaderText = "tilesUncovered";
-            tilesUncoveredDataGridViewTextBoxColumn.MinimumWidth = 6;
-            tilesUncoveredDataGridViewTextBoxColumn.Name = "tilesUncoveredDataGridViewTextBoxColumn";
-            tilesUncoveredDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // clicksPerformedDataGridViewTextBoxColumn
-            // 
-            clicksPerformedDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            clicksPerformedDataGridViewTextBoxColumn.DataPropertyName = "clicksPerformed";
-            clicksPerformedDataGridViewTextBoxColumn.HeaderText = "clicksPerformed";
-            clicksPerformedDataGridViewTextBoxColumn.MinimumWidth = 6;
-            clicksPerformedDataGridViewTextBoxColumn.Name = "clicksPerformedDataGridViewTextBoxColumn";
-            clicksPerformedDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // flaggsSetDataGridViewTextBoxColumn
-            // 
-            flaggsSetDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            flaggsSetDataGridViewTextBoxColumn.DataPropertyName = "flaggsSet";
-            flaggsSetDataGridViewTextBoxColumn.HeaderText = "flaggsSet";
-            flaggsSetDataGridViewTextBoxColumn.MinimumWidth = 6;
-            flaggsSetDataGridViewTextBoxColumn.Name = "flaggsSetDataGridViewTextBoxColumn";
-            flaggsSetDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
             // StatisticForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
-            AutoScaleMode = AutoScaleMode.Font;
-            AutoSize = true;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
             BackgroundImageLayout = ImageLayout.None;
-            ClientSize = new Size(848, 455);
+            ClientSize = new Size(503, 235);
             Controls.Add(sqlite_database_button);
             Controls.Add(csv_radio_button);
             Controls.Add(csv_records_grid);
             Controls.Add(sql_database_grid);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.SizableToolWindow;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "StatisticForm";
             SizeGripStyle = SizeGripStyle.Show;
             StartPosition = FormStartPosition.CenterScreen;

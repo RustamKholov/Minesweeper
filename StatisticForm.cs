@@ -34,7 +34,7 @@ namespace Minesweeper
         }
         private void LoadFromSQLite()
         {
-            foreach (var record in _gameEngine.SQLiteDataBase.GetRecords())
+            foreach (var record in _gameEngine.SQLiteDataBase.GetAllRecords())
             {
                 sqlRecordBinding.Add(record);
             }

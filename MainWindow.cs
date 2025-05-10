@@ -132,12 +132,12 @@ namespace Minesweeper
             SmileButton.BackgroundImage = Properties.Resources.Scared;
             Point realtivePosition = Cursor.Position;
             Point clientPoint = tableGrid.PointToClient(realtivePosition);
-            if(clientPoint.X < 0 || clientPoint.Y < 0)
+            if (clientPoint.X < 0 || clientPoint.Y < 0)
                 return;
 
             int col = (int)(clientPoint.X / _settings.CellSize);
-            int row = (int)(clientPoint.Y/ _settings.CellSize);
-            
+            int row = (int)(clientPoint.Y / _settings.CellSize);
+
             if (col < 0 || col >= _settings.Cols || row < 0 || row >= _settings.Rows)
                 return;
 
@@ -469,6 +469,12 @@ namespace Minesweeper
         {
             StatisticForm optionsForm = new StatisticForm(_gameEngine);
             optionsForm.ShowDialog();
+        }
+
+        private void statisticToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            StatusPie statusPie = new StatusPie();
+            statusPie.ShowDialog();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Minesweeper
                 throw new Exception("Failed to save record to database.");
             }
         }
-        public List<Record> GetRecords()
+        public List<Record> GetAllRecords()
         {
             List<Record> records = new List<Record>();
             RecordsList.Clear();
@@ -59,7 +59,44 @@ namespace Minesweeper
         private void LoadRecords()
         {
             RecordsList.Clear();
-            RecordsList = GetRecords();
+            RecordsList = GetAllRecords();
+        }
+        public void DeleteRecord(Record record)
+        {
+            using var conn = new SQLiteConnection(_connectionString);
+            conn.Open();
+            string query = "DELETE FROM Records WHERE ID = @id";
+            using var cmd = new SQLiteCommand(query, conn);
+            cmd.Parameters.AddWithValue("@id", record.ID);
+            if (cmd.ExecuteNonQuery() != 1)
+            {
+                throw new Exception("Failed to delete record from database.");
+            }
+        }
+        public List<GameStatus> GetAllStatuses(Difficulty? difficulty = null) {
+            List<GameStatus> statuses = new List<GameStatus>();
+            using var conn = new SQLiteConnection(_connectionString);
+            conn.Open();
+            string query;
+            using var cmd = conn.CreateCommand();
+            if (difficulty != null)
+            {
+                query = "SELECT Status FROM Records WHERE Difficulty = @difficulty";
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@difficulty", difficulty.ToString());
+            }
+            else
+            {
+                query = "SELECT Status FROM Records";
+                cmd.CommandText = query;
+            }            
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var status = (GameStatus)Enum.Parse(typeof(GameStatus), reader.GetString(0));
+                statuses.Add(status);
+            }
+            return statuses;
         }
     }
 }
