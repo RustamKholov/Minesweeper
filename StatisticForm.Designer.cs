@@ -29,267 +29,350 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            csv_records_grid = new DataGridView();
-            iDDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            secondsInGameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            difficultyDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            statusDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            tilesUncoveredDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            clicksPerformedDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            flaggsSetDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            csvRecordBinding = new BindingSource(components);
-            csv_radio_button = new RadioButton();
-            sqlite_database_button = new RadioButton();
-            sql_database_grid = new DataGridView();
-            iDDataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
-            secondsInGameDataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
-            difficultyDataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
-            statusDataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
-            tilesUncoveredDataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
-            clicksPerformedDataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
-            flaggsSetDataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
-            sqlRecordBinding = new BindingSource(components);
-            ((System.ComponentModel.ISupportInitialize)csv_records_grid).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)csvRecordBinding).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)sql_database_grid).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)sqlRecordBinding).BeginInit();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StatisticForm));
+            winRatePanel = new Panel();
+            diffCheckBox = new CheckedListBox();
+            recordBindingSource1 = new BindingSource(components);
+            recordBindingSource = new BindingSource(components);
+            DifficultyLabel = new Label();
+            bestScorePanel = new Panel();
+            dateBestLabel = new Label();
+            dateBestTitleLabel = new Label();
+            bestTimeLabel = new Label();
+            bestTimeTitleLabel = new Label();
+            resultsPanel = new Panel();
+            resultsFrame = new GroupBox();
+            tilesResultAbLabel = new Label();
+            tilesResultLostLabel = new Label();
+            tilesResultWonLabel = new Label();
+            abandonedResultTimeLabel = new Label();
+            lostResultTimeLabel = new Label();
+            wonResultTimeLabel = new Label();
+            abandonedResultLabel = new Label();
+            lostResultLabel = new Label();
+            wonResultLabel = new Label();
+            tilesResultTotalLabel = new Label();
+            tilesResultTitleLabel = new Label();
+            timeResultLabel = new Label();
+            totalResultTimeLabel = new Label();
+            totalResultLabel = new Label();
+            ((System.ComponentModel.ISupportInitialize)recordBindingSource1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)recordBindingSource).BeginInit();
+            bestScorePanel.SuspendLayout();
+            resultsPanel.SuspendLayout();
+            resultsFrame.SuspendLayout();
             SuspendLayout();
             // 
-            // csv_records_grid
+            // winRatePanel
             // 
-            csv_records_grid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            csv_records_grid.AutoGenerateColumns = false;
-            csv_records_grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            csv_records_grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            csv_records_grid.Columns.AddRange(new DataGridViewColumn[] { iDDataGridViewTextBoxColumn, secondsInGameDataGridViewTextBoxColumn, difficultyDataGridViewTextBoxColumn, statusDataGridViewTextBoxColumn, tilesUncoveredDataGridViewTextBoxColumn, clicksPerformedDataGridViewTextBoxColumn, flaggsSetDataGridViewTextBoxColumn });
-            csv_records_grid.DataSource = csvRecordBinding;
-            csv_records_grid.ImeMode = ImeMode.NoControl;
-            csv_records_grid.Location = new Point(0, 26);
-            csv_records_grid.Name = "csv_records_grid";
-            csv_records_grid.ReadOnly = true;
-            csv_records_grid.RowHeadersWidth = 51;
-            csv_records_grid.Size = new Size(499, 209);
-            csv_records_grid.TabIndex = 0;
+            winRatePanel.Location = new Point(533, 24);
+            winRatePanel.Name = "winRatePanel";
+            winRatePanel.Size = new Size(245, 166);
+            winRatePanel.TabIndex = 0;
             // 
-            // iDDataGridViewTextBoxColumn
+            // diffCheckBox
             // 
-            iDDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
-            iDDataGridViewTextBoxColumn.HeaderText = "ID";
-            iDDataGridViewTextBoxColumn.MinimumWidth = 6;
-            iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
-            iDDataGridViewTextBoxColumn.ReadOnly = true;
+            diffCheckBox.BackColor = SystemColors.Control;
+            diffCheckBox.BorderStyle = BorderStyle.None;
+            diffCheckBox.CheckOnClick = true;
+            diffCheckBox.FormattingEnabled = true;
+            diffCheckBox.ImeMode = ImeMode.Off;
+            diffCheckBox.Items.AddRange(new object[] { "Easy", "Medium", "Hard" });
+            diffCheckBox.Location = new Point(32, 66);
+            diffCheckBox.Name = "diffCheckBox";
+            diffCheckBox.Size = new Size(71, 72);
+            diffCheckBox.TabIndex = 1;
+            diffCheckBox.ThreeDCheckBoxes = true;
+            diffCheckBox.SelectedIndexChanged += diffCheckBox_SelectedIndexChanged;
             // 
-            // secondsInGameDataGridViewTextBoxColumn
+            // recordBindingSource1
             // 
-            secondsInGameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            secondsInGameDataGridViewTextBoxColumn.DataPropertyName = "secondsInGame";
-            secondsInGameDataGridViewTextBoxColumn.HeaderText = "secondsInGame";
-            secondsInGameDataGridViewTextBoxColumn.MinimumWidth = 6;
-            secondsInGameDataGridViewTextBoxColumn.Name = "secondsInGameDataGridViewTextBoxColumn";
-            secondsInGameDataGridViewTextBoxColumn.ReadOnly = true;
+            recordBindingSource1.DataSource = typeof(Record);
             // 
-            // difficultyDataGridViewTextBoxColumn
+            // recordBindingSource
             // 
-            difficultyDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            difficultyDataGridViewTextBoxColumn.DataPropertyName = "difficulty";
-            difficultyDataGridViewTextBoxColumn.HeaderText = "difficulty";
-            difficultyDataGridViewTextBoxColumn.MinimumWidth = 6;
-            difficultyDataGridViewTextBoxColumn.Name = "difficultyDataGridViewTextBoxColumn";
-            difficultyDataGridViewTextBoxColumn.ReadOnly = true;
+            recordBindingSource.DataSource = typeof(Record);
             // 
-            // statusDataGridViewTextBoxColumn
+            // DifficultyLabel
             // 
-            statusDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            statusDataGridViewTextBoxColumn.DataPropertyName = "status";
-            statusDataGridViewTextBoxColumn.HeaderText = "status";
-            statusDataGridViewTextBoxColumn.MinimumWidth = 6;
-            statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
-            statusDataGridViewTextBoxColumn.ReadOnly = true;
+            DifficultyLabel.AutoSize = true;
+            DifficultyLabel.Location = new Point(32, 38);
+            DifficultyLabel.Name = "DifficultyLabel";
+            DifficultyLabel.Size = new Size(58, 15);
+            DifficultyLabel.TabIndex = 2;
+            DifficultyLabel.Text = "Difficulty:";
             // 
-            // tilesUncoveredDataGridViewTextBoxColumn
+            // bestScorePanel
             // 
-            tilesUncoveredDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            tilesUncoveredDataGridViewTextBoxColumn.DataPropertyName = "tilesUncovered";
-            tilesUncoveredDataGridViewTextBoxColumn.HeaderText = "tilesUncovered";
-            tilesUncoveredDataGridViewTextBoxColumn.MinimumWidth = 6;
-            tilesUncoveredDataGridViewTextBoxColumn.Name = "tilesUncoveredDataGridViewTextBoxColumn";
-            tilesUncoveredDataGridViewTextBoxColumn.ReadOnly = true;
+            bestScorePanel.Controls.Add(dateBestLabel);
+            bestScorePanel.Controls.Add(dateBestTitleLabel);
+            bestScorePanel.Controls.Add(bestTimeLabel);
+            bestScorePanel.Controls.Add(bestTimeTitleLabel);
+            bestScorePanel.Location = new Point(208, 24);
+            bestScorePanel.Name = "bestScorePanel";
+            bestScorePanel.Size = new Size(233, 166);
+            bestScorePanel.TabIndex = 3;
             // 
-            // clicksPerformedDataGridViewTextBoxColumn
+            // dateBestLabel
             // 
-            clicksPerformedDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            clicksPerformedDataGridViewTextBoxColumn.DataPropertyName = "clicksPerformed";
-            clicksPerformedDataGridViewTextBoxColumn.HeaderText = "clicksPerformed";
-            clicksPerformedDataGridViewTextBoxColumn.MinimumWidth = 6;
-            clicksPerformedDataGridViewTextBoxColumn.Name = "clicksPerformedDataGridViewTextBoxColumn";
-            clicksPerformedDataGridViewTextBoxColumn.ReadOnly = true;
+            dateBestLabel.AutoSize = true;
+            dateBestLabel.Location = new Point(91, 42);
+            dateBestLabel.Name = "dateBestLabel";
+            dateBestLabel.Size = new Size(0, 15);
+            dateBestLabel.TabIndex = 3;
             // 
-            // flaggsSetDataGridViewTextBoxColumn
+            // dateBestTitleLabel
             // 
-            flaggsSetDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            flaggsSetDataGridViewTextBoxColumn.DataPropertyName = "flaggsSet";
-            flaggsSetDataGridViewTextBoxColumn.HeaderText = "flaggsSet";
-            flaggsSetDataGridViewTextBoxColumn.MinimumWidth = 6;
-            flaggsSetDataGridViewTextBoxColumn.Name = "flaggsSetDataGridViewTextBoxColumn";
-            flaggsSetDataGridViewTextBoxColumn.ReadOnly = true;
+            dateBestTitleLabel.AutoSize = true;
+            dateBestTitleLabel.Location = new Point(41, 42);
+            dateBestTitleLabel.Name = "dateBestTitleLabel";
+            dateBestTitleLabel.Size = new Size(34, 15);
+            dateBestTitleLabel.TabIndex = 2;
+            dateBestTitleLabel.Text = "Date:";
             // 
-            // csvRecordBinding
+            // bestTimeLabel
             // 
-            csvRecordBinding.DataSource = typeof(Record);
+            bestTimeLabel.AutoSize = true;
+            bestTimeLabel.Location = new Point(91, 14);
+            bestTimeLabel.Name = "bestTimeLabel";
+            bestTimeLabel.Size = new Size(0, 15);
+            bestTimeLabel.TabIndex = 1;
             // 
-            // csv_radio_button
+            // bestTimeTitleLabel
             // 
-            csv_radio_button.AutoSize = true;
-            csv_radio_button.Checked = true;
-            csv_radio_button.Location = new Point(116, 2);
-            csv_radio_button.Margin = new Padding(3, 2, 3, 2);
-            csv_radio_button.Name = "csv_radio_button";
-            csv_radio_button.Size = new Size(97, 19);
-            csv_radio_button.TabIndex = 1;
-            csv_radio_button.TabStop = true;
-            csv_radio_button.Text = "CSV DataBase";
-            csv_radio_button.UseVisualStyleBackColor = true;
-            csv_radio_button.CheckedChanged += radioButton1_CheckedChanged;
+            bestTimeTitleLabel.AutoSize = true;
+            bestTimeTitleLabel.Location = new Point(14, 14);
+            bestTimeTitleLabel.Name = "bestTimeTitleLabel";
+            bestTimeTitleLabel.Size = new Size(61, 15);
+            bestTimeTitleLabel.TabIndex = 0;
+            bestTimeTitleLabel.Text = "Best Time:";
             // 
-            // sqlite_database_button
+            // resultsPanel
             // 
-            sqlite_database_button.AutoSize = true;
-            sqlite_database_button.Location = new Point(261, 2);
-            sqlite_database_button.Margin = new Padding(3, 2, 3, 2);
-            sqlite_database_button.Name = "sqlite_database_button";
-            sqlite_database_button.Size = new Size(110, 19);
-            sqlite_database_button.TabIndex = 2;
-            sqlite_database_button.Text = "SQLite DataBase";
-            sqlite_database_button.UseVisualStyleBackColor = true;
-            sqlite_database_button.CheckedChanged += sqlite_database_button_CheckedChanged;
+            resultsPanel.Controls.Add(resultsFrame);
+            resultsPanel.Controls.Add(tilesResultTotalLabel);
+            resultsPanel.Controls.Add(tilesResultTitleLabel);
+            resultsPanel.Controls.Add(timeResultLabel);
+            resultsPanel.Controls.Add(totalResultTimeLabel);
+            resultsPanel.Controls.Add(totalResultLabel);
+            resultsPanel.Location = new Point(482, 206);
+            resultsPanel.Name = "resultsPanel";
+            resultsPanel.Size = new Size(302, 185);
+            resultsPanel.TabIndex = 4;
             // 
-            // sql_database_grid
+            // resultsFrame
             // 
-            sql_database_grid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            sql_database_grid.AutoGenerateColumns = false;
-            sql_database_grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            sql_database_grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            sql_database_grid.Columns.AddRange(new DataGridViewColumn[] { iDDataGridViewTextBoxColumn1, secondsInGameDataGridViewTextBoxColumn1, difficultyDataGridViewTextBoxColumn1, statusDataGridViewTextBoxColumn1, tilesUncoveredDataGridViewTextBoxColumn1, clicksPerformedDataGridViewTextBoxColumn1, flaggsSetDataGridViewTextBoxColumn1 });
-            sql_database_grid.DataSource = sqlRecordBinding;
-            sql_database_grid.Enabled = false;
-            sql_database_grid.Location = new Point(0, 26);
-            sql_database_grid.Margin = new Padding(3, 2, 3, 2);
-            sql_database_grid.Name = "sql_database_grid";
-            sql_database_grid.ReadOnly = true;
-            sql_database_grid.RowHeadersWidth = 51;
-            sql_database_grid.Size = new Size(499, 209);
-            sql_database_grid.TabIndex = 3;
-            sql_database_grid.Visible = false;
+            resultsFrame.Controls.Add(tilesResultAbLabel);
+            resultsFrame.Controls.Add(tilesResultLostLabel);
+            resultsFrame.Controls.Add(tilesResultWonLabel);
+            resultsFrame.Controls.Add(abandonedResultTimeLabel);
+            resultsFrame.Controls.Add(lostResultTimeLabel);
+            resultsFrame.Controls.Add(wonResultTimeLabel);
+            resultsFrame.Controls.Add(abandonedResultLabel);
+            resultsFrame.Controls.Add(lostResultLabel);
+            resultsFrame.Controls.Add(wonResultLabel);
+            resultsFrame.Location = new Point(3, 27);
+            resultsFrame.Name = "resultsFrame";
+            resultsFrame.Size = new Size(296, 87);
+            resultsFrame.TabIndex = 24;
+            resultsFrame.TabStop = false;
             // 
-            // iDDataGridViewTextBoxColumn1
+            // tilesResultAbLabel
             // 
-            iDDataGridViewTextBoxColumn1.DataPropertyName = "ID";
-            iDDataGridViewTextBoxColumn1.HeaderText = "ID";
-            iDDataGridViewTextBoxColumn1.MinimumWidth = 6;
-            iDDataGridViewTextBoxColumn1.Name = "iDDataGridViewTextBoxColumn1";
-            iDDataGridViewTextBoxColumn1.ReadOnly = true;
+            tilesResultAbLabel.AutoSize = true;
+            tilesResultAbLabel.ImageAlign = ContentAlignment.MiddleLeft;
+            tilesResultAbLabel.Location = new Point(235, 65);
+            tilesResultAbLabel.Name = "tilesResultAbLabel";
+            tilesResultAbLabel.Size = new Size(55, 15);
+            tilesResultAbLabel.TabIndex = 22;
+            tilesResultAbLabel.Text = "1 000 000";
+            tilesResultAbLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // secondsInGameDataGridViewTextBoxColumn1
+            // tilesResultLostLabel
             // 
-            secondsInGameDataGridViewTextBoxColumn1.DataPropertyName = "secondsInGame";
-            secondsInGameDataGridViewTextBoxColumn1.HeaderText = "secondsInGame";
-            secondsInGameDataGridViewTextBoxColumn1.MinimumWidth = 6;
-            secondsInGameDataGridViewTextBoxColumn1.Name = "secondsInGameDataGridViewTextBoxColumn1";
-            secondsInGameDataGridViewTextBoxColumn1.ReadOnly = true;
+            tilesResultLostLabel.AutoSize = true;
+            tilesResultLostLabel.ImageAlign = ContentAlignment.MiddleLeft;
+            tilesResultLostLabel.Location = new Point(235, 37);
+            tilesResultLostLabel.Name = "tilesResultLostLabel";
+            tilesResultLostLabel.Size = new Size(55, 15);
+            tilesResultLostLabel.TabIndex = 21;
+            tilesResultLostLabel.Text = "1 000 000";
+            tilesResultLostLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // difficultyDataGridViewTextBoxColumn1
+            // tilesResultWonLabel
             // 
-            difficultyDataGridViewTextBoxColumn1.DataPropertyName = "difficulty";
-            difficultyDataGridViewTextBoxColumn1.HeaderText = "difficulty";
-            difficultyDataGridViewTextBoxColumn1.MinimumWidth = 6;
-            difficultyDataGridViewTextBoxColumn1.Name = "difficultyDataGridViewTextBoxColumn1";
-            difficultyDataGridViewTextBoxColumn1.ReadOnly = true;
+            tilesResultWonLabel.AutoSize = true;
+            tilesResultWonLabel.ImageAlign = ContentAlignment.MiddleLeft;
+            tilesResultWonLabel.Location = new Point(235, 13);
+            tilesResultWonLabel.Name = "tilesResultWonLabel";
+            tilesResultWonLabel.Size = new Size(55, 15);
+            tilesResultWonLabel.TabIndex = 20;
+            tilesResultWonLabel.Text = "1 000 000";
+            tilesResultWonLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // statusDataGridViewTextBoxColumn1
+            // abandonedResultTimeLabel
             // 
-            statusDataGridViewTextBoxColumn1.DataPropertyName = "status";
-            statusDataGridViewTextBoxColumn1.HeaderText = "status";
-            statusDataGridViewTextBoxColumn1.MinimumWidth = 6;
-            statusDataGridViewTextBoxColumn1.Name = "statusDataGridViewTextBoxColumn1";
-            statusDataGridViewTextBoxColumn1.ReadOnly = true;
+            abandonedResultTimeLabel.AutoSize = true;
+            abandonedResultTimeLabel.ImageAlign = ContentAlignment.MiddleLeft;
+            abandonedResultTimeLabel.Location = new Point(110, 63);
+            abandonedResultTimeLabel.Name = "abandonedResultTimeLabel";
+            abandonedResultTimeLabel.Size = new Size(49, 15);
+            abandonedResultTimeLabel.TabIndex = 15;
+            abandonedResultTimeLabel.Text = "00:00:00";
+            abandonedResultTimeLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // tilesUncoveredDataGridViewTextBoxColumn1
+            // lostResultTimeLabel
             // 
-            tilesUncoveredDataGridViewTextBoxColumn1.DataPropertyName = "tilesUncovered";
-            tilesUncoveredDataGridViewTextBoxColumn1.HeaderText = "tilesUncovered";
-            tilesUncoveredDataGridViewTextBoxColumn1.MinimumWidth = 6;
-            tilesUncoveredDataGridViewTextBoxColumn1.Name = "tilesUncoveredDataGridViewTextBoxColumn1";
-            tilesUncoveredDataGridViewTextBoxColumn1.ReadOnly = true;
+            lostResultTimeLabel.AutoSize = true;
+            lostResultTimeLabel.ImageAlign = ContentAlignment.MiddleLeft;
+            lostResultTimeLabel.Location = new Point(110, 37);
+            lostResultTimeLabel.Name = "lostResultTimeLabel";
+            lostResultTimeLabel.Size = new Size(49, 15);
+            lostResultTimeLabel.TabIndex = 14;
+            lostResultTimeLabel.Text = "00:00:00";
+            lostResultTimeLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // clicksPerformedDataGridViewTextBoxColumn1
+            // wonResultTimeLabel
             // 
-            clicksPerformedDataGridViewTextBoxColumn1.DataPropertyName = "clicksPerformed";
-            clicksPerformedDataGridViewTextBoxColumn1.HeaderText = "clicksPerformed";
-            clicksPerformedDataGridViewTextBoxColumn1.MinimumWidth = 6;
-            clicksPerformedDataGridViewTextBoxColumn1.Name = "clicksPerformedDataGridViewTextBoxColumn1";
-            clicksPerformedDataGridViewTextBoxColumn1.ReadOnly = true;
+            wonResultTimeLabel.AutoSize = true;
+            wonResultTimeLabel.ImageAlign = ContentAlignment.MiddleLeft;
+            wonResultTimeLabel.Location = new Point(110, 12);
+            wonResultTimeLabel.Name = "wonResultTimeLabel";
+            wonResultTimeLabel.Size = new Size(49, 15);
+            wonResultTimeLabel.TabIndex = 13;
+            wonResultTimeLabel.Text = "00:00:00";
+            wonResultTimeLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // flaggsSetDataGridViewTextBoxColumn1
+            // abandonedResultLabel
             // 
-            flaggsSetDataGridViewTextBoxColumn1.DataPropertyName = "flaggsSet";
-            flaggsSetDataGridViewTextBoxColumn1.HeaderText = "flaggsSet";
-            flaggsSetDataGridViewTextBoxColumn1.MinimumWidth = 6;
-            flaggsSetDataGridViewTextBoxColumn1.Name = "flaggsSetDataGridViewTextBoxColumn1";
-            flaggsSetDataGridViewTextBoxColumn1.ReadOnly = true;
+            abandonedResultLabel.AutoSize = true;
+            abandonedResultLabel.Location = new Point(7, 63);
+            abandonedResultLabel.Name = "abandonedResultLabel";
+            abandonedResultLabel.Size = new Size(72, 15);
+            abandonedResultLabel.TabIndex = 12;
+            abandonedResultLabel.Text = "Abandoned:";
             // 
-            // sqlRecordBinding
+            // lostResultLabel
             // 
-            sqlRecordBinding.DataSource = typeof(Record);
+            lostResultLabel.AutoSize = true;
+            lostResultLabel.Location = new Point(47, 37);
+            lostResultLabel.Name = "lostResultLabel";
+            lostResultLabel.Size = new Size(32, 15);
+            lostResultLabel.TabIndex = 11;
+            lostResultLabel.Text = "Lost:";
+            // 
+            // wonResultLabel
+            // 
+            wonResultLabel.AutoSize = true;
+            wonResultLabel.Location = new Point(44, 12);
+            wonResultLabel.Name = "wonResultLabel";
+            wonResultLabel.Size = new Size(35, 15);
+            wonResultLabel.TabIndex = 10;
+            wonResultLabel.Text = "Won:";
+            // 
+            // tilesResultTotalLabel
+            // 
+            tilesResultTotalLabel.AutoSize = true;
+            tilesResultTotalLabel.Location = new Point(238, 117);
+            tilesResultTotalLabel.Name = "tilesResultTotalLabel";
+            tilesResultTotalLabel.Size = new Size(55, 15);
+            tilesResultTotalLabel.TabIndex = 23;
+            tilesResultTotalLabel.Text = "1 000 000";
+            tilesResultTotalLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // tilesResultTitleLabel
+            // 
+            tilesResultTitleLabel.AutoSize = true;
+            tilesResultTitleLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            tilesResultTitleLabel.Location = new Point(199, 9);
+            tilesResultTitleLabel.Name = "tilesResultTitleLabel";
+            tilesResultTitleLabel.Size = new Size(97, 15);
+            tilesResultTitleLabel.TabIndex = 19;
+            tilesResultTitleLabel.Text = "Tiles Uncovered";
+            // 
+            // timeResultLabel
+            // 
+            timeResultLabel.AutoSize = true;
+            timeResultLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            timeResultLabel.Location = new Point(91, 9);
+            timeResultLabel.Name = "timeResultLabel";
+            timeResultLabel.Size = new Size(71, 15);
+            timeResultLabel.TabIndex = 18;
+            timeResultLabel.Text = "Time Spent";
+            // 
+            // totalResultTimeLabel
+            // 
+            totalResultTimeLabel.AutoSize = true;
+            totalResultTimeLabel.Location = new Point(113, 117);
+            totalResultTimeLabel.Name = "totalResultTimeLabel";
+            totalResultTimeLabel.Size = new Size(49, 15);
+            totalResultTimeLabel.TabIndex = 17;
+            totalResultTimeLabel.Text = "00:00:00";
+            totalResultTimeLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // totalResultLabel
+            // 
+            totalResultLabel.AutoSize = true;
+            totalResultLabel.Location = new Point(50, 117);
+            totalResultLabel.Name = "totalResultLabel";
+            totalResultLabel.Size = new Size(32, 15);
+            totalResultLabel.TabIndex = 16;
+            totalResultLabel.Text = "Total";
             // 
             // StatisticForm
             // 
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            BackgroundImageLayout = ImageLayout.None;
-            ClientSize = new Size(503, 235);
-            Controls.Add(sqlite_database_button);
-            Controls.Add(csv_radio_button);
-            Controls.Add(csv_records_grid);
-            Controls.Add(sql_database_grid);
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Controls.Add(resultsPanel);
+            Controls.Add(bestScorePanel);
+            Controls.Add(DifficultyLabel);
+            Controls.Add(diffCheckBox);
+            Controls.Add(winRatePanel);
             DoubleBuffered = true;
-            FormBorderStyle = FormBorderStyle.SizableToolWindow;
-            Margin = new Padding(3, 2, 3, 2);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "StatisticForm";
-            SizeGripStyle = SizeGripStyle.Show;
-            StartPosition = FormStartPosition.CenterScreen;
             Text = "Statistic";
-            Load += OptionsForm_Load;
-            ((System.ComponentModel.ISupportInitialize)csv_records_grid).EndInit();
-            ((System.ComponentModel.ISupportInitialize)csvRecordBinding).EndInit();
-            ((System.ComponentModel.ISupportInitialize)sql_database_grid).EndInit();
-            ((System.ComponentModel.ISupportInitialize)sqlRecordBinding).EndInit();
+            Load += StatusPie_Load;
+            ((System.ComponentModel.ISupportInitialize)recordBindingSource1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)recordBindingSource).EndInit();
+            bestScorePanel.ResumeLayout(false);
+            bestScorePanel.PerformLayout();
+            resultsPanel.ResumeLayout(false);
+            resultsPanel.PerformLayout();
+            resultsFrame.ResumeLayout(false);
+            resultsFrame.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private DataGridView csv_records_grid;
-        private BindingSource csvRecordBinding;
-        private RadioButton csv_radio_button;
-        private RadioButton sqlite_database_button;
-        private DataGridView sql_database_grid;
-        private BindingSource sqlRecordBinding;
-        private DataGridViewTextBoxColumn iDDataGridViewTextBoxColumn1;
-        private DataGridViewTextBoxColumn secondsInGameDataGridViewTextBoxColumn1;
-        private DataGridViewTextBoxColumn difficultyDataGridViewTextBoxColumn1;
-        private DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn1;
-        private DataGridViewTextBoxColumn tilesUncoveredDataGridViewTextBoxColumn1;
-        private DataGridViewTextBoxColumn clicksPerformedDataGridViewTextBoxColumn1;
-        private DataGridViewTextBoxColumn flaggsSetDataGridViewTextBoxColumn1;
-        private DataGridViewTextBoxColumn iDDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn secondsInGameDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn difficultyDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn tilesUncoveredDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn clicksPerformedDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn flaggsSetDataGridViewTextBoxColumn;
+        private Panel winRatePanel;
+        private CheckedListBox diffCheckBox;
+        private Label DifficultyLabel;
+        private Panel bestScorePanel;
+        private Label bestTimeLabel;
+        private Label bestTimeTitleLabel;
+        private Label dateBestTitleLabel;
+        private Label dateBestLabel;
+        private BindingSource recordBindingSource;
+        private BindingSource recordBindingSource1;
+        private Panel resultsPanel;
+        private Label totalResultTimeLabel;
+        private Label totalResultLabel;
+        private Label abandonedResultTimeLabel;
+        private Label lostResultTimeLabel;
+        private Label wonResultTimeLabel;
+        private Label abandonedResultLabel;
+        private Label lostResultLabel;
+        private Label wonResultLabel;
+        private Label timeResultLabel;
+        private Label tilesResultTotalLabel;
+        private Label tilesResultAbLabel;
+        private Label tilesResultLostLabel;
+        private Label tilesResultWonLabel;
+        private Label tilesResultTitleLabel;
+        private GroupBox resultsFrame;
     }
 }

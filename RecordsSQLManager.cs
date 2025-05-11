@@ -30,14 +30,25 @@ namespace Minesweeper
                 throw new Exception("Failed to save record to database.");
             }
         }
-        public List<Record> GetAllRecords()
+        public List<Record> GetAllRecords(Difficulty? difficulty = null)
         {
             List<Record> records = new List<Record>();
             RecordsList.Clear();
             using var conn = new SQLiteConnection(_connectionString);
             conn.Open();
-            string query = "SELECT * FROM Records";
-            using var cmd = new SQLiteCommand(query, conn);
+            string query;
+            using var cmd = conn.CreateCommand();
+            if(difficulty != null)
+            {
+                query = "SELECT * FROM Records WHERE Difficulty = @difficulty";
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@difficulty", difficulty.ToString());
+            }
+            else
+            {
+                query = "SELECT * FROM Records";
+                cmd.CommandText = query;
+            }
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -50,8 +61,8 @@ namespace Minesweeper
                     tilesUncovered = reader.GetInt32(4),
                     clicksPerformed = reader.GetInt32(5),
                     flaggsSet = reader.GetInt32(6),
+                    timeStamp = DateTime.TryParse(reader.GetString(7), out DateTime timeStamp) ? timeStamp : null
                 };
-                reader.GetString(7); // TimeStamp
                 records.Add(record);
             }
             return records;
@@ -97,6 +108,41 @@ namespace Minesweeper
                 statuses.Add(status);
             }
             return statuses;
+        }
+        public Record? GetBestRecord(Difficulty? difficulty = null) //if difficulty is null, get the best record from all difficulties
+        {
+            using var conn = new SQLiteConnection(_connectionString);
+            conn.Open();
+            
+            string query;
+            using var cmd = conn.CreateCommand();
+            if (difficulty != null)
+            {
+                query = "SELECT * FROM Records WHERE Difficulty = @difficulty AND Status = 'Win' ORDER BY Game_Seconds ASC LIMIT 1";
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@difficulty", difficulty.ToString());
+            }
+            else
+            {
+                query = "SELECT * FROM Records WHERE Status = 'Win' ORDER BY Game_Seconds ASC LIMIT 1 ";
+                cmd.CommandText = query;
+            }
+            using var reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                return new Record
+                {
+                    ID = reader.GetInt32(0),
+                    secondsInGame = reader.GetInt32(1),
+                    difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), reader.GetString(2)),
+                    status = (GameStatus)Enum.Parse(typeof(GameStatus), reader.GetString(3)),
+                    tilesUncovered = reader.GetInt32(4),
+                    clicksPerformed = reader.GetInt32(5),
+                    flaggsSet = reader.GetInt32(6),
+                    timeStamp = DateTime.TryParse(reader.GetString(7), out DateTime timeStamp) ? timeStamp : null
+                };
+            }
+            return null;
         }
     }
 }

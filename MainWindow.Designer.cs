@@ -43,8 +43,7 @@
             toolStripMenuItem2 = new ToolStripMenuItem();
             toolStripMenuItem3 = new ToolStripMenuItem();
             statisticToolStripMenuItem = new ToolStripMenuItem();
-            recordsToolStripMenuItem = new ToolStripMenuItem();
-            statisticToolStripMenuItem1 = new ToolStripMenuItem();
+            recordsStripMenuItem = new ToolStripMenuItem();
             InfoBox.SuspendLayout();
             Mines_Panel.SuspendLayout();
             Timer_Panel.SuspendLayout();
@@ -109,7 +108,7 @@
             // 
             NavigationMenu.BackColor = SystemColors.Control;
             NavigationMenu.ImageScalingSize = new Size(20, 20);
-            NavigationMenu.Items.AddRange(new ToolStripItem[] { newGameToolStripMenuItem, optionsToolStripMenuItem, statisticToolStripMenuItem });
+            NavigationMenu.Items.AddRange(new ToolStripItem[] { newGameToolStripMenuItem, optionsToolStripMenuItem, statisticToolStripMenuItem, recordsStripMenuItem });
             resources.ApplyResources(NavigationMenu, "NavigationMenu");
             NavigationMenu.Name = "NavigationMenu";
             // 
@@ -145,21 +144,15 @@
             // 
             // statisticToolStripMenuItem
             // 
-            statisticToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { recordsToolStripMenuItem, statisticToolStripMenuItem1 });
             statisticToolStripMenuItem.Name = "statisticToolStripMenuItem";
             resources.ApplyResources(statisticToolStripMenuItem, "statisticToolStripMenuItem");
+            statisticToolStripMenuItem.Click += statisticToolStripMenuItem_Click;
             // 
-            // recordsToolStripMenuItem
+            // recordsStripMenuItem
             // 
-            recordsToolStripMenuItem.Name = "recordsToolStripMenuItem";
-            resources.ApplyResources(recordsToolStripMenuItem, "recordsToolStripMenuItem");
-            recordsToolStripMenuItem.Click += recordsToolStripMenuItem_Click;
-            // 
-            // statisticToolStripMenuItem1
-            // 
-            statisticToolStripMenuItem1.Name = "statisticToolStripMenuItem1";
-            resources.ApplyResources(statisticToolStripMenuItem1, "statisticToolStripMenuItem1");
-            statisticToolStripMenuItem1.Click += statisticToolStripMenuItem1_Click;
+            recordsStripMenuItem.Name = "recordsStripMenuItem";
+            resources.ApplyResources(recordsStripMenuItem, "recordsStripMenuItem");
+            recordsStripMenuItem.Click += recordsStripMenuItem_Click;
             // 
             // MainWindow
             // 
@@ -197,7 +190,6 @@
         private Panel Mines_Panel;
         private Label Mines_Label;
         private Button SmileButton;
-        private ToolStripMenuItem recordsToolStripMenuItem;
-        private ToolStripMenuItem statisticToolStripMenuItem1;
+        private ToolStripMenuItem recordsStripMenuItem;
     }
 }

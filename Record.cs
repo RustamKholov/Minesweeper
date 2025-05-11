@@ -15,5 +15,6 @@ namespace Minesweeper
         public int tilesUncovered { get; set; }
         public int clicksPerformed { get; set; }
         public int flaggsSet { get; set; }
+        public DateTime? timeStamp { get; set; }
     }
 }

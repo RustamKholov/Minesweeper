@@ -418,12 +418,10 @@ namespace Minesweeper
         private void ShowLose()
         {
             SmileButton.BackgroundImage = Properties.Resources.Fail;
-            MessageBox.Show("Game Over! You hit a mine.", "Game Over", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         private void ShowWin()
         {
             SmileButton.BackgroundImage = Properties.Resources.Success;
-            MessageBox.Show("Congratulations! You won!", "You Win", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void UpdateRevealed(Cell cell)
@@ -465,16 +463,16 @@ namespace Minesweeper
             NewGame();
         }
 
-        private void recordsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void statisticToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            StatisticForm optionsForm = new StatisticForm(_gameEngine);
-            optionsForm.ShowDialog();
+            StatisticForm statusPie = new StatisticForm();
+            statusPie.ShowDialog();
         }
 
-        private void statisticToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void recordsStripMenuItem_Click(object sender, EventArgs e)
         {
-            StatusPie statusPie = new StatusPie();
-            statusPie.ShowDialog();
+            RecordsForm optionsForm = new RecordsForm(_gameEngine);
+            optionsForm.ShowDialog();
         }
     }
 }
