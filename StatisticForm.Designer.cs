@@ -56,6 +56,7 @@
             timeResultLabel = new Label();
             totalResultTimeLabel = new Label();
             totalResultLabel = new Label();
+            graphicPanel = new Panel();
             ((System.ComponentModel.ISupportInitialize)recordBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)recordBindingSource).BeginInit();
             bestScorePanel.SuspendLayout();
@@ -313,17 +314,26 @@
             // totalResultLabel
             // 
             totalResultLabel.AutoSize = true;
+            totalResultLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             totalResultLabel.Location = new Point(50, 117);
             totalResultLabel.Name = "totalResultLabel";
-            totalResultLabel.Size = new Size(32, 15);
+            totalResultLabel.Size = new Size(34, 15);
             totalResultLabel.TabIndex = 16;
             totalResultLabel.Text = "Total";
+            // 
+            // graphicPanel
+            // 
+            graphicPanel.Location = new Point(45, 206);
+            graphicPanel.Name = "graphicPanel";
+            graphicPanel.Size = new Size(396, 222);
+            graphicPanel.TabIndex = 5;
             // 
             // StatisticForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(graphicPanel);
             Controls.Add(resultsPanel);
             Controls.Add(bestScorePanel);
             Controls.Add(DifficultyLabel);
@@ -374,5 +384,6 @@
         private Label tilesResultWonLabel;
         private Label tilesResultTitleLabel;
         private GroupBox resultsFrame;
+        private Panel graphicPanel;
     }
 }
