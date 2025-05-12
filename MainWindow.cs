@@ -10,7 +10,7 @@ namespace Minesweeper
         private bool _mousePressed = false;
         private Button? _pressedButton = null;
         private Image _lastSmile = Properties.Resources.Smile;
-        private readonly int _paddingWindth = 25;
+        private readonly int _paddingWindth = 27;
         private readonly int _paddingHeight = 170;
         
 
@@ -371,7 +371,7 @@ namespace Minesweeper
                                 {
                                     btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
                                     btn.Image = Properties.Resources.Mine;
-                                    btn.ImageAlign = ContentAlignment.MiddleCenter; ;
+                                    btn.ImageAlign = ContentAlignment.MiddleCenter; 
                                 }
 
                             }
@@ -424,9 +424,10 @@ namespace Minesweeper
         }
         private void RebuildGame()
         {
+            Visible = false;
             _gameEngine.Dispose();
             _gameEngine = new GameEngine(_settings);
-            Visible = false;
+            
             ClientSize = GetSize();
             InitializeGameGrid(_settings.Rows, _settings.Cols);
             CenterToScreen();

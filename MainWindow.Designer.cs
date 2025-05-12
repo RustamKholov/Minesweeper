@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            tableGrid = new TableLayoutPanel();
             InfoBox = new GroupBox();
             SmileButton = new Button();
             Mines_Panel = new Panel();
             Mines_Label = new Label();
             Timer_Panel = new Panel();
             Game_Timer_Label = new Label();
+            TimerPanel = new Panel();
             NavigationMenu = new MenuStrip();
             newGameToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
@@ -44,18 +44,16 @@
             toolStripMenuItem3 = new ToolStripMenuItem();
             statisticToolStripMenuItem = new ToolStripMenuItem();
             recordsStripMenuItem = new ToolStripMenuItem();
+            tableGrid = new TableLayoutPanel();
+            menuPanel = new Panel();
+            FieldPanel = new Panel();
             InfoBox.SuspendLayout();
             Mines_Panel.SuspendLayout();
             Timer_Panel.SuspendLayout();
             NavigationMenu.SuspendLayout();
+            menuPanel.SuspendLayout();
+            FieldPanel.SuspendLayout();
             SuspendLayout();
-            // 
-            // tableGrid
-            // 
-            resources.ApplyResources(tableGrid, "tableGrid");
-            tableGrid.BackColor = Color.Transparent;
-            tableGrid.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
-            tableGrid.Name = "tableGrid";
             // 
             // InfoBox
             // 
@@ -63,6 +61,7 @@
             InfoBox.Controls.Add(SmileButton);
             InfoBox.Controls.Add(Mines_Panel);
             InfoBox.Controls.Add(Timer_Panel);
+            InfoBox.Controls.Add(TimerPanel);
             InfoBox.Name = "InfoBox";
             InfoBox.TabStop = false;
             // 
@@ -78,7 +77,6 @@
             // 
             resources.ApplyResources(Mines_Panel, "Mines_Panel");
             Mines_Panel.BackColor = Color.Black;
-            Mines_Panel.BorderStyle = BorderStyle.FixedSingle;
             Mines_Panel.Controls.Add(Mines_Label);
             Mines_Panel.Name = "Mines_Panel";
             // 
@@ -92,7 +90,6 @@
             // Timer_Panel
             // 
             Timer_Panel.BackColor = Color.Black;
-            Timer_Panel.BorderStyle = BorderStyle.FixedSingle;
             Timer_Panel.Controls.Add(Game_Timer_Label);
             resources.ApplyResources(Timer_Panel, "Timer_Panel");
             Timer_Panel.Name = "Timer_Panel";
@@ -104,13 +101,19 @@
             Game_Timer_Label.ForeColor = Color.Red;
             Game_Timer_Label.Name = "Game_Timer_Label";
             // 
+            // TimerPanel
+            // 
+            resources.ApplyResources(TimerPanel, "TimerPanel");
+            TimerPanel.BorderStyle = BorderStyle.Fixed3D;
+            TimerPanel.Name = "TimerPanel";
+            // 
             // NavigationMenu
             // 
             NavigationMenu.BackColor = SystemColors.Control;
+            resources.ApplyResources(NavigationMenu, "NavigationMenu");
             NavigationMenu.GripMargin = new Padding(2);
             NavigationMenu.ImageScalingSize = new Size(20, 20);
             NavigationMenu.Items.AddRange(new ToolStripItem[] { newGameToolStripMenuItem, optionsToolStripMenuItem, statisticToolStripMenuItem, recordsStripMenuItem });
-            resources.ApplyResources(NavigationMenu, "NavigationMenu");
             NavigationMenu.Name = "NavigationMenu";
             NavigationMenu.RenderMode = ToolStripRenderMode.Professional;
             // 
@@ -156,12 +159,33 @@
             resources.ApplyResources(recordsStripMenuItem, "recordsStripMenuItem");
             recordsStripMenuItem.Click += recordsStripMenuItem_Click;
             // 
+            // tableGrid
+            // 
+            resources.ApplyResources(tableGrid, "tableGrid");
+            tableGrid.BackColor = Color.Transparent;
+            tableGrid.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
+            tableGrid.Name = "tableGrid";
+            // 
+            // menuPanel
+            // 
+            resources.ApplyResources(menuPanel, "menuPanel");
+            menuPanel.BorderStyle = BorderStyle.Fixed3D;
+            menuPanel.Controls.Add(NavigationMenu);
+            menuPanel.Name = "menuPanel";
+            // 
+            // FieldPanel
+            // 
+            resources.ApplyResources(FieldPanel, "FieldPanel");
+            FieldPanel.BorderStyle = BorderStyle.Fixed3D;
+            FieldPanel.Controls.Add(tableGrid);
+            FieldPanel.Name = "FieldPanel";
+            // 
             // MainWindow
             // 
             resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Dpi;
-            Controls.Add(tableGrid);
-            Controls.Add(NavigationMenu);
+            Controls.Add(FieldPanel);
+            Controls.Add(menuPanel);
             Controls.Add(InfoBox);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.Fixed3D;
@@ -174,8 +198,11 @@
             Timer_Panel.ResumeLayout(false);
             NavigationMenu.ResumeLayout(false);
             NavigationMenu.PerformLayout();
+            menuPanel.ResumeLayout(false);
+            menuPanel.PerformLayout();
+            FieldPanel.ResumeLayout(false);
+            FieldPanel.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -188,11 +215,14 @@
         private ToolStripMenuItem toolStripMenuItem2;
         private ToolStripMenuItem toolStripMenuItem3;
         private Label Game_Timer_Label;
-        private TableLayoutPanel tableGrid;
         private Panel Timer_Panel;
         private Panel Mines_Panel;
         private Label Mines_Label;
         private Button SmileButton;
         private ToolStripMenuItem recordsStripMenuItem;
+        private Panel TimerPanel;
+        private TableLayoutPanel tableGrid;
+        private Panel menuPanel;
+        private Panel FieldPanel;
     }
 }

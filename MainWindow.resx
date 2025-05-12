@@ -118,51 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="tableGrid.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Bottom, Left, Right</value>
-  </data>
-  <data name="tableGrid.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
-    <value>GrowAndShrink</value>
-  </data>
-  <data name="tableGrid.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="tableGrid.ColumnCount" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="tableGrid.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 155</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="tableGrid.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
-  </data>
-  <data name="tableGrid.RowCount" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="tableGrid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>315, 315</value>
-  </data>
-  <data name="tableGrid.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;tableGrid.Name" xml:space="preserve">
-    <value>tableGrid</value>
-  </data>
-  <data name="&gt;&gt;tableGrid.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tableGrid.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;tableGrid.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="tableGrid.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls /&gt;&lt;Columns Styles="Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35" /&gt;&lt;Rows Styles="Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35" /&gt;&lt;/TableLayoutSettings&gt;</value>
-  </data>
   <data name="InfoBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
   </data>
@@ -181,18 +136,21 @@
   <data name="SmileButton.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Popup</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="SmileButton.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 16pt</value>
   </data>
   <data name="SmileButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>138, 27</value>
+    <value>138, 26</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="SmileButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
   </data>
   <data name="SmileButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 41</value>
+    <value>46, 46</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="SmileButton.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
@@ -221,13 +179,13 @@
     <value>Left</value>
   </data>
   <data name="Mines_Label.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Digital dream Narrow, 24pt</value>
+    <value>Digital dream Narrow, 27.75pt</value>
   </data>
   <data name="Mines_Label.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Mines_Label.Location" type="System.Drawing.Point, System.Drawing">
-    <value>-7, -3</value>
+    <value>-7, -2</value>
   </data>
   <data name="Mines_Label.Size" type="System.Drawing.Size, System.Drawing">
     <value>97, 46</value>
@@ -254,7 +212,7 @@
     <value>0</value>
   </data>
   <data name="Mines_Panel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>221, 26</value>
+    <value>226, 28</value>
   </data>
   <data name="Mines_Panel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
@@ -287,10 +245,10 @@
     <value>Left</value>
   </data>
   <data name="Game_Timer_Label.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Digital dream Narrow, 24pt</value>
+    <value>Digital dream Narrow, 27.75pt</value>
   </data>
   <data name="Game_Timer_Label.Location" type="System.Drawing.Point, System.Drawing">
-    <value>-7, -3</value>
+    <value>-7, -2</value>
   </data>
   <data name="Game_Timer_Label.Size" type="System.Drawing.Size, System.Drawing">
     <value>97, 46</value>
@@ -340,6 +298,30 @@
   <data name="&gt;&gt;Timer_Panel.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
+  <data name="TimerPanel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="TimerPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1, 6</value>
+  </data>
+  <data name="TimerPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>321, 77</value>
+  </data>
+  <data name="TimerPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;TimerPanel.Name" xml:space="preserve">
+    <value>TimerPanel</value>
+  </data>
+  <data name="&gt;&gt;TimerPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TimerPanel.Parent" xml:space="preserve">
+    <value>InfoBox</value>
+  </data>
+  <data name="&gt;&gt;TimerPanel.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
   <data name="InfoBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>10, 55</value>
   </data>
@@ -350,7 +332,7 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="InfoBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>314, 86</value>
+    <value>319, 86</value>
   </data>
   <data name="InfoBox.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -370,6 +352,9 @@
   <metadata name="NavigationMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="NavigationMenu.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>None</value>
+  </data>
   <data name="newGameToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>77, 20</value>
   </data>
@@ -425,10 +410,10 @@
     <value>Records</value>
   </data>
   <data name="NavigationMenu.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 8</value>
+    <value>-1, 1</value>
   </data>
   <data name="NavigationMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>323, 24</value>
+    <value>393, 24</value>
   </data>
   <data name="NavigationMenu.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -443,10 +428,106 @@
     <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;NavigationMenu.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>menuPanel</value>
   </data>
   <data name="&gt;&gt;NavigationMenu.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableGrid.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tableGrid.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="tableGrid.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="tableGrid.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tableGrid.ColumnCount" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="tableGrid.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 2</value>
+  </data>
+  <data name="tableGrid.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="tableGrid.RowCount" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="tableGrid.Size" type="System.Drawing.Size, System.Drawing">
+    <value>315, 315</value>
+  </data>
+  <data name="tableGrid.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tableGrid.Name" xml:space="preserve">
+    <value>tableGrid</value>
+  </data>
+  <data name="&gt;&gt;tableGrid.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tableGrid.Parent" xml:space="preserve">
+    <value>FieldPanel</value>
+  </data>
+  <data name="&gt;&gt;tableGrid.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableGrid.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls /&gt;&lt;Columns Styles="Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35" /&gt;&lt;Rows Styles="Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35,Absolute,35" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="menuPanel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="menuPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 11</value>
+  </data>
+  <data name="menuPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>324, 27</value>
+  </data>
+  <data name="menuPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;menuPanel.Name" xml:space="preserve">
+    <value>menuPanel</value>
+  </data>
+  <data name="&gt;&gt;menuPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;menuPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;menuPanel.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="FieldPanel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="FieldPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 145</value>
+  </data>
+  <data name="FieldPanel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="FieldPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>322, 318</value>
+  </data>
+  <data name="FieldPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;FieldPanel.Name" xml:space="preserve">
+    <value>FieldPanel</value>
+  </data>
+  <data name="&gt;&gt;FieldPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;FieldPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;FieldPanel.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -458,7 +539,7 @@
     <value>GrowAndShrink</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>339, 481</value>
+    <value>344, 483</value>
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt</value>
