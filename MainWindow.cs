@@ -10,6 +10,9 @@ namespace Minesweeper
         private bool _mousePressed = false;
         private Button? _pressedButton = null;
         private Image _lastSmile = Properties.Resources.Smile;
+        private readonly int _paddingWindth = 25;
+        private readonly int _paddingHeight = 170;
+        
 
         public MainWindow(Settings settings, GameEngine gameEngine)
         {
@@ -17,16 +20,23 @@ namespace Minesweeper
             _gameEngine = gameEngine;
             SubscribeComponents();
             InitializeComponent();
-
+            
         }
         private void SubscribeComponents()
         {
             _gameEngine.Subscribe(this);
             _gameEngine.GameTimer.Subscribe(this);
         }
+        private Size GetSize()
+        {
+            return new Size((int)(_settings.Cols * _settings.CellSize + _paddingWindth)
+                , (int)(_settings.Rows * _settings.CellSize + _paddingHeight));
+        }
         private void MainWindow_Load(object sender, EventArgs e)
         {
             InitializeGameGrid(_settings.Rows, _settings.Cols);
+
+            ClientSize = GetSize();
 
             Mines_Label.Text = _settings.Mines.ToString("000");
 
@@ -43,9 +53,10 @@ namespace Minesweeper
             tableGrid.Controls.Clear();
             tableGrid.ColumnStyles.Clear();
             tableGrid.RowStyles.Clear();
+            tableGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tableGrid.RowCount = rows;
             tableGrid.ColumnCount = cols;
-            tableGrid.AutoSize = true;
+            
             tableGrid.Padding = new Padding(0);
             tableGrid.Margin = new Padding(0);
 
@@ -379,10 +390,10 @@ namespace Minesweeper
                 {
                     if (tableGrid.GetControlFromPosition(col, row) is Button btn)
                     {
-                        btn.MouseUp -= Left_Click_Up;
                         btn.Click -= Tile_Click;
                         btn.MouseDown -= Right_Click_Field;
                         btn.MouseDown -= Left_Click_Down;
+                        btn.MouseUp -= Left_Click_Up;
                         btn.MouseMove -= Mouse_Move_With_Left_Click;
                     }
                 }
@@ -390,17 +401,37 @@ namespace Minesweeper
         }
         private void NewGame()
         {
+            DeactivateGrid();
+            foreach (Control control in tableGrid.Controls)
+            {
+                if (control is Button btn)
+                {
+                    btn.BackgroundImage = Properties.Resources.Minesweeper_unopened_square;
+                    btn.Text = "";
+                    btn.Image = null;
+                    btn.Click += Tile_Click;
+                    btn.MouseDown += Right_Click_Field;
+                    btn.MouseDown += Left_Click_Down;
+                    btn.MouseUp += Left_Click_Up;
+                    btn.MouseMove += Mouse_Move_With_Left_Click;
+                }
+            }
             _gameEngine.RestartGame();
             SetDefaultLabels();
             SubscribeComponents();
             _lastSmile = Properties.Resources.Smile;
-            InitializeGameGrid(_settings.Rows, _settings.Cols);
+            
         }
         private void RebuildGame()
         {
             _gameEngine.Dispose();
             _gameEngine = new GameEngine(_settings);
+            Visible = false;
+            ClientSize = GetSize();
+            InitializeGameGrid(_settings.Rows, _settings.Cols);
+            CenterToScreen();
             NewGame();
+            Visible = true;
         }
 
         private void SetDefaultLabels()

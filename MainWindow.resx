@@ -119,11 +119,7 @@
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="tableGrid.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Bottom, Left, Right</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="tableGrid.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+    <value>Bottom, Left, Right</value>
   </data>
   <data name="tableGrid.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
     <value>GrowAndShrink</value>
@@ -131,6 +127,7 @@
   <data name="tableGrid.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>None</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="tableGrid.ColumnCount" type="System.Int32, mscorlib">
     <value>9</value>
   </data>
@@ -188,7 +185,7 @@
     <value>Segoe UI, 16pt</value>
   </data>
   <data name="SmileButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>143, 27</value>
+    <value>138, 27</value>
   </data>
   <data name="SmileButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
@@ -257,7 +254,7 @@
     <value>0</value>
   </data>
   <data name="Mines_Panel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>231, 26</value>
+    <value>221, 26</value>
   </data>
   <data name="Mines_Panel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
@@ -353,7 +350,7 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="InfoBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>324, 86</value>
+    <value>314, 86</value>
   </data>
   <data name="InfoBox.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -431,7 +428,7 @@
     <value>8, 8</value>
   </data>
   <data name="NavigationMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>329, 24</value>
+    <value>323, 24</value>
   </data>
   <data name="NavigationMenu.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -457,14 +454,11 @@
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>96, 96</value>
   </data>
-  <data name="$this.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
   <data name="$this.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
     <value>GrowAndShrink</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>345, 490</value>
+    <value>339, 481</value>
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt</value>

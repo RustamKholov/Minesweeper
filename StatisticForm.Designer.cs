@@ -57,18 +57,20 @@
             totalResultTimeLabel = new Label();
             totalResultLabel = new Label();
             graphicPanel = new Panel();
+            difficultyPanel = new Panel();
             ((System.ComponentModel.ISupportInitialize)recordBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)recordBindingSource).BeginInit();
             bestScorePanel.SuspendLayout();
             resultsPanel.SuspendLayout();
             resultsFrame.SuspendLayout();
+            difficultyPanel.SuspendLayout();
             SuspendLayout();
             // 
             // winRatePanel
             // 
-            winRatePanel.Location = new Point(533, 24);
+            winRatePanel.Location = new Point(486, 24);
             winRatePanel.Name = "winRatePanel";
-            winRatePanel.Size = new Size(245, 166);
+            winRatePanel.Size = new Size(302, 166);
             winRatePanel.TabIndex = 0;
             // 
             // diffCheckBox
@@ -79,7 +81,7 @@
             diffCheckBox.FormattingEnabled = true;
             diffCheckBox.ImeMode = ImeMode.Off;
             diffCheckBox.Items.AddRange(new object[] { "Easy", "Medium", "Hard" });
-            diffCheckBox.Location = new Point(32, 66);
+            diffCheckBox.Location = new Point(13, 38);
             diffCheckBox.Name = "diffCheckBox";
             diffCheckBox.Size = new Size(71, 72);
             diffCheckBox.TabIndex = 1;
@@ -97,9 +99,10 @@
             // DifficultyLabel
             // 
             DifficultyLabel.AutoSize = true;
-            DifficultyLabel.Location = new Point(32, 38);
+            DifficultyLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            DifficultyLabel.Location = new Point(13, 10);
             DifficultyLabel.Name = "DifficultyLabel";
-            DifficultyLabel.Size = new Size(58, 15);
+            DifficultyLabel.Size = new Size(62, 15);
             DifficultyLabel.TabIndex = 2;
             DifficultyLabel.Text = "Difficulty:";
             // 
@@ -117,7 +120,7 @@
             // dateBestLabel
             // 
             dateBestLabel.AutoSize = true;
-            dateBestLabel.Location = new Point(91, 42);
+            dateBestLabel.Location = new Point(102, 38);
             dateBestLabel.Name = "dateBestLabel";
             dateBestLabel.Size = new Size(0, 15);
             dateBestLabel.TabIndex = 3;
@@ -125,16 +128,17 @@
             // dateBestTitleLabel
             // 
             dateBestTitleLabel.AutoSize = true;
-            dateBestTitleLabel.Location = new Point(41, 42);
+            dateBestTitleLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dateBestTitleLabel.Location = new Point(52, 38);
             dateBestTitleLabel.Name = "dateBestTitleLabel";
-            dateBestTitleLabel.Size = new Size(34, 15);
+            dateBestTitleLabel.Size = new Size(37, 15);
             dateBestTitleLabel.TabIndex = 2;
             dateBestTitleLabel.Text = "Date:";
             // 
             // bestTimeLabel
             // 
             bestTimeLabel.AutoSize = true;
-            bestTimeLabel.Location = new Point(91, 14);
+            bestTimeLabel.Location = new Point(102, 10);
             bestTimeLabel.Name = "bestTimeLabel";
             bestTimeLabel.Size = new Size(0, 15);
             bestTimeLabel.TabIndex = 1;
@@ -142,9 +146,10 @@
             // bestTimeTitleLabel
             // 
             bestTimeTitleLabel.AutoSize = true;
-            bestTimeTitleLabel.Location = new Point(14, 14);
+            bestTimeTitleLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            bestTimeTitleLabel.Location = new Point(25, 10);
             bestTimeTitleLabel.Name = "bestTimeTitleLabel";
-            bestTimeTitleLabel.Size = new Size(61, 15);
+            bestTimeTitleLabel.Size = new Size(66, 15);
             bestTimeTitleLabel.TabIndex = 0;
             bestTimeTitleLabel.Text = "Best Time:";
             // 
@@ -156,9 +161,9 @@
             resultsPanel.Controls.Add(timeResultLabel);
             resultsPanel.Controls.Add(totalResultTimeLabel);
             resultsPanel.Controls.Add(totalResultLabel);
-            resultsPanel.Location = new Point(482, 206);
+            resultsPanel.Location = new Point(486, 206);
             resultsPanel.Name = "resultsPanel";
-            resultsPanel.Size = new Size(302, 185);
+            resultsPanel.Size = new Size(302, 222);
             resultsPanel.TabIndex = 4;
             // 
             // resultsFrame
@@ -328,20 +333,30 @@
             graphicPanel.Size = new Size(396, 222);
             graphicPanel.TabIndex = 5;
             // 
+            // difficultyPanel
+            // 
+            difficultyPanel.Controls.Add(DifficultyLabel);
+            difficultyPanel.Controls.Add(diffCheckBox);
+            difficultyPanel.Location = new Point(45, 24);
+            difficultyPanel.Name = "difficultyPanel";
+            difficultyPanel.Size = new Size(152, 166);
+            difficultyPanel.TabIndex = 6;
+            // 
             // StatisticForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(difficultyPanel);
             Controls.Add(graphicPanel);
             Controls.Add(resultsPanel);
             Controls.Add(bestScorePanel);
-            Controls.Add(DifficultyLabel);
-            Controls.Add(diffCheckBox);
             Controls.Add(winRatePanel);
             DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.SizableToolWindow;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "StatisticForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Statistic";
             Load += StatusPie_Load;
             ((System.ComponentModel.ISupportInitialize)recordBindingSource1).EndInit();
@@ -352,8 +367,9 @@
             resultsPanel.PerformLayout();
             resultsFrame.ResumeLayout(false);
             resultsFrame.PerformLayout();
+            difficultyPanel.ResumeLayout(false);
+            difficultyPanel.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -385,5 +401,6 @@
         private Label tilesResultTitleLabel;
         private GroupBox resultsFrame;
         private Panel graphicPanel;
+        private Panel difficultyPanel;
     }
 }

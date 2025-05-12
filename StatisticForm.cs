@@ -45,7 +45,7 @@ namespace Minesweeper
             };
 
         }
-
+        
         private void StatusPie_Load(object sender, EventArgs e)
         {
             diffCheckBox.SetItemChecked(0, true);
@@ -57,6 +57,8 @@ namespace Minesweeper
             BestRecordInitialize();
             ResultsInitialize();
             InitializeGraphic();
+            diffCheckBox.TabStop = false;
+            
         }
         private void UpdatePieChart()
         {
@@ -66,6 +68,7 @@ namespace Minesweeper
         private void diffCheckBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             diffCheckBox.ClearSelected();
+            
             List<Difficulty> selectedDifficulties = new List<Difficulty>();
             foreach (var item in diffCheckBox.CheckedItems)
             {
@@ -244,7 +247,7 @@ namespace Minesweeper
                 }
             };
             var records = selectedRecords ?? SQLDataBase.GetAllRecords();
-            var grouper = records.Where(r => r.secondsInGame > 0 && r.status == GameStatus.Win)
+            var grouper = records.Where(r => r.secondsInGame > 0 && (r.status == GameStatus.Win))
                 .OrderBy(r => r.secondsInGame)
                 .GroupBy(r => r.difficulty);
             if (selectedRecords != null)

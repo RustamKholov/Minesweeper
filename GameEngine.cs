@@ -209,6 +209,7 @@ namespace Minesweeper
             _flaggsSet = 0;
             _tilesUncovered = 0;
             _clicksPerformed = 0;
+            Grid = new Cell[_rows, _cols];
             InitializeEmptyGrid();
             _status = GameStatus.NotStarted;
             _gameSaved = false;

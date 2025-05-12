@@ -107,10 +107,12 @@
             // NavigationMenu
             // 
             NavigationMenu.BackColor = SystemColors.Control;
+            NavigationMenu.GripMargin = new Padding(2);
             NavigationMenu.ImageScalingSize = new Size(20, 20);
             NavigationMenu.Items.AddRange(new ToolStripItem[] { newGameToolStripMenuItem, optionsToolStripMenuItem, statisticToolStripMenuItem, recordsStripMenuItem });
             resources.ApplyResources(NavigationMenu, "NavigationMenu");
             NavigationMenu.Name = "NavigationMenu";
+            NavigationMenu.RenderMode = ToolStripRenderMode.Professional;
             // 
             // newGameToolStripMenuItem
             // 
@@ -162,6 +164,7 @@
             Controls.Add(NavigationMenu);
             Controls.Add(InfoBox);
             DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.Fixed3D;
             MainMenuStrip = NavigationMenu;
             Name = "MainWindow";
             FormClosing += MainWindow_FormClosing;
