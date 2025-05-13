@@ -58,12 +58,18 @@
             totalResultLabel = new Label();
             graphicPanel = new Panel();
             difficultyPanel = new Panel();
+            gameStatusPanel = new Panel();
+            allRadioButton = new RadioButton();
+            abandonedRadioButton = new RadioButton();
+            loseRadioButton = new RadioButton();
+            winRadioButton = new RadioButton();
             ((System.ComponentModel.ISupportInitialize)recordBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)recordBindingSource).BeginInit();
             bestScorePanel.SuspendLayout();
             resultsPanel.SuspendLayout();
             resultsFrame.SuspendLayout();
             difficultyPanel.SuspendLayout();
+            gameStatusPanel.SuspendLayout();
             SuspendLayout();
             // 
             // winRatePanel
@@ -114,7 +120,7 @@
             bestScorePanel.Controls.Add(bestTimeTitleLabel);
             bestScorePanel.Location = new Point(208, 24);
             bestScorePanel.Name = "bestScorePanel";
-            bestScorePanel.Size = new Size(233, 166);
+            bestScorePanel.Size = new Size(253, 111);
             bestScorePanel.TabIndex = 3;
             // 
             // dateBestLabel
@@ -328,9 +334,9 @@
             // 
             // graphicPanel
             // 
-            graphicPanel.Location = new Point(45, 206);
+            graphicPanel.Location = new Point(45, 174);
             graphicPanel.Name = "graphicPanel";
-            graphicPanel.Size = new Size(396, 222);
+            graphicPanel.Size = new Size(416, 254);
             graphicPanel.TabIndex = 5;
             // 
             // difficultyPanel
@@ -339,14 +345,72 @@
             difficultyPanel.Controls.Add(diffCheckBox);
             difficultyPanel.Location = new Point(45, 24);
             difficultyPanel.Name = "difficultyPanel";
-            difficultyPanel.Size = new Size(152, 166);
+            difficultyPanel.Size = new Size(152, 111);
             difficultyPanel.TabIndex = 6;
+            // 
+            // gameStatusPanel
+            // 
+            gameStatusPanel.Controls.Add(allRadioButton);
+            gameStatusPanel.Controls.Add(abandonedRadioButton);
+            gameStatusPanel.Controls.Add(loseRadioButton);
+            gameStatusPanel.Controls.Add(winRadioButton);
+            gameStatusPanel.Location = new Point(46, 141);
+            gameStatusPanel.Name = "gameStatusPanel";
+            gameStatusPanel.Size = new Size(415, 29);
+            gameStatusPanel.TabIndex = 7;
+            // 
+            // allRadioButton
+            // 
+            allRadioButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            allRadioButton.AutoSize = true;
+            allRadioButton.Location = new Point(306, 3);
+            allRadioButton.Name = "allRadioButton";
+            allRadioButton.Size = new Size(39, 19);
+            allRadioButton.TabIndex = 3;
+            allRadioButton.Text = "All";
+            allRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // abandonedRadioButton
+            // 
+            abandonedRadioButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            abandonedRadioButton.AutoSize = true;
+            abandonedRadioButton.Location = new Point(200, 3);
+            abandonedRadioButton.Name = "abandonedRadioButton";
+            abandonedRadioButton.Size = new Size(87, 19);
+            abandonedRadioButton.TabIndex = 2;
+            abandonedRadioButton.Text = "Abandoned";
+            abandonedRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // loseRadioButton
+            // 
+            loseRadioButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            loseRadioButton.AutoSize = true;
+            loseRadioButton.Location = new Point(132, 3);
+            loseRadioButton.Name = "loseRadioButton";
+            loseRadioButton.Size = new Size(49, 19);
+            loseRadioButton.TabIndex = 1;
+            loseRadioButton.Text = "Lose";
+            loseRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // winRadioButton
+            // 
+            winRadioButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            winRadioButton.AutoSize = true;
+            winRadioButton.Checked = true;
+            winRadioButton.Location = new Point(67, 3);
+            winRadioButton.Name = "winRadioButton";
+            winRadioButton.Size = new Size(46, 19);
+            winRadioButton.TabIndex = 0;
+            winRadioButton.TabStop = true;
+            winRadioButton.Text = "Win";
+            winRadioButton.UseVisualStyleBackColor = true;
             // 
             // StatisticForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(gameStatusPanel);
             Controls.Add(difficultyPanel);
             Controls.Add(graphicPanel);
             Controls.Add(resultsPanel);
@@ -369,6 +433,8 @@
             resultsFrame.PerformLayout();
             difficultyPanel.ResumeLayout(false);
             difficultyPanel.PerformLayout();
+            gameStatusPanel.ResumeLayout(false);
+            gameStatusPanel.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -402,5 +468,10 @@
         private GroupBox resultsFrame;
         private Panel graphicPanel;
         private Panel difficultyPanel;
+        private Panel gameStatusPanel;
+        private RadioButton allRadioButton;
+        private RadioButton abandonedRadioButton;
+        private RadioButton loseRadioButton;
+        private RadioButton winRadioButton;
     }
 }

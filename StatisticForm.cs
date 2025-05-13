@@ -14,8 +14,10 @@ using LiveCharts.Defaults;
 using LiveCharts.WinForms;
 using PieChart = LiveCharts.WinForms.PieChart;
 using CartesianChart = LiveCharts.WinForms.CartesianChart;
+using Separator = LiveCharts.Wpf.Separator;
 using System.Xml.Serialization;
 using System.Reflection;
+using LiveCharts.Wpf.Charts.Base;
 
 namespace Minesweeper
 {
@@ -24,15 +26,17 @@ namespace Minesweeper
         public SeriesCollection SeriesCollection { get; set; } = new SeriesCollection();
         public RecordsSQLManager SQLDataBase { get; set; }
         public PieChart PieChart { get; set; }
-        private List<GameStatus> gameStatuses;
+        private List<GameStatus> _gameStatuses;
+        private List<GameStatus> _selectedStatuses = new List<GameStatus>() { GameStatus.Win };
+        private List<Difficulty> _selectedDifficulties = new List<Difficulty>() { Difficulty.Easy, Difficulty.Medium, Difficulty.Hard };
         public StatisticForm()
         {
 
             InitializeComponent();
             SQLDataBase = new RecordsSQLManager();
-            gameStatuses = SQLDataBase.GetAllStatuses();
+            _gameStatuses = SQLDataBase.GetAllStatuses();
 
-            InitializeSeriesCollection(gameStatuses);
+            InitializeSeriesCollection(_gameStatuses);
 
             PieChart = new PieChart
             {
@@ -45,12 +49,17 @@ namespace Minesweeper
             };
 
         }
-        
+
         private void StatusPie_Load(object sender, EventArgs e)
         {
             diffCheckBox.SetItemChecked(0, true);
             diffCheckBox.SetItemChecked(1, true);
             diffCheckBox.SetItemChecked(2, true);
+            winRadioButton.Checked = true;
+            winRadioButton.CheckedChanged += radioButton_Checked;
+            loseRadioButton.CheckedChanged += radioButton_Checked;
+            abandonedRadioButton.CheckedChanged += radioButton_Checked;
+            allRadioButton.CheckedChanged += radioButton_Checked;
             PieChart.Series = SeriesCollection;
             PieChart.DataContext = this;
             winRatePanel.Controls.Add(PieChart);
@@ -58,7 +67,7 @@ namespace Minesweeper
             ResultsInitialize();
             InitializeGraphic();
             diffCheckBox.TabStop = false;
-            
+            DataContext = this;
         }
         private void UpdatePieChart()
         {
@@ -68,7 +77,7 @@ namespace Minesweeper
         private void diffCheckBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             diffCheckBox.ClearSelected();
-            
+
             List<Difficulty> selectedDifficulties = new List<Difficulty>();
             foreach (var item in diffCheckBox.CheckedItems)
             {
@@ -77,6 +86,7 @@ namespace Minesweeper
                     selectedDifficulties.Add(difficulty);
                 }
             }
+            _selectedDifficulties = selectedDifficulties;
             UpdateAllElements(selectedDifficulties);
         }
         private void InitializeSeriesCollection(List<GameStatus> statuses)
@@ -193,26 +203,23 @@ namespace Minesweeper
         }
         private void UpdateAllElements(List<Difficulty> selectedDifficulties)
         {
-            UpdateChart(selectedDifficulties);
+            UpdatePieChart(selectedDifficulties);
             BestRecordUpdate(selectedDifficulties);
             UpdateResults(selectedDifficulties);
             UpdateGraphic(selectedDifficulties);
         }
-        private void UpdateChart(List<Difficulty> selectedDifficulties)
+        private void UpdatePieChart(List<Difficulty> selectedDifficulties)
         {
             if (selectedDifficulties.Count == 0)
             {
-                InitializeSeriesCollection(gameStatuses);
+                InitializeSeriesCollection(_gameStatuses);
                 UpdatePieChart();
                 return;
             }
             List<GameStatus> selectedStatuses = new List<GameStatus>();
-            foreach (var item in selectedDifficulties)
+            foreach (var difficulty in selectedDifficulties)
             {
-                if (Enum.TryParse(item.ToString(), out Difficulty difficulty))
-                {
-                    selectedStatuses = selectedStatuses.Concat(SQLDataBase.GetAllStatuses(difficulty)).ToList();
-                }
+                selectedStatuses = selectedStatuses.Concat(SQLDataBase.GetAllStatuses(difficulty)).ToList();
             }
             InitializeSeriesCollection(selectedStatuses);
             UpdatePieChart();
@@ -220,12 +227,9 @@ namespace Minesweeper
         private void UpdateResults(List<Difficulty> selectedDifficulties)
         {
             List<Record> records = new List<Record>();
-            foreach (var item in selectedDifficulties)
+            foreach (var difficulty in selectedDifficulties)
             {
-                if (Enum.TryParse(item.ToString(), out Difficulty difficulty))
-                {
-                    records = records.Concat(SQLDataBase.GetAllRecords(difficulty)).ToList();
-                }
+                records = records.Concat(SQLDataBase.GetAllRecords(difficulty)).ToList();
             }
             if (records.Count == 0)
             {
@@ -237,65 +241,178 @@ namespace Minesweeper
 
         private void InitializeGraphic(List<Record>? selectedRecords = null)
         {
+
+            var records = selectedRecords ?? SQLDataBase.GetAllRecords();
+
+            graphicPanel.Controls.Add(CreateChart(records));
+
+        }
+
+        private CartesianChart CreateChart(List<Record> records)
+        {
+
             var chart = new CartesianChart
             {
                 Dock = DockStyle.Fill,
                 LegendLocation = LegendLocation.Top,
                 DataTooltip = new DefaultTooltip
                 {
-                    SelectionMode = TooltipSelectionMode.SharedXInSeries
+                    SelectionMode = TooltipSelectionMode.OnlySender
                 }
             };
-            var records = selectedRecords ?? SQLDataBase.GetAllRecords();
-            var grouper = records.Where(r => r.secondsInGame > 0 && (r.status == GameStatus.Win))
+
+            FillChart(chart, records);
+            return chart;
+        }
+        private void UpdateChart(CartesianChart chart, List<Record> records)
+        {
+
+            chart.Series.Clear();
+            chart.AxisX.Clear();
+            chart.AxisY.Clear();
+            if (records.Count == 0)
+            {
+                records = SQLDataBase.GetAllRecords();
+            }
+            FillChart(chart, records);
+        }
+
+        private void FillChart(CartesianChart chart, List<Record> records)
+        {
+            double globalMaxX = double.MinValue;
+            double globalMaxY = double.MinValue;
+            double globalMinX = double.MaxValue;
+            double globalMinY = double.MaxValue;
+            var grouper = records.Where(r => r.secondsInGame > 0 && (_selectedStatuses.Contains(r.status)))
                 .OrderBy(r => r.secondsInGame)
                 .GroupBy(r => r.difficulty);
-            if (selectedRecords != null)
-            {
-                graphicPanel.Controls.Clear();
-            }
+
             Dictionary<int, List<double>> tilesPerSecond = new Dictionary<int, List<double>>();
+            SeriesCollection bubbleSeries = new SeriesCollection();
+            chart.Series = bubbleSeries;
             foreach (var group in grouper)
             {
-                var series = new LineSeries
+                var series = new ScatterSeries
                 {
+
                     Title = group.Key.ToString(),
-                    Values = new ChartValues<ObservablePoint>(),
-                    LineSmoothness = 1,
-                    Fill = System.Windows.Media.Brushes.Transparent,
+                    Values = new ChartValues<ScatterPoint>(),
+                    MinPointShapeDiameter = 10,
+                    MaxPointShapeDiameter = 40,
+                    
                 };
-                foreach (var record in group)
+
+                // Dictionary to group by X (tiles per second)
+                var groupedPoints = group
+                    .Select(r => new
+                    {
+                        X = Math.Round((double)r.tilesUncovered / r.secondsInGame, 2),
+                        Y = (double)r.secondsInGame
+                    })
+                    .GroupBy(p => p.X);
+
+                foreach (var xGroup in groupedPoints)
                 {
-                    series.Values.Add(new ObservablePoint((double)record.tilesUncovered / record.secondsInGame, record.secondsInGame));
+                    double x = xGroup.Key;
+                    double averageY = xGroup.Average(p => p.Y);
+                    double weight = xGroup.Count(); // this for Z to show stacking
+
+                    // Update global min and max values
+                    globalMaxX = Math.Max(globalMaxX, x);
+                    globalMaxY = Math.Max(globalMaxY, averageY);
+
+                    globalMinX = Math.Min(globalMinX, x);
+                    globalMinY = Math.Min(globalMinY, averageY);
+
+                    // The Z parameter controls point size in ScatterPoint
+                    series.Values.Add(new ScatterPoint()
+                    {
+                        X = x,
+                        Y = averageY,
+                        Weight = weight,
+                    });
                 }
+
                 chart.Series.Add(series);
             }
-            
-            
+
+            // Calculate dynamic steps and max values to show 10 ticks
+            double xRange = globalMaxX - globalMinX;
+            double xStep = xRange / 9; // 10 points = 9 intervals
+            double xMax = globalMinX + xStep * 9;
+
+            double yRange = globalMaxY - globalMinY;
+            double yStep = yRange / 9;
+            double yMax = globalMinY + yStep * 9;
+
+
+
             chart.AxisX.Add(new Axis
             {
-                Title = "Tiles per Second",
-                LabelFormatter = value => value.ToString("N")
-            });
-            chart.AxisY.Add(new Axis
-            {
-                Title = "Time spent",
-                LabelFormatter = value => value.ToString("N")
+                Title = "Tiles opened per second",
+                LabelFormatter = value => value.ToString("0.0"),
+                MinValue = Math.Floor(globalMinX),
+                MaxValue = Math.Ceiling(xMax),
+                Separator = new Separator
+                {
+                    Step = xStep,
+                    IsEnabled = true
+                }
             });
 
-            graphicPanel.Controls.Add(chart);
+            chart.AxisY.Add(new Axis
+            {
+                Title = "Time Spent (seconds)",
+                LabelFormatter = value => TimeSpan.FromSeconds(value).ToString(@"mm\:ss"),
+                MinValue = Math.Floor(globalMinY),
+                MaxValue = Math.Ceiling(yMax),
+                Separator = new Separator
+                {
+                    Step = yStep,
+                    IsEnabled = true
+                }
+            });
+
         }
+
         private void UpdateGraphic(List<Difficulty> selectedDifficulties)
         {
             List<Record> records = new List<Record>();
-            foreach (var item in selectedDifficulties)
+            foreach (var difficulty in selectedDifficulties)
             {
-                if (Enum.TryParse(item.ToString(), out Difficulty difficulty))
-                {
-                    records = records.Concat(SQLDataBase.GetAllRecords(difficulty)).ToList();
-                }
+              records = records.Concat(SQLDataBase.GetAllRecords(difficulty)).ToList();
             }
-            InitializeGraphic(records);
+            if (graphicPanel.GetNextControl(graphicPanel, true) is CartesianChart chart)
+            {
+                UpdateChart(chart, records);
+            }
+        }
+
+        private void radioButton_Checked(object? sender, EventArgs e)
+        {
+            if(sender is System.Windows.Forms.RadioButton radioButton)
+            {
+                if (radioButton.Checked)
+                {
+                    if (radioButton.Name == "winRadioButton")
+                    {
+                        _selectedStatuses = new List<GameStatus>() { GameStatus.Win };
+                    }
+                    else if (radioButton.Name == "loseRadioButton")
+                    {
+                        _selectedStatuses = new List<GameStatus>() { GameStatus.Lose };
+                    }
+                    else if (radioButton.Name == "abandonedRadioButton")
+                    {
+                        _selectedStatuses = new List<GameStatus>() { GameStatus.Abandoned };
+                    }
+                    else if (radioButton.Name == "allRadioButton")
+                    {
+                        _selectedStatuses = new List<GameStatus>() { GameStatus.Win, GameStatus.Lose, GameStatus.Abandoned };
+                    }
+                }
+                UpdateGraphic(_selectedDifficulties);
+            }
         }
     }
 }

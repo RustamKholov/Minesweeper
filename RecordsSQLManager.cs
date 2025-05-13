@@ -118,13 +118,27 @@ namespace Minesweeper
             using var cmd = conn.CreateCommand();
             if (difficulty != null)
             {
-                query = "SELECT * FROM Records WHERE Difficulty = @difficulty AND Status = 'Win' ORDER BY Game_Seconds ASC LIMIT 1";
+                query = "SELECT * FROM Records" +
+                    " WHERE Difficulty = @difficulty AND Status = 'Win'" +
+                    " ORDER BY Game_Seconds ASC" +
+                    ",Clicks_Performed ASC" +
+                    ",Flaggs_Set ASC" +
+                    ",Tiles_Uncovered ASC" +
+                    ",TimeStamp ASC" +
+                    " LIMIT 1";
                 cmd.CommandText = query;
                 cmd.Parameters.AddWithValue("@difficulty", difficulty.ToString());
             }
             else
             {
-                query = "SELECT * FROM Records WHERE Status = 'Win' ORDER BY Game_Seconds ASC LIMIT 1 ";
+                query = "SELECT * FROM Records" +
+                    " WHERE Status = 'Win'" +
+                    " ORDER BY Game_Seconds ASC" +
+                    ",Clicks_Performed ASC" +
+                    ",Flaggs_Set ASC" +
+                    ",Tiles_Uncovered ASC" +
+                    ",TimeStamp ASC" +
+                    " LIMIT 1 ";
                 cmd.CommandText = query;
             }
             using var reader = cmd.ExecuteReader();
