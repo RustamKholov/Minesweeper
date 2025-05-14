@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
+using Minesweeper.Models;
+using Minesweeper.Interfaces;
 
-namespace Minesweeper
+namespace Minesweeper.Controllers
 {
-    public class RecordsSQLManager
+    public class RecordsSQLManager : IRecordService
     {
         public List<Record> RecordsList { get; private set; } = new List<Record>();
         private readonly string _connectionString = "Data Source=Data/Minesweeper.db;Version=3;";
-
         public void SaveRecord(Record record)
         {
             using var conn = new SQLiteConnection(_connectionString);
@@ -67,11 +63,6 @@ namespace Minesweeper
             }
             return records;
         }
-        private void LoadRecords()
-        {
-            RecordsList.Clear();
-            RecordsList = GetAllRecords();
-        }
         public void DeleteRecord(Record record)
         {
             using var conn = new SQLiteConnection(_connectionString);
@@ -84,7 +75,7 @@ namespace Minesweeper
                 throw new Exception("Failed to delete record from database.");
             }
         }
-        public List<GameStatus> GetAllStatuses(Difficulty? difficulty = null) {
+        public List<GameStatus> GetAllGameStatuses(Difficulty? difficulty = null) {
             List<GameStatus> statuses = new List<GameStatus>();
             using var conn = new SQLiteConnection(_connectionString);
             conn.Open();

@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using Minesweeper.Controllers;
+using Minesweeper.Interfaces;
 
 namespace Minesweeper
 {
     public partial class RecordsForm : Form
     {
-        private GameEngine _gameEngine;
+        private IRecordService _csvDataBase;
+        private IRecordService _sqliteDataBase;
 
-        public RecordsForm(GameEngine gameEngine)
+        public RecordsForm()
         {
-            _gameEngine = gameEngine;
+            _csvDataBase = new DataBaseCSV();
+            _sqliteDataBase = new RecordsSQLManager();
             InitializeComponent();
         }
 
@@ -27,14 +22,14 @@ namespace Minesweeper
         }
         private void LoadFromCSV()
         {
-            foreach (var record in _gameEngine.CSVDataBase.RecordsList)
+            foreach (var record in _csvDataBase.GetAllRecords())
             {
                 csvRecordBinding.Add(record);
             }
         }
         private void LoadFromSQLite()
         {
-            foreach (var record in _gameEngine.SQLiteDataBase.GetAllRecords())
+            foreach (var record in _sqliteDataBase.GetAllRecords())
             {
                 sqlRecordBinding.Add(record);
             }

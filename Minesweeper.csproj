@@ -58,6 +58,7 @@
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7">
       <GeneratePathProperty>True</GeneratePathProperty>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
   </ItemGroup>
 

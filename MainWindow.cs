@@ -1,12 +1,13 @@
-﻿using System.Threading.Tasks;
-using Timer = System.Windows.Forms.Timer;
+﻿using Minesweeper.Interfaces;
+using Minesweeper.Models;
 
 namespace Minesweeper
 {
     public partial class MainWindow : Form, ICellObserver, ITimerObserver
     {
-        private Settings _settings;
-        private GameEngine _gameEngine;
+        private IGameSettings _settings;
+        private IGameServiceGenerator _serviceGenerator;
+        private IGameService _gameService;
         private bool _mousePressed = false;
         private Button? _pressedButton = null;
         private Image _lastSmile = Properties.Resources.Smile;
@@ -14,18 +15,19 @@ namespace Minesweeper
         private readonly int _paddingHeight = 170;
         
 
-        public MainWindow(Settings settings, GameEngine gameEngine)
+        public MainWindow(IGameSettings settings, IGameServiceGenerator gameEngineGenerator)
         {
             _settings = settings;
-            _gameEngine = gameEngine;
+            _serviceGenerator = gameEngineGenerator;
+            _gameService = _serviceGenerator.CreateGameService();
             SubscribeComponents();
             InitializeComponent();
             
         }
         private void SubscribeComponents()
         {
-            _gameEngine.Subscribe(this);
-            _gameEngine.GameTimer.Subscribe(this);
+            _gameService.SubscribeCellObserver(this);
+            _gameService.SubscribeTimerObserver(this);
         }
         private Size GetSize()
         {
@@ -115,10 +117,10 @@ namespace Minesweeper
             {
                 int col = coords.Item1;
                 int row = coords.Item2;
-                var relatedCell = _gameEngine.GetCell(row, col);
+                var relatedCell = _gameService.GetCell(row, col);
                 if (e.Button == MouseButtons.Right)
                 {
-                    _gameEngine.FlagCell(relatedCell);
+                    _gameService.FlaggCell(relatedCell);
                 }
             }
         }
@@ -179,7 +181,7 @@ namespace Minesweeper
             {
                 int col = coords.Item1;
                 int row = coords.Item2;
-                Cell relatedCell = _gameEngine.GetCell(row, col);
+                Cell relatedCell = _gameService.GetCell(row, col);
                 if (relatedCell != null && !relatedCell.IsRevealed && !relatedCell.IsFlagged)
                 {
                     btn.FlatStyle = FlatStyle.Flat;
@@ -208,7 +210,7 @@ namespace Minesweeper
             {
                 int col = coords.Item1;
                 int row = coords.Item2;
-                Cell relatedCell = _gameEngine.GetCell(row, col);
+                Cell relatedCell = _gameService.GetCell(row, col);
                 if (relatedCell != null && !relatedCell.IsRevealed && !relatedCell.IsFlagged)
                 {
                     btn.FlatStyle = FlatStyle.Flat;
@@ -237,8 +239,8 @@ namespace Minesweeper
             {
                 int col = coords.Item1;
                 int row = coords.Item2;
-                _gameEngine.RevealCell(row, col);
-                _gameEngine.ClicksPerformed++;
+                _gameService.RevealCell(row, col);
+                _gameService.IncrementClick();
                 CheckGameOver();
             }
         }
@@ -320,11 +322,11 @@ namespace Minesweeper
         }
         public void CheckGameOver()
         {
-            if (_gameEngine.IsGameOver)
+            if (_gameService.CheckIfGameOver())
             {
                 DeactivateGrid();
                 ShowAllMines();
-                if (_gameEngine.IsGameWon)
+                if (_gameService.CheckIfGameWon())
                 {
                     ShowWin();
                 }
@@ -344,7 +346,7 @@ namespace Minesweeper
                     Button? btn = tableGrid.GetControlFromPosition(col, row) as Button;
                     if (btn != null)
                     {
-                        Cell cell = _gameEngine.Grid[row, col];
+                        Cell cell = _gameService.GetCell(row, col);
                         if (cell.IsFlagged && !cell.IsMine)
                         {
                             btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
@@ -362,7 +364,7 @@ namespace Minesweeper
                             }
                             else
                             {
-                                if (_gameEngine.IsGameWon)
+                                if (_gameService.CheckIfGameWon())
                                 {
                                     btn.BackgroundImage = Properties.Resources.Minesweeper_flag;
                                     btn.BackgroundImageLayout = ImageLayout.Stretch;
@@ -416,7 +418,7 @@ namespace Minesweeper
                     btn.MouseMove += Mouse_Move_With_Left_Click;
                 }
             }
-            _gameEngine.RestartGame();
+            _gameService.RestartGame();
             SetDefaultLabels();
             SubscribeComponents();
             _lastSmile = Properties.Resources.Smile;
@@ -425,9 +427,9 @@ namespace Minesweeper
         private void RebuildGame()
         {
             Visible = false;
-            _gameEngine.Dispose();
-            _gameEngine = new GameEngine(_settings);
-            
+            _gameService.DisposeGame();
+            _gameService = _serviceGenerator.CreateGameService();
+
             ClientSize = GetSize();
             InitializeGameGrid(_settings.Rows, _settings.Cols);
             CenterToScreen();
@@ -442,10 +444,10 @@ namespace Minesweeper
         }
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _gameEngine.CreateRecord();
-            _gameEngine.Dispose();
-            _gameEngine.GameTimer.UnsubscribeAll();
-            _gameEngine.Unsubscribe(this);
+            _gameService.SaveGame();
+            _gameService.DisposeGame();
+            _gameService.UnsubscribeTimerObserver(this);
+            _gameService.UnsubscribeCellObserver(this);
         }
         private void ShowLose()
         {
@@ -464,7 +466,7 @@ namespace Minesweeper
         public void UpdateFlagged(Cell cell)
         {
             UpdateFlagedUI(cell);
-            Mines_Label.Text = _gameEngine.MinesToFlagg.ToString("000");
+            Mines_Label.Text = _gameService.GetMinesToFlag().ToString("000");
         }
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
@@ -503,7 +505,7 @@ namespace Minesweeper
 
         private void recordsStripMenuItem_Click(object sender, EventArgs e)
         {
-            RecordsForm optionsForm = new RecordsForm(_gameEngine);
+            RecordsForm optionsForm = new RecordsForm();
             optionsForm.ShowDialog();
         }
     }

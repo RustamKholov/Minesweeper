@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
+using Minesweeper.Interfaces;
+using Minesweeper.Models;
 
-namespace Minesweeper
+namespace Minesweeper.Controllers
 {
 
-    public class DataBaseCSV
+    public class DataBaseCSV : IRecordService
     {
         private int _nextId = 1;
         private readonly string _titles = "ID,Seconds,Difficulty,Status,Tiles_Uncovered,Clicks_Performed,Flaggs_Set";
@@ -24,21 +21,24 @@ namespace Minesweeper
             InitializeDataBase();
         }
 
-        public void AddRecord(Record record)
+        public void SaveRecord(Record record)
         {
             record.ID = _nextId++;
             _recordsList.Add(record);
             Edited = true;
         }
 
-        public void DeleteUser(Record record)
+        public void DeleteRecord(Record record)
         {
             _recordsList.Remove(record);
             Edited = true;
         }
-        public List<Record> GetRecordsList()
+        public List<Record> GetAllRecords(Difficulty? difficulty = null)
         {
-            return _recordsList;
+            if (difficulty == null)
+                return _recordsList;
+            else
+                return _recordsList.Where(r => r.difficulty == difficulty).ToList();
         }
         private void InitializeDataBase()
         {
@@ -59,7 +59,7 @@ namespace Minesweeper
                 while ((line = reader.ReadLine()) != null)
                 {
                     var record = ParseRecord(line);
-                    AddRecord(record);
+                    SaveRecord(record);
                 }
                 _nextId = _recordsList.Count > 0 ? _recordsList.Max(r => r.ID) + 1 : 1;
                 Edited = false;
@@ -105,6 +105,26 @@ namespace Minesweeper
             catch (Exception e)
             {
                 throw new Exception("Error saving to CSV: " + e.Message, e);
+            }
+        }
+
+        public List<GameStatus> GetAllGameStatuses(Difficulty? difficulty = null)
+        {
+            if (difficulty == null)
+                return _recordsList.Select(r => r.status).Distinct().ToList();
+            else
+                return _recordsList.Where(r => r.difficulty == difficulty).Select(r => r.status).Distinct().ToList();
+        }
+
+        public Record? GetBestRecord(Difficulty? difficulty = null)
+        {
+            if(difficulty == null)
+            {
+                return _recordsList.OrderBy(r => r.secondsInGame).FirstOrDefault();
+            }
+            else
+            {
+                return _recordsList.Where(r => r.difficulty == difficulty).OrderBy(r => r.secondsInGame).FirstOrDefault();
             }
         }
     }

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
+﻿using Minesweeper.Interfaces;
 using Timer = System.Windows.Forms.Timer;
 
 
-namespace Minesweeper
+namespace Minesweeper.Models
 {
-    
-    public class GameTimer : IDisposable
+
+    public class GameTimer : IDisposable, IGameTimer
     {
         private Timer _timer;
         private int _elapsedTime = 0;
@@ -22,7 +17,7 @@ namespace Minesweeper
         {
             _timer = new Timer();
             _timer.Interval = 1000; // 1 second
-            _timer.Tick += (s,e) =>
+            _timer.Tick += (s, e) =>
                 {
                     _elapsedTime++;
                     NotifyObservers();
@@ -35,7 +30,7 @@ namespace Minesweeper
             _timer.Start();
         }
 
-        
+
 
         public void StopTimer()
         {

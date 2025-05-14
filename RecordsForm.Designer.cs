@@ -1,4 +1,6 @@
-﻿namespace Minesweeper
+﻿using Minesweeper.Models;
+
+namespace Minesweeper
 {
     partial class RecordsForm
     {

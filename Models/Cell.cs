@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Minesweeper.Interfaces;
 
-namespace Minesweeper
+namespace Minesweeper.Models
 {
-    public class Cell 
-    {        
+    public class Cell : ICell
+    {
         public bool IsMine { get; set; }
         public bool IsRevealed { get; set; }
         public bool IsFlagged { get; set; }
-        public int AdjacentMines { get => CountAdjacentMines();}
+        public int AdjacentMines { get => CountAdjacentMines(); }
         public bool IsSecured { get => CheckIfSecured(); }
         public int Row { get; set; }
         public int Col { get; set; }

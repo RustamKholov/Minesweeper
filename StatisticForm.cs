@@ -1,42 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Forms;
+﻿using System.Data;
 using LiveCharts;
 using LiveCharts.Wpf;
 using LiveCharts.Defaults;
-using LiveCharts.WinForms;
 using PieChart = LiveCharts.WinForms.PieChart;
 using CartesianChart = LiveCharts.WinForms.CartesianChart;
 using Separator = LiveCharts.Wpf.Separator;
-using System.Xml.Serialization;
-using System.Reflection;
-using LiveCharts.Wpf.Charts.Base;
+using Minesweeper.Models;
+using Minesweeper.Controllers;
+using Minesweeper.Interfaces;
+
 
 namespace Minesweeper
 {
     public partial class StatisticForm : Form
     {
         public SeriesCollection SeriesCollection { get; set; } = new SeriesCollection();
-        public RecordsSQLManager SQLDataBase { get; set; }
-        public PieChart PieChart { get; set; }
+        public IRecordService SQLDataBase { get; set; }
+        public IStatProviderService _statProviderService { get; set; }
         private List<GameStatus> _gameStatuses;
+        public PieChart PieChart { get; set; }
+
         private List<GameStatus> _selectedStatuses = new List<GameStatus>() { GameStatus.Win };
         private List<Difficulty> _selectedDifficulties = new List<Difficulty>() { Difficulty.Easy, Difficulty.Medium, Difficulty.Hard };
         public StatisticForm()
         {
-
             InitializeComponent();
             SQLDataBase = new RecordsSQLManager();
-            _gameStatuses = SQLDataBase.GetAllStatuses();
+            _statProviderService = new StatProviderService(SQLDataBase);
+            _gameStatuses = _statProviderService.GetAllGameStatuses();
 
-            InitializeSeriesCollection(_gameStatuses);
+            InitializeSeriesCollection(_statProviderService.GetGameStatusCount());
 
             PieChart = new PieChart
             {
@@ -89,35 +82,23 @@ namespace Minesweeper
             _selectedDifficulties = selectedDifficulties;
             UpdateAllElements(selectedDifficulties);
         }
-        private void InitializeSeriesCollection(List<GameStatus> statuses)
+
+        private void InitializeSeriesCollection(Dictionary<GameStatus, int> totals)
         {
             SeriesCollection.Clear();
             Func<ChartPoint, string> labelPoint = chartPoint =>
                 string.Format("{0} ({1:P0})", chartPoint.Y, chartPoint.Participation);
-            SeriesCollection.Add(new PieSeries
+            foreach (var gameStatusData in totals)
             {
-                Title = "Win",
-                Values = new ChartValues<int> { statuses.Count(g => g == GameStatus.Win) },
-                DataLabels = true,
-                LabelPoint = labelPoint
-
-            });
-            SeriesCollection.Add(new PieSeries
-            {
-                Title = "Lose",
-                Values = new ChartValues<int> { statuses.Count(g => g == GameStatus.Lose) },
-                DataLabels = true,
-                LabelPoint = labelPoint
-            });
-            SeriesCollection.Add(new PieSeries
-            {
-                Title = "Abandoned",
-                Values = new ChartValues<int> { statuses.Count(g => g == GameStatus.Abandoned) },
-                DataLabels = true,
-                LabelPoint = labelPoint
-            });
-
-
+                var series = new PieSeries
+                {
+                    Title = gameStatusData.Key.ToString(),
+                    Values = new ChartValues<int> { gameStatusData.Value },
+                    DataLabels = true,
+                    LabelPoint = labelPoint,
+                };
+                SeriesCollection.Add(series);
+            }
         }
         private void ResultsInitialize(List<Record>? records = null)
         {
@@ -212,25 +193,16 @@ namespace Minesweeper
         {
             if (selectedDifficulties.Count == 0)
             {
-                InitializeSeriesCollection(_gameStatuses);
+                InitializeSeriesCollection(_statProviderService.GetGameStatusCount());
                 UpdatePieChart();
                 return;
             }
-            List<GameStatus> selectedStatuses = new List<GameStatus>();
-            foreach (var difficulty in selectedDifficulties)
-            {
-                selectedStatuses = selectedStatuses.Concat(SQLDataBase.GetAllStatuses(difficulty)).ToList();
-            }
-            InitializeSeriesCollection(selectedStatuses);
+            InitializeSeriesCollection(_statProviderService.GetGameStatusCount(selectedDifficulties));
             UpdatePieChart();
         }
         private void UpdateResults(List<Difficulty> selectedDifficulties)
         {
-            List<Record> records = new List<Record>();
-            foreach (var difficulty in selectedDifficulties)
-            {
-                records = records.Concat(SQLDataBase.GetAllRecords(difficulty)).ToList();
-            }
+            List<Record> records = _statProviderService.GetAllRecords(selectedDifficulties);
             if (records.Count == 0)
             {
                 ResultsInitialize();
@@ -242,7 +214,7 @@ namespace Minesweeper
         private void InitializeGraphic(List<Record>? selectedRecords = null)
         {
 
-            var records = selectedRecords ?? SQLDataBase.GetAllRecords();
+            var records = selectedRecords ?? _statProviderService.GetAllRecords();
 
             graphicPanel.Controls.Add(CreateChart(records));
 
@@ -272,116 +244,58 @@ namespace Minesweeper
             chart.AxisY.Clear();
             if (records.Count == 0)
             {
-                records = SQLDataBase.GetAllRecords();
+                records = _statProviderService.GetAllRecords();
             }
             FillChart(chart, records);
         }
 
         private void FillChart(CartesianChart chart, List<Record> records)
         {
-            double globalMaxX = double.MinValue;
-            double globalMaxY = double.MinValue;
-            double globalMinX = double.MaxValue;
-            double globalMinY = double.MaxValue;
-            var grouper = records.Where(r => r.secondsInGame > 0 && (_selectedStatuses.Contains(r.status)))
-                .OrderBy(r => r.secondsInGame)
-                .GroupBy(r => r.difficulty);
+            var chartData = _statProviderService.BuildChartData(records, _selectedStatuses);
 
-            Dictionary<int, List<double>> tilesPerSecond = new Dictionary<int, List<double>>();
-            SeriesCollection bubbleSeries = new SeriesCollection();
-            chart.Series = bubbleSeries;
-            foreach (var group in grouper)
+            var seriesCollection = new SeriesCollection();
+            foreach (var series in chartData.Series)
             {
-                var series = new ScatterSeries
+                seriesCollection.Add(new ScatterSeries
                 {
-
-                    Title = group.Key.ToString(),
-                    Values = new ChartValues<ScatterPoint>(),
+                    Title = series.SeriesTitle,
+                    Values = new ChartValues<ScatterPoint>(series.Points),
                     MinPointShapeDiameter = 10,
-                    MaxPointShapeDiameter = 40,
-                    
-                };
-
-                // Dictionary to group by X (tiles per second)
-                var groupedPoints = group
-                    .Select(r => new
-                    {
-                        X = Math.Round((double)r.tilesUncovered / r.secondsInGame, 2),
-                        Y = (double)r.secondsInGame
-                    })
-                    .GroupBy(p => p.X);
-
-                foreach (var xGroup in groupedPoints)
-                {
-                    double x = xGroup.Key;
-                    double averageY = xGroup.Average(p => p.Y);
-                    double weight = xGroup.Count(); // this for Z to show stacking
-
-                    // Update global min and max values
-                    globalMaxX = Math.Max(globalMaxX, x);
-                    globalMaxY = Math.Max(globalMaxY, averageY);
-
-                    globalMinX = Math.Min(globalMinX, x);
-                    globalMinY = Math.Min(globalMinY, averageY);
-
-                    // The Z parameter controls point size in ScatterPoint
-                    series.Values.Add(new ScatterPoint()
-                    {
-                        X = x,
-                        Y = averageY,
-                        Weight = weight,
-                    });
-                }
-
-                chart.Series.Add(series);
+                    MaxPointShapeDiameter = 40
+                });
             }
 
-            // Calculate dynamic steps and max values to show 10 ticks
-            double xRange = globalMaxX - globalMinX;
-            double xStep = xRange / 9; // 10 points = 9 intervals
-            double xMax = globalMinX + xStep * 9;
+            chart.Series = seriesCollection;
 
-            double yRange = globalMaxY - globalMinY;
-            double yStep = yRange / 9;
-            double yMax = globalMinY + yStep * 9;
+            double xStep = (chartData.MaxX - chartData.MinX) / 9;
+            double yStep = (chartData.MaxY - chartData.MinY) / 9;
 
-
+            chart.AxisX.Clear();
+            chart.AxisY.Clear();
 
             chart.AxisX.Add(new Axis
             {
                 Title = "Tiles opened per second",
                 LabelFormatter = value => value.ToString("0.0"),
-                MinValue = Math.Floor(globalMinX),
-                MaxValue = Math.Ceiling(xMax),
-                Separator = new Separator
-                {
-                    Step = xStep,
-                    IsEnabled = true
-                }
+                MinValue = Math.Floor(chartData.MinX),
+                MaxValue = Math.Ceiling(chartData.MaxX),
+                Separator = new Separator { Step = xStep }
             });
 
             chart.AxisY.Add(new Axis
             {
                 Title = "Time Spent (seconds)",
                 LabelFormatter = value => TimeSpan.FromSeconds(value).ToString(@"mm\:ss"),
-                MinValue = Math.Floor(globalMinY),
-                MaxValue = Math.Ceiling(yMax),
-                Separator = new Separator
-                {
-                    Step = yStep,
-                    IsEnabled = true
-                }
+                MinValue = Math.Floor(chartData.MinY),
+                MaxValue = Math.Ceiling(chartData.MaxY),
+                Separator = new Separator { Step = yStep }
             });
 
         }
 
         private void UpdateGraphic(List<Difficulty> selectedDifficulties)
         {
-            List<Record> records = new List<Record>();
-            foreach (var difficulty in selectedDifficulties)
-            {
-              records = records.Concat(SQLDataBase.GetAllRecords(difficulty)).ToList();
-            }
+            List<Record> records = _statProviderService.GetAllRecords(selectedDifficulties);
             if (graphicPanel.GetNextControl(graphicPanel, true) is CartesianChart chart)
             {
                 UpdateChart(chart, records);

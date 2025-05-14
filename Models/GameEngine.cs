@@ -1,5 +1,7 @@
-﻿
-namespace Minesweeper
+﻿using Minesweeper.Controllers;
+using Minesweeper.Interfaces;
+
+namespace Minesweeper.Models
 {
     public class GameEngine : IDisposable
     {
@@ -11,7 +13,6 @@ namespace Minesweeper
         private int _flaggsSet = 0;
         private int _tilesUncovered = 0;
         private int _clicksPerformed = 0;
-        private Settings _settings;
         private DataBaseCSV _dataBase;
         private RecordsSQLManager _sqlManager;
         private bool _gameSaved = false;
@@ -23,20 +24,17 @@ namespace Minesweeper
         public bool IsFirstClick { get; set; }
         public int ClicksPerformed {get => _clicksPerformed; set { _clicksPerformed = value; }}
 
-
-        private GameTimer _gameTimer;
+        private IGameTimer _gameTimer;
         public DataBaseCSV CSVDataBase => _dataBase;
         public RecordsSQLManager SQLiteDataBase => _sqlManager;
-        public GameTimer GameTimer => _gameTimer;
+        public IGameTimer GameTimer => _gameTimer;
         public bool IsGameWon => _cellToReveal == 0;
         public int MinesToFlagg => _mines - _flaggedCells;
-        
-        public GameEngine(Settings settings)
+        public GameEngine(int rows, int cols, int mines)
         {
-            _rows = settings.Rows;
-            _cols = settings.Cols;
-            _mines = settings.Mines;
-            _settings = settings;
+            _rows = rows;
+            _cols = cols;
+            _mines = mines;
             _dataBase = new DataBaseCSV();
             _sqlManager = new RecordsSQLManager();
             IsGameOver = false;
@@ -249,14 +247,14 @@ namespace Minesweeper
             Record record = new Record()
             {
                 secondsInGame = _gameTimer.SecondInLastGame,
-                difficulty = _settings.Difficulty,
+                difficulty = Difficulty.Easy,
                 status = _status == GameStatus.Started ? GameStatus.Abandoned : _status,
                 tilesUncovered = _tilesUncovered,
                 clicksPerformed = _clicksPerformed,
                 flaggsSet = _flaggsSet,
             };
             _sqlManager.SaveRecord(record);
-            _dataBase.AddRecord(record);
+            _dataBase.SaveRecord(record);
             _dataBase.SaveToCSV();
             _gameSaved = true;
         }
