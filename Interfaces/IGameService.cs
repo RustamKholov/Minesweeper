@@ -17,6 +17,8 @@ namespace Minesweeper.Interfaces
         bool CheckIfGameWon();
         void RestartGame();
         GameEngine GetNewGameEngine();
+        void SetNewGameEngine(GameEngine gameEngine);
+        void RebuildGameEngine(IGameSettings settings);
         void SaveGame();
         void DisposeGame();
     }

@@ -8,6 +8,7 @@ namespace Minesweeper
         private IGameSettings _settings;
         private IGameServiceGenerator _serviceGenerator;
         private IGameService _gameService;
+        private ButtonRenderer _buttonRenderer;
         private bool _mousePressed = false;
         private Button? _pressedButton = null;
         private Image _lastSmile = Properties.Resources.Smile;
@@ -20,6 +21,7 @@ namespace Minesweeper
             _settings = settings;
             _serviceGenerator = gameEngineGenerator;
             _gameService = _serviceGenerator.CreateGameService();
+            _buttonRenderer = new ButtonRenderer(tableGrid, settings);
             SubscribeComponents();
             InitializeComponent();
             
@@ -42,8 +44,8 @@ namespace Minesweeper
 
             Mines_Label.Text = _settings.Mines.ToString("000");
 
-            SmileButton.FlatStyle = FlatStyle.Flat;
-            SmileButton.FlatAppearance.BorderSize = 0;
+            _buttonRenderer.Flat(SmileButton);
+            
             SmileButton.MouseDown += Smile_Button_Pressed;
             SmileButton.MouseUp += Smile_Button_Released;
 
@@ -76,39 +78,42 @@ namespace Minesweeper
             {
                 for (int col = 0; col < cols; col++)
                 {
-                    Button btn = new Button();
-
-                    btn.Dock = DockStyle.Fill;
-                    btn.FlatStyle = FlatStyle.Flat;
-                    btn.FlatAppearance.BorderSize = 0;
-                    btn.BackgroundImage = Properties.Resources.Minesweeper_unopened_square;
-                    btn.BackgroundImageLayout = ImageLayout.Stretch;
-                    btn.Margin = new Padding(0);
-                    btn.Font = _settings.Font;
+                    Button btn = _buttonRenderer.CreateCustomTile();
                     btn.Tag = (col, row);
-                    btn.Click += Tile_Click;
-                    btn.MouseDown += Right_Click_Field;
-                    btn.MouseDown += Left_Click_Down;
-                    btn.MouseUp += Left_Click_Up;
-                    btn.MouseMove += Mouse_Move_With_Left_Click;
+                    AddAllEvents(btn);
 
                     tableGrid.Controls.Add(btn, col, row);
                 }
             }
         }
+        private void AddAllEvents(Button btn)
+        {
+            btn.Click += Tile_Click;
+            btn.MouseDown += Right_Click_Field;
+            btn.MouseDown += Left_Click_Down;
+            btn.MouseUp += Left_Click_Up;
+            btn.MouseMove += Mouse_Move_With_Left_Click;
+        }
+        private void ClearAllEvents(Button btn)
+        {
+            btn.Click -= Tile_Click;
+            btn.MouseDown -= Right_Click_Field;
+            btn.MouseDown -= Left_Click_Down;
+            btn.MouseUp -= Left_Click_Up;
+            btn.MouseMove -= Mouse_Move_With_Left_Click;
+        }
         private void Smile_Button_Pressed(object? sender, EventArgs e)
         {
             if (sender is Button btn)
             {
-                _lastSmile = btn.BackgroundImage ?? _lastSmile;
-                btn.BackgroundImage = Properties.Resources.Smile_pressed;
+                _buttonRenderer.SmilePressed(btn, _lastSmile);
             }
         }
         private void Smile_Button_Released(object? sender, EventArgs e)
         {
             if (sender is Button btn)
             {
-                btn.BackgroundImage = _lastSmile;
+                _buttonRenderer.SmileReleased(btn, _lastSmile);
             }
         }
         private void Right_Click_Field(object? sender, MouseEventArgs e)
@@ -133,7 +138,7 @@ namespace Minesweeper
             {
                 _mousePressed = true;
                 _pressedButton = btn;
-                SmileButton.BackgroundImage = Properties.Resources.Scared;
+                _buttonRenderer.SmileScared(SmileButton);
                 DisplayButtonOnHold(btn);
             }
         }
@@ -142,7 +147,7 @@ namespace Minesweeper
 
             if (!_mousePressed) return;
 
-            SmileButton.BackgroundImage = Properties.Resources.Scared;
+            _buttonRenderer.SmileScared(SmileButton);
             Point realtivePosition = Cursor.Position;
             Point clientPoint = tableGrid.PointToClient(realtivePosition);
             if (clientPoint.X < 0 || clientPoint.Y < 0)
@@ -167,7 +172,7 @@ namespace Minesweeper
         private void Left_Click_Up(object? sender, MouseEventArgs e)
         {
             _mousePressed = false;
-            SmileButton.BackgroundImage = Properties.Resources.Smile;
+            _buttonRenderer.SmileDefault(SmileButton);
             if (_pressedButton != null)
             {
                 DisplayDefaultButton(_pressedButton);
@@ -184,10 +189,7 @@ namespace Minesweeper
                 Cell relatedCell = _gameService.GetCell(row, col);
                 if (relatedCell != null && !relatedCell.IsRevealed && !relatedCell.IsFlagged)
                 {
-                    btn.FlatStyle = FlatStyle.Flat;
-                    btn.FlatAppearance.BorderSize = 0;
-                    btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
-                    btn.BackgroundImageLayout = ImageLayout.Stretch;
+                    _buttonRenderer.Opened(btn);
                 }
                 else if (relatedCell != null && relatedCell.IsRevealed && relatedCell.AdjacentMines > 0)
                 {
@@ -195,10 +197,7 @@ namespace Minesweeper
                     {
                         if (!cell.IsRevealed && !cell.IsFlagged && tableGrid.GetControlFromPosition(cell.Col, cell.Row) is Button relatedButton)
                         {
-                            relatedButton.FlatStyle = FlatStyle.Flat;
-                            relatedButton.FlatAppearance.BorderSize = 0;
-                            relatedButton.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
-                            relatedButton.BackgroundImageLayout = ImageLayout.Stretch;
+                            _buttonRenderer.Opened(relatedButton);
                         }
                     }
                 }
@@ -213,9 +212,8 @@ namespace Minesweeper
                 Cell relatedCell = _gameService.GetCell(row, col);
                 if (relatedCell != null && !relatedCell.IsRevealed && !relatedCell.IsFlagged)
                 {
-                    btn.FlatStyle = FlatStyle.Flat;
-                    btn.FlatAppearance.BorderSize = 0;
-                    btn.BackgroundImage = Properties.Resources.Minesweeper_unopened_square;
+                    _buttonRenderer.Flat(btn);
+                    _buttonRenderer.Unopened(btn);
                 }
                 else if (relatedCell != null && relatedCell.IsRevealed && relatedCell.AdjacentMines > 0)
                 {
@@ -223,9 +221,8 @@ namespace Minesweeper
                     {
                         if (!cell.IsRevealed && !cell.IsFlagged && tableGrid.GetControlFromPosition(cell.Col, cell.Row) is Button relatedButton)
                         {
-                            relatedButton.FlatStyle = FlatStyle.Flat;
-                            relatedButton.FlatAppearance.BorderSize = 0;
-                            relatedButton.BackgroundImage = Properties.Resources.Minesweeper_unopened_square;
+                            _buttonRenderer.Flat(relatedButton);
+                            _buttonRenderer.Unopened(relatedButton);
                         }
                     }
                 }
@@ -248,61 +245,25 @@ namespace Minesweeper
         {
             NewGame();
         }
-        #region ButtonsRevealingUI
-        private void ButtonRevealed(Button btn)
-        {
-            btn.FlatStyle = FlatStyle.Flat;
-            btn.FlatAppearance.BorderSize = 0;
-            btn.FlatAppearance.BorderColor = Color.Gray;
-            btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
-        }
-        private void RevealdButtonIsMine(Button btn)
-        {
-            btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square_mine;
-            btn.BackgroundImageLayout = ImageLayout.Stretch;
-            btn.Image = Properties.Resources.Mine;
-            btn.ImageAlign = ContentAlignment.MiddleCenter;
-        }
-        private void RevealdButtonIsNotMine(Button btn, Cell cell)
-        {
-            btn.ForeColor = cell.AdjacentMines switch
-            {
-                1 => Color.Blue,
-                2 => Color.Green,
-                3 => Color.Red,
-                4 => Color.DarkBlue,
-                5 => Color.DarkRed,
-                6 => Color.Cyan,
-                7 => Color.Black,
-                _ => btn.ForeColor
-            };
-            btn.Text = cell.AdjacentMines > 0 ? cell.AdjacentMines.ToString() : "";
-        }
-        private void RevealdButtonZeroMines(Button btn)
-        {
-            btn.Click -= Tile_Click;
-            btn.MouseDown -= Right_Click_Field;
-
-        }
-        #endregion
+        
         private void UpdateRevealedUI(Cell cell)
         {
             if (tableGrid.GetControlFromPosition(cell.Col, cell.Row) is Button btn)
             {
-                ButtonRevealed(btn);
+                _buttonRenderer.Opened(btn);
                 if (cell.AdjacentMines == 0)
                 {
-                    RevealdButtonZeroMines(btn);
+                    btn = _buttonRenderer.CreateCustomTile();
+                    _buttonRenderer.Opened(btn);
                 }
                 if (cell.IsMine)
                 {
-                    RevealdButtonIsMine(btn);
+                    _buttonRenderer.OpenedMine(btn);
                 }
                 else
                 {
-                    RevealdButtonIsNotMine(btn, cell);
-                }
-                btn.Refresh();
+                    _buttonRenderer.OpenedNotMine(btn, cell.AdjacentMines);
+                } 
             }
         }
         public void UpdateFlagedUI(Cell cell)
@@ -311,12 +272,11 @@ namespace Minesweeper
             {
                 if (cell.IsFlagged)
                 {
-                    btn.BackgroundImage = Properties.Resources.Minesweeper_flag;
-                    btn.BackgroundImageLayout = ImageLayout.Stretch;
+                    _buttonRenderer.Flag(btn);
                 }
                 else
                 {
-                    btn.BackgroundImage = Properties.Resources.Minesweeper_unopened_square;
+                    _buttonRenderer.Unopened(btn);
                 }
             }
         }
@@ -347,33 +307,26 @@ namespace Minesweeper
                     if (btn != null)
                     {
                         Cell cell = _gameService.GetCell(row, col);
+
                         if (cell.IsFlagged && !cell.IsMine)
                         {
-                            btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
-                            btn.BackgroundImageLayout = ImageLayout.Stretch;
-                            btn.Image = Properties.Resources.Wrong_Mine;
-
+                            _buttonRenderer.FlagedWrong(btn);
                         }
                         else if (cell.IsMine)
                         {
                             if (cell.IsRevealed)
                             {
-                                btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square_mine;
-                                btn.Image = Properties.Resources.Mine;
-                                btn.ImageAlign = ContentAlignment.MiddleCenter;
+                                _buttonRenderer.OpenedMine(btn);
                             }
                             else
                             {
                                 if (_gameService.CheckIfGameWon())
                                 {
-                                    btn.BackgroundImage = Properties.Resources.Minesweeper_flag;
-                                    btn.BackgroundImageLayout = ImageLayout.Stretch;
+                                    _buttonRenderer.Flag(btn);
                                 }
                                 else
                                 {
-                                    btn.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
-                                    btn.Image = Properties.Resources.Mine;
-                                    btn.ImageAlign = ContentAlignment.MiddleCenter; 
+                                    _buttonRenderer.Mine(btn); 
                                 }
 
                             }
@@ -392,11 +345,7 @@ namespace Minesweeper
                 {
                     if (tableGrid.GetControlFromPosition(col, row) is Button btn)
                     {
-                        btn.Click -= Tile_Click;
-                        btn.MouseDown -= Right_Click_Field;
-                        btn.MouseDown -= Left_Click_Down;
-                        btn.MouseUp -= Left_Click_Up;
-                        btn.MouseMove -= Mouse_Move_With_Left_Click;
+                        ClearAllEvents(btn);
                     }
                 }
             }
@@ -408,14 +357,8 @@ namespace Minesweeper
             {
                 if (control is Button btn)
                 {
-                    btn.BackgroundImage = Properties.Resources.Minesweeper_unopened_square;
-                    btn.Text = "";
-                    btn.Image = null;
-                    btn.Click += Tile_Click;
-                    btn.MouseDown += Right_Click_Field;
-                    btn.MouseDown += Left_Click_Down;
-                    btn.MouseUp += Left_Click_Up;
-                    btn.MouseMove += Mouse_Move_With_Left_Click;
+                    _buttonRenderer.Reset(btn);
+                    AddAllEvents(btn);
                 }
             }
             _gameService.RestartGame();
@@ -427,9 +370,8 @@ namespace Minesweeper
         private void RebuildGame()
         {
             Visible = false;
-            _gameService.DisposeGame();
-            _gameService = _serviceGenerator.CreateGameService();
-
+            _gameService.DisposeGame(); 
+            _gameService.RebuildGameEngine(_settings);
             ClientSize = GetSize();
             InitializeGameGrid(_settings.Rows, _settings.Cols);
             CenterToScreen();
@@ -451,11 +393,11 @@ namespace Minesweeper
         }
         private void ShowLose()
         {
-            SmileButton.BackgroundImage = Properties.Resources.Fail;
+            _buttonRenderer.SmileFail(SmileButton);
         }
         private void ShowWin()
         {
-            SmileButton.BackgroundImage = Properties.Resources.Success;
+            _buttonRenderer.SmileSuccess(SmileButton);
         }
 
         public void UpdateRevealed(Cell cell)
