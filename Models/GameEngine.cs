@@ -231,7 +231,7 @@ namespace Minesweeper.Models
         {
             foreach (var observer in Observers)
             {
-                observer.UpdateFlagged(cell);
+                observer.UpdateFlagged(cell, MinesToFlagg);
             }
         }
         public void UnsubscribeAll()

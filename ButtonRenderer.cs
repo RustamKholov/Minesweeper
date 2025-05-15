@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Minesweeper.Interfaces;
 using Minesweeper.Models;
 
@@ -11,10 +12,10 @@ namespace Minesweeper
     public class ButtonRenderer
     {
         private IGameSettings _gameSettings;    
-        private readonly TableLayoutPanel _tableLayoutPanel;
+        private readonly TableLayoutPanel _tableGrid;
         public ButtonRenderer(TableLayoutPanel tableLayoutPanel, IGameSettings gameSettings)
         {
-            _tableLayoutPanel = tableLayoutPanel;
+            _tableGrid = tableLayoutPanel;
             _gameSettings = gameSettings;
         }
         public Button CreateCustomTile()
@@ -47,7 +48,7 @@ namespace Minesweeper
             button.BackgroundImage = Properties.Resources.Minesweeper_opened_square;
             button.BackgroundImageLayout = ImageLayout.Stretch;
         }
-        public void OpenedMine(Button button)
+        public void MineBlow(Button button)
         {
             button.BackgroundImage = Properties.Resources.Minesweeper_opened_square_mine;
             button.BackgroundImageLayout = ImageLayout.Stretch;
@@ -86,12 +87,7 @@ namespace Minesweeper
             button.Image = Properties.Resources.Mine;
             button.ImageAlign = ContentAlignment.MiddleCenter;
         }
-        public void MineOpened(Button button)
-        {
-            button.BackgroundImage = Properties.Resources.Minesweeper_opened_square_mine;
-            button.Image = Properties.Resources.Mine;
-            button.ImageAlign = ContentAlignment.MiddleCenter;
-        }
+
         public void Reset(Button button)
         {
             button.BackgroundImage = Properties.Resources.Minesweeper_unopened_square;
@@ -126,5 +122,78 @@ namespace Minesweeper
         {
             smile.BackgroundImage = Properties.Resources.Success;
         }
+
+        public void UpdateFlagedUI(Cell cell)
+        {
+            if (_tableGrid.GetControlFromPosition(cell.Col, cell.Row) is Button btn)
+            {
+                if (cell.IsFlagged)
+                {
+                    Flag(btn);
+                }
+                else
+                {
+                    Unopened(btn);
+                }
+            }
+        }
+        public void UpdateRevealedUI(Cell cell)
+        {
+            if (_tableGrid.GetControlFromPosition(cell.Col, cell.Row) is Button btn)
+            {
+                Opened(btn);
+                if (cell.AdjacentMines == 0)
+                {
+                    btn = CreateCustomTile();
+                    Opened(btn);
+                }
+                if (cell.IsMine)
+                {
+                    MineBlow(btn);
+                }
+                else
+                {
+                    OpenedNotMine(btn, cell.AdjacentMines);
+                }
+            }
+        }
+        public void ButtonOnHold(Button btn, Cell relatedCell)
+        {
+            if (relatedCell != null && !relatedCell.IsRevealed && !relatedCell.IsFlagged)
+            {
+                Opened(btn);
+            }
+            else if (relatedCell != null && relatedCell.IsRevealed && relatedCell.AdjacentMines > 0)
+            {
+                foreach (Cell cell in relatedCell.AdjacentCells)
+                {
+                    if (!cell.IsRevealed && !cell.IsFlagged && _tableGrid.GetControlFromPosition(cell.Col, cell.Row) is Button relatedButton)
+                    {
+                        Opened(relatedButton);
+                    }
+                }
+            }
+        }
+        public void ReleasedButton(Button btn, Cell relatedCell)
+        {
+            if (relatedCell != null && !relatedCell.IsRevealed && !relatedCell.IsFlagged)
+            {
+                Flat(btn);
+                Unopened(btn);
+            }
+            else if (relatedCell != null && relatedCell.IsRevealed && relatedCell.AdjacentMines > 0)
+            {
+                foreach (Cell cell in relatedCell.AdjacentCells)
+                {
+                    if (!cell.IsRevealed && !cell.IsFlagged && _tableGrid.GetControlFromPosition(cell.Col, cell.Row) is Button relatedButton)
+                    {
+                        Flat(relatedButton);
+                        Unopened(relatedButton);
+                    }
+                }
+            }
+        }
+
+
     }
 }

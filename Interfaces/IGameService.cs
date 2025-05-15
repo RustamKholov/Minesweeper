@@ -5,7 +5,6 @@ namespace Minesweeper.Interfaces
     public interface IGameService
     {
         Cell GetCell(int row, int col);
-        int GetMinesToFlag();
         void SubscribeCellObserver(ICellObserver observer);
         void UnsubscribeCellObserver(ICellObserver observer);
         void SubscribeTimerObserver(ITimerObserver observer);

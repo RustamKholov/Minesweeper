@@ -37,7 +37,6 @@ namespace Minesweeper.Controllers
             _settings = settings;
             _gameEngine = new GameEngine(_settings.Rows, _settings.Cols, _settings.Mines);
         }
-        public int GetMinesToFlag() => _gameEngine.MinesToFlagg;
 
         public void IncrementClick()
         {

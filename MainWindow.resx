@@ -410,10 +410,10 @@
     <value>Records</value>
   </data>
   <data name="NavigationMenu.Location" type="System.Drawing.Point, System.Drawing">
-    <value>-1, 1</value>
+    <value>0, 0</value>
   </data>
   <data name="NavigationMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>393, 24</value>
+    <value>273, 24</value>
   </data>
   <data name="NavigationMenu.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -485,7 +485,7 @@
     <value>10, 11</value>
   </data>
   <data name="menuPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>324, 27</value>
+    <value>324, 29</value>
   </data>
   <data name="menuPanel.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
