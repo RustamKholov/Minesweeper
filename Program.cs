@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
-using Minesweeper.Controllers;
+using Minesweeper.Application.Services;
+using Minesweeper.Domain.Logic;
 using Minesweeper.Interfaces;
-using Minesweeper.Models;
 
-namespace Minesweeper
+namespace Minesweeper.UI.Forms
 {
     internal static class Program
     {
@@ -13,13 +13,12 @@ namespace Minesweeper
         [STAThread]
         static void Main()
         {
-
             var services = new ServiceCollection();
             ConfigureServices(services);
             var serviceProvider = services.BuildServiceProvider();
             ApplicationConfiguration.Initialize();
             var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
-            Application.Run(mainWindow);
+            System.Windows.Forms.Application.Run(mainWindow);
         }
 
         private static void ConfigureServices(IServiceCollection services)
@@ -27,6 +26,6 @@ namespace Minesweeper
             services.AddSingleton<IGameServiceGenerator, GameServiceGenerator>();
             services.AddSingleton<IGameSettings, Settings>();
             services.AddSingleton<MainWindow>();
-        }   
+        }
     }
 }
