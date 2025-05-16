@@ -1,11 +1,11 @@
 # 💣 Minesweeper (WinForms Game)
 
-#### A modern recreation of the classic Minesweeper game, built using C# and WinForms.  
+#### Recreation of the classic Minesweeper game, built using C# and WinForms.  
 #### This project marks a major step forward in my learning journey — moving from console to graphical UI, integrating SQLite, applying layered architecture, and practicing design patterns with real-world tools.
 
 ---
 
-![menu-preview](Assets/Placeholder_Menu.gif)  
+![menu-preview](Assets/Main.gif)  
 *Menu navigation, difficulty selector, animated transitions*
 
 ---
@@ -70,7 +70,6 @@ Layered Architecture | Separated projects: Domain, Application, Infrastructure, 
     └── Builders          // GridBuilder, MenuBuilder
 
 Program.cs               // App startup and DI configuration
-App.config               // Connection string for local SQLite
 Assets/                  // Images, icons, fonts, animations
 ```
 
@@ -91,14 +90,17 @@ dotnet run --project Minesweeper.WinForms
 
 ## 📸 Preview
 
+### 💣 Main Gameplay
+![difficulty](Assets/GamePlay.gif)
+
 ### ✅ Difficulty selector & grid scaling
-![difficulty](Assets/Placeholder_Difficulty.gif)
+![difficulty](Assets/Difficulty.gif)
 
 ### 🏆 Game stats and chart view
-![chart](Assets/Placeholder_Chart.png)
+![chart](Assets/Stat.png)
 
 ### 💾 Save records and analyze performance
-![records](Assets/Placeholder_Records.gif)
+![records](Assets/Records.png)
 
 ---
 
