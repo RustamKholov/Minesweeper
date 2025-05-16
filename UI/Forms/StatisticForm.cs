@@ -5,7 +5,7 @@ using LiveCharts.Defaults;
 using PieChart = LiveCharts.WinForms.PieChart;
 using CartesianChart = LiveCharts.WinForms.CartesianChart;
 using Separator = LiveCharts.Wpf.Separator;
-using Minesweeper.Interfaces;
+using Minesweeper.Application.Interfaces;
 using Minesweeper.Domain.Entities;
 using Minesweeper.Application.Services;
 using Minesweeper.Infrastructure.Services;

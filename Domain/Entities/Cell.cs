@@ -1,4 +1,4 @@
-﻿using Minesweeper.Interfaces;
+﻿using Minesweeper.Application.Interfaces;
 
 namespace Minesweeper.Domain.Entities
 {

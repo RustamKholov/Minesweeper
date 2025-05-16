@@ -1,6 +1,4 @@
-﻿using Minesweeper.Domain.Logic;
-
-namespace Minesweeper.Domain.Entities
+﻿namespace Minesweeper.Infrastructure.Configuration
 {
     public class GameDifficulty
     {

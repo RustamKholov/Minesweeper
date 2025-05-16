@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Minesweeper.Domain.Entities;
-using Minesweeper.Interfaces;
+using Minesweeper.Application.Interfaces;
 
 namespace Minesweeper
 {

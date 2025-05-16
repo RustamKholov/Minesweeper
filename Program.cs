@@ -1,7 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Minesweeper.Application.Services;
-using Minesweeper.Domain.Logic;
-using Minesweeper.Interfaces;
+using Minesweeper.Infrastructure.Configuration;
+using Minesweeper.Application.Interfaces;
+using Minesweeper.Infrastructure.Services;
 
 namespace Minesweeper.UI.Forms
 {

@@ -1,6 +1,6 @@
 ﻿
 using Minesweeper.Infrastructure.Services;
-using Minesweeper.Interfaces;
+using Minesweeper.Application.Interfaces;
 
 namespace Minesweeper
 {

@@ -1,5 +1,5 @@
 ﻿using System.Data.SQLite;
-using Minesweeper.Interfaces;
+using Minesweeper.Application.Interfaces;
 using Minesweeper.Domain.Entities;
 
 namespace Minesweeper.Infrastructure.Services

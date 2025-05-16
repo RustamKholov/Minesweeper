@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Minesweeper.Application.DTO;
 using Minesweeper.Domain.Entities;
 
-namespace Minesweeper.Interfaces
+namespace Minesweeper.Application.Interfaces
 {
     public interface IStatProviderService
     {

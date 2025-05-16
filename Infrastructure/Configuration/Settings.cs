@@ -1,8 +1,8 @@
 ﻿using System.Drawing.Text;
 using System.IO;
-using Minesweeper.Interfaces;
+using Minesweeper.Application.Interfaces;
 
-namespace Minesweeper.Domain.Logic
+namespace Minesweeper.Infrastructure.Configuration
 {
     public class Settings : IGameSettings
     {

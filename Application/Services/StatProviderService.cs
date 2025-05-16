@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using LiveCharts.Defaults;
 using Minesweeper.Application.DTO;
 using Minesweeper.Domain.Entities;
-using Minesweeper.Interfaces;
+using Minesweeper.Application.Interfaces;
 
 namespace Minesweeper.Application.Services
 {

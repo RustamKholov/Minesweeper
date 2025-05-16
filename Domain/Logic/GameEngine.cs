@@ -1,7 +1,9 @@
-﻿using Minesweeper.Infrastructure.Services;
-using Minesweeper.Interfaces;
+﻿using Minesweeper.Application.DTO;
+using Minesweeper.Application.Interfaces;
+using Minesweeper.Domain.Entities;
+using Minesweeper.Infrastructure.Services;
 
-namespace Minesweeper.Domain.Entities
+namespace Minesweeper.Domain.Logic
 {
     public class GameEngine : IDisposable
     {
@@ -13,9 +15,7 @@ namespace Minesweeper.Domain.Entities
         private int _flaggsSet = 0;
         private int _tilesUncovered = 0;
         private int _clicksPerformed = 0;
-        private DataBaseCSV _dataBase;
-        private RecordsSQLManager _sqlManager;
-        private bool _gameSaved = false;
+        
         private GameStatus _status = GameStatus.NotStarted;
         public List<ICellObserver> Observers { get; set; } = new List<ICellObserver>();
         
@@ -25,18 +25,16 @@ namespace Minesweeper.Domain.Entities
         public int ClicksPerformed {get => _clicksPerformed; set { _clicksPerformed = value; }}
 
         private IGameTimer _gameTimer;
-        public DataBaseCSV CSVDataBase => _dataBase;
-        public RecordsSQLManager SQLiteDataBase => _sqlManager;
         public IGameTimer GameTimer => _gameTimer;
         public bool IsGameWon => _cellToReveal == 0;
         public int MinesToFlagg => _mines - _flaggedCells;
+        public GameStatus Status => _status;
         public GameEngine(int rows, int cols, int mines)
         {
             _rows = rows;
             _cols = cols;
             _mines = mines;
-            _dataBase = new DataBaseCSV();
-            _sqlManager = new RecordsSQLManager();
+            
             IsGameOver = false;
             IsFirstClick = true;
             Grid = new Cell[_rows, _cols];
@@ -193,7 +191,6 @@ namespace Minesweeper.Domain.Entities
         {
             _gameTimer.StopTimer();
             IsGameOver = true;
-            CreateRecord();
             UnsubscribeAll();
             _gameTimer.UnsubscribeAll();
         }
@@ -210,7 +207,6 @@ namespace Minesweeper.Domain.Entities
             Grid = new Cell[_rows, _cols];
             InitializeEmptyGrid();
             _status = GameStatus.NotStarted;
-            _gameSaved = false;
         }
         public void Subscribe(ICellObserver observer)
         {
@@ -234,30 +230,25 @@ namespace Minesweeper.Domain.Entities
                 observer.UpdateFlagged(cell, MinesToFlagg);
             }
         }
+
+        public EngineRecords GetEngineRecords()
+        {
+            var engineRecord = new EngineRecords()
+            {
+                SecondsInGame = _gameTimer.SecondInLastGame,
+                GameStatus = _status == GameStatus.Started ? GameStatus.Abandoned : _status,
+                TilesUncovered = _tilesUncovered,
+                ClicksPerformed = _clicksPerformed,
+                FlaggsSet = _flaggsSet,
+            };
+            return engineRecord;
+        }
+
         public void UnsubscribeAll()
         {
             Observers.Clear();
-        }
-        public void CreateRecord()
-        {
-            if (_status == GameStatus.NotStarted || _gameSaved)
-            {
-                return;
-            }
-            Record record = new Record()
-            {
-                secondsInGame = _gameTimer.SecondInLastGame,
-                difficulty = Difficulty.Easy,
-                status = _status == GameStatus.Started ? GameStatus.Abandoned : _status,
-                tilesUncovered = _tilesUncovered,
-                clicksPerformed = _clicksPerformed,
-                flaggsSet = _flaggsSet,
-            };
-            _sqlManager.SaveRecord(record);
-            _dataBase.SaveRecord(record);
-            _dataBase.SaveToCSV();
-            _gameSaved = true;
-        }
+        }  
+
         public void Dispose()
         {
             UnsubscribeAll();

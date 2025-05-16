@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Minesweeper.Domain.Entities;
-using Minesweeper.Interfaces;
+using Minesweeper.Application.Interfaces;
 
 namespace Minesweeper.Infrastructure.Services
 {

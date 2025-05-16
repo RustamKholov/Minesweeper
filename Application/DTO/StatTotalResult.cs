@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Minesweeper.Domain.Entities;
-using Minesweeper.Interfaces;
+using Minesweeper.Application.Interfaces;
 
 namespace Minesweeper.Application.DTO
 {

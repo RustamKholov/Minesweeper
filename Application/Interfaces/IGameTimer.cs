@@ -1,4 +1,4 @@
-﻿namespace Minesweeper.Interfaces
+﻿namespace Minesweeper.Application.Interfaces
 {
     public interface IGameTimer
     {

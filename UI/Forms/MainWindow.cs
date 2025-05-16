@@ -1,5 +1,6 @@
 ﻿using Minesweeper.Domain.Entities;
-using Minesweeper.Interfaces;
+using Minesweeper.Infrastructure.Configuration;
+using Minesweeper.Application.Interfaces;
 
 namespace Minesweeper
 {

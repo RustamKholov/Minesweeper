@@ -1,4 +1,4 @@
-﻿using Minesweeper.Interfaces;
+﻿using Minesweeper.Application.Interfaces;
 using Timer = System.Windows.Forms.Timer;
 
 

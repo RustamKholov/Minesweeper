@@ -1,6 +1,7 @@
 ﻿using Minesweeper.Domain.Entities;
+using Minesweeper.Domain.Logic;
 
-namespace Minesweeper.Interfaces
+namespace Minesweeper.Application.Interfaces
 {
     public interface IGameService
     {
@@ -9,7 +10,7 @@ namespace Minesweeper.Interfaces
         void UnsubscribeCellObserver(ICellObserver observer);
         void SubscribeTimerObserver(ITimerObserver observer);
         void UnsubscribeTimerObserver(ITimerObserver observer);
-        void FlaggCell (Cell cell);
+        void FlaggCell(Cell cell);
         void RevealCell(int row, int col);
         void RevealCell(Cell cell);
         void IncrementClick();

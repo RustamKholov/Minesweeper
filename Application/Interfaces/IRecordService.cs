@@ -1,6 +1,6 @@
 ﻿using Minesweeper.Domain.Entities;
 
-namespace Minesweeper.Interfaces
+namespace Minesweeper.Application.Interfaces
 {
     public interface IRecordService
     {
