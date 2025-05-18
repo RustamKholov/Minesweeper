@@ -133,5 +133,5 @@ This Minesweeper game reflects my growing ability to structure larger apps with 
 
 Stay tuned.  
 👉 **Follow my progress**:  
-GitHub: [RustamHolov](https://github.com/RustamHolov)  
+GitHub: [RustamHolov](https://github.com/RustamKHolov)  
 LinkedIn: [Rustam Kholov](https://www.linkedin.com/in/rustam-kholov/)
