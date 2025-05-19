@@ -19,6 +19,7 @@ namespace Minesweeper.Application.Services
         }
         public StatChartResult BuildChartData(List<Record> records, List<GameStatus> selectedStatuses)
         {
+
             double globalMaxX = double.MinValue, globalMaxY = double.MinValue;
             double globalMinX = double.MaxValue, globalMinY = double.MaxValue;
 

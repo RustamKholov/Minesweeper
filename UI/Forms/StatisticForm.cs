@@ -251,8 +251,8 @@ namespace Minesweeper
 
         private void FillChart(CartesianChart chart, List<Record> records)
         {
+            if (records.Count == 0) { return; }
             var chartData = _statProviderService.BuildChartData(records, _selectedStatuses);
-
             var seriesCollection = new SeriesCollection();
             foreach (var series in chartData.Series)
             {
