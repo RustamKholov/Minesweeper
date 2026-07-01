@@ -11,9 +11,13 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// The API's base address - during local development this is Minesweeper.Api's own launch
-// profile URL (see Minesweeper.Api/Properties/launchSettings.json), not this app's own address.
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5207/") });
+// API base address. In production the API is served under the same origin (Traefik routes
+// /api → Minesweeper.Api), so relative calls to "api/records" just work. In local dev the
+// WASM dev-server isn't the API, so point at Minesweeper.Api's own launch profile URL.
+var apiBase = builder.HostEnvironment.IsDevelopment()
+    ? "http://localhost:5207/"
+    : builder.HostEnvironment.BaseAddress;
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiBase) });
 
 builder.Services.AddScoped<IGameSettings>(_ => GameDifficulty.Medium);
 builder.Services.AddScoped<IMineGenerator, NoGuessMineGenerator>();

@@ -39,7 +39,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(BlazorClientCorsPolicy);
-app.UseHttpsRedirection();
+// No UseHttpsRedirection — TLS terminates at Traefik; the API speaks http on :8080 and
+// the WASM calls it same-origin (/api), so CORS isn't involved in production.
 
 app.MapGet("/api/records", (IRecordService recordService, Difficulty? difficulty) =>
 {

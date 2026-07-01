@@ -7,8 +7,10 @@ namespace Minesweeper.Infrastructure.Services
     public class RecordsSQLManager : IRecordService
     {
         public List<Record> RecordsList { get; private set; } = new List<Record>();
+        // MINESWEEPER_DB_PATH lets the deployment point at a persistent volume (PVC);
+        // falls back to the bundled DB next to the binary for local dev.
         private readonly string _connectionString =
-            $"Data Source={Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Infrastructure", "Data", "Minesweeper.db")};Version=3;";
+            $"Data Source={Environment.GetEnvironmentVariable("MINESWEEPER_DB_PATH") ?? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Infrastructure", "Data", "Minesweeper.db")};Version=3;";
         public void SaveRecord(Record record)
         {
             using var conn = new SQLiteConnection(_connectionString);
