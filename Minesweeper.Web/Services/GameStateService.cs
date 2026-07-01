@@ -20,6 +20,11 @@ namespace Minesweeper.Web.Services
 
         public event Action? Changed;
 
+        // Separate from Changed, which also fires on every reveal/flag - GameBoard uses this
+        // one specifically to know when to reset its pan offset, since a per-cell-mutation
+        // signal would reset the pan mid-game every time the player touches a cell.
+        public event Action? GameStarted;
+
         public GameMood CurrentMood =>
             IsGameOver switch
             {
@@ -74,6 +79,7 @@ namespace Minesweeper.Web.Services
             IsGameWon = false;
             _anyPressActive = false;
             Changed?.Invoke();
+            GameStarted?.Invoke();
         }
 
         public void RestartGame()
@@ -85,6 +91,7 @@ namespace Minesweeper.Web.Services
             IsGameWon = false;
             _anyPressActive = false;
             Changed?.Invoke();
+            GameStarted?.Invoke();
         }
 
         private void AfterMutation()

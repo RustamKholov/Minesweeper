@@ -1,5 +1,5 @@
 <div class="board-slot">
-    <div class="board-well">
+    <div class="board-well" style="@BoardWellStyle">
         <div class="board-grid" style="grid-template-columns: repeat(@State.CurrentSettings.Cols, @(CellPx)px); grid-auto-rows: @(CellPx)px;">
             @for (int r = 0; r < State.CurrentSettings.Rows; r++)
             {

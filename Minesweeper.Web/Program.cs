@@ -23,5 +23,6 @@ builder.Services.AddScoped<GameStateService>();
 builder.Services.AddScoped<RecordsApiClient>();
 builder.Services.AddScoped<ThemeState>();
 builder.Services.AddScoped<TutorialFlagService>();
+builder.Services.AddScoped<FullscreenService>();
 
 await builder.Build().RunAsync();

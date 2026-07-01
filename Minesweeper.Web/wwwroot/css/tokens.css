@@ -39,6 +39,10 @@ html, body {
   padding: 0;
   -webkit-tap-highlight-color: transparent;
   font-family: var(--font-ui);
+  /* Stop pull-to-refresh/rubber-band scrolling from hijacking gameplay touches - the app
+     owns its own scroll areas (the board well) explicitly instead. */
+  overscroll-behavior: none;
+  height: 100%;
 }
 
 * {
