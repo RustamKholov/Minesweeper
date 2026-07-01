@@ -24,9 +24,9 @@ namespace Minesweeper.Application.Services
             double globalMinX = double.MaxValue, globalMinY = double.MaxValue;
 
             var grouped = records
-                .Where(r => r.secondsInGame > 0 && selectedStatuses.Contains(r.status))
-                .OrderBy(r => r.secondsInGame)
-                .GroupBy(r => r.difficulty);
+                .Where(r => r.SecondsInGame > 0 && selectedStatuses.Contains(r.Status))
+                .OrderBy(r => r.SecondsInGame)
+                .GroupBy(r => r.Difficulty);
 
             var result = new StatChartResult();
 
@@ -40,8 +40,8 @@ namespace Minesweeper.Application.Services
                 var groupedPoints = group
                     .Select(r => new
                     {
-                        X = Math.Round((double)r.tilesUncovered / r.secondsInGame, 2),
-                        Y = (double)r.secondsInGame
+                        X = Math.Round((double)r.TilesUncovered / r.SecondsInGame, 2),
+                        Y = (double)r.SecondsInGame
                     })
                     .GroupBy(p => p.X);
 
@@ -107,7 +107,7 @@ namespace Minesweeper.Application.Services
         public Dictionary<GameStatus, int> GetGameStatusCount()
         {
             var records = _recordService.GetAllRecords();
-            var grouped = records.GroupBy(r => r.status);
+            var grouped = records.GroupBy(r => r.Status);
             var result = new Dictionary<GameStatus, int>();
             foreach (var group in grouped)
             {
@@ -123,7 +123,7 @@ namespace Minesweeper.Application.Services
             {
                 records.AddRange(_recordService.GetAllRecords(difficulty));
             }
-            var grouped = records.GroupBy(r => r.status);
+            var grouped = records.GroupBy(r => r.Status);
             var result = new Dictionary<GameStatus, int>();
             foreach (var group in grouped)
             {

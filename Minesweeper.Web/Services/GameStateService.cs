@@ -1,0 +1,130 @@
+using Minesweeper.Application.Interfaces;
+using Minesweeper.Domain.Entities;
+using Minesweeper.Web.Models;
+
+namespace Minesweeper.Web.Services
+{
+    public enum GameMood { Smile, Worried, Cool, Dead }
+
+    public sealed class GameStateService : ICellObserver, ITimerObserver, IDisposable
+    {
+        private readonly IGameService _gameService;
+        private readonly RecordsApiClient _recordsApi;
+        private bool _anyPressActive;
+
+        public IGameSettings CurrentSettings { get; private set; }
+        public int MinesLeft { get; private set; }
+        public int ElapsedSeconds { get; private set; }
+        public bool IsGameOver { get; private set; }
+        public bool IsGameWon { get; private set; }
+
+        public event Action? Changed;
+
+        public GameMood CurrentMood =>
+            IsGameOver switch
+            {
+                true when IsGameWon => GameMood.Cool,
+                true => GameMood.Dead,
+                _ => _anyPressActive ? GameMood.Worried : GameMood.Smile
+            };
+
+        public GameStateService(IGameServiceGenerator gameServiceGenerator, IGameSettings initialSettings, RecordsApiClient recordsApi)
+        {
+            _recordsApi = recordsApi;
+            CurrentSettings = initialSettings;
+            _gameService = gameServiceGenerator.CreateGameService();
+            MinesLeft = CurrentSettings.Mines;
+            _gameService.SubscribeCellObserver(this);
+            _gameService.SubscribeTimerObserver(this);
+        }
+
+        public Cell GetCell(int row, int col) => _gameService.GetCell(row, col);
+
+        public void RevealCell(int row, int col)
+        {
+            if (IsGameOver) return;
+            _gameService.RevealCell(row, col);
+            _gameService.IncrementClick();
+            AfterMutation();
+        }
+
+        public void FlagCell(Cell cell)
+        {
+            if (IsGameOver) return;
+            _gameService.FlaggCell(cell);
+            AfterMutation();
+        }
+
+        public void SetPressActive(bool active)
+        {
+            if (_anyPressActive == active) return;
+            _anyPressActive = active;
+            Changed?.Invoke();
+        }
+
+        public void SwitchDifficulty(IGameSettings newSettings)
+        {
+            CurrentSettings = newSettings;
+            _gameService.RebuildGameEngine(newSettings);
+            _gameService.SubscribeCellObserver(this);
+            _gameService.SubscribeTimerObserver(this);
+            MinesLeft = newSettings.Mines;
+            ElapsedSeconds = 0;
+            IsGameOver = false;
+            IsGameWon = false;
+            _anyPressActive = false;
+            Changed?.Invoke();
+        }
+
+        public void RestartGame()
+        {
+            _gameService.RestartGame();
+            MinesLeft = CurrentSettings.Mines;
+            ElapsedSeconds = 0;
+            IsGameOver = false;
+            IsGameWon = false;
+            _anyPressActive = false;
+            Changed?.Invoke();
+        }
+
+        private void AfterMutation()
+        {
+            if (_gameService.CheckIfGameOver())
+            {
+                IsGameOver = true;
+                IsGameWon = _gameService.CheckIfGameWon();
+                _ = SubmitRecordAsync();
+            }
+            Changed?.Invoke();
+        }
+
+        private async Task SubmitRecordAsync()
+        {
+            var engineRecords = _gameService.GetEngineRecords();
+            var request = new SubmitRecordRequest(
+                engineRecords.SecondsInGame,
+                CurrentSettings.Difficulty,
+                engineRecords.GameStatus,
+                engineRecords.TilesUncovered,
+                engineRecords.ClicksPerformed,
+                engineRecords.FlaggsSet);
+            await _recordsApi.SubmitAsync(request);
+        }
+
+        public void UpdateRevealed(Cell cell) => Changed?.Invoke();
+
+        public void UpdateFlagged(Cell cell, int minesLeftToFlag)
+        {
+            MinesLeft = minesLeftToFlag;
+            Changed?.Invoke();
+        }
+
+        public void UpdateTime(int time)
+        {
+            ElapsedSeconds = time;
+            Changed?.Invoke();
+        }
+
+        public void Dispose() => _gameService.DisposeGame();
+    }
+}

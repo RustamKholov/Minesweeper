@@ -1,0 +1,36 @@
+@page "/records"
+@inject RecordsApiClient RecordsApi
+
+<PageTitle>Records</PageTitle>
+
+<div class="records-page">
+    <div class="records-title">Records</div>
+
+    @if (_loading)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <div class="record-cards-row">
+            <RecordCard Label="EASY" BestSeconds="_records!.BestSecondsByDifficulty.GetValueOrDefault(Difficulty.Easy)" PlayCount="_records.PlayCountByDifficulty.GetValueOrDefault(Difficulty.Easy)" />
+            <RecordCard Label="MEDIUM" BestSeconds="_records.BestSecondsByDifficulty.GetValueOrDefault(Difficulty.Medium)" PlayCount="_records.PlayCountByDifficulty.GetValueOrDefault(Difficulty.Medium)" />
+            <RecordCard Label="HARD" BestSeconds="_records.BestSecondsByDifficulty.GetValueOrDefault(Difficulty.Hard)" PlayCount="_records.PlayCountByDifficulty.GetValueOrDefault(Difficulty.Hard)" />
+        </div>
+
+        <div class="recent-games-title">Recent games</div>
+        <RecentGamesList Records="_records.Recent" />
+    }
+</div>
+
+@code {
+    private bool _loading = true;
+    private RecordsResult? _records;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var history = await RecordsApi.GetAllAsync();
+        _records = RecordsCalculator.Compute(history);
+        _loading = false;
+    }
+}

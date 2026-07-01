@@ -1,0 +1,69 @@
+:root {
+  --accent: #d9922c;
+
+  --num-1: #2b6cd4;
+  --num-2: #1f9d55;
+  --num-3: #d64545;
+  --num-4: #5b3aa0;
+  --num-5: #8a2e2e;
+  --num-6: #0f8a8a;
+  --num-7: #26292e;
+  --num-8: #6b7280;
+
+  --font-ui: 'Sora', sans-serif;
+  --font-lcd: 'Rajdhani', sans-serif;
+
+  --root-bg: linear-gradient(160deg, #eef1f5, #dde2e9);
+  --header-bg: linear-gradient(#f8fafc, #e2e7ee);
+
+  --ink: #262a30;
+  --ink-muted: #7a8090;
+  --ink-faint: #9aa1ab;
+  --ink-nav-inactive: #8a90a0;
+
+  --card-bg: linear-gradient(#fdfefe, #eef1f5);
+  --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
+  --bevel-raised-bg: linear-gradient(145deg, #c9cfd8, #aab1bc);
+  --bevel-raised-shadow: 2px 2px 3px rgba(255, 255, 255, 0.55), -2px -2px 3px rgba(255, 255, 255, 0.35), inset 1px 1px 0 rgba(255, 255, 255, 0.6), 2px 2px 5px rgba(30, 34, 40, 0.35);
+  --bevel-pressed-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.35), inset -1px -1px 2px rgba(255, 255, 255, 0.25);
+
+  --well-bg: linear-gradient(150deg, #dde2e9, #bcc2cc);
+  --well-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.65), inset 0 -2px 5px rgba(20, 24, 32, 0.18), 0 14px 30px rgba(20, 24, 34, 0.20);
+
+  --shake-duration: 300ms;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-ui);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@keyframes msShake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-4px) rotate(-2deg); }
+  40% { transform: translateX(4px) rotate(2deg); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes msPopIn {
+  0% { opacity: 0; transform: translateY(6px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes msFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.shake {
+  animation: msShake var(--shake-duration) ease;
+}

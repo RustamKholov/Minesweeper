@@ -1,0 +1,24 @@
+<ModalShell IsOpen="IsOpen" OnClose="Close">
+    <div class="modal-title">How to play</div>
+    <div class="modal-row">
+        <div class="modal-row-emoji">👆</div>
+        <div><div class="modal-row-title">Tap</div><div class="modal-row-body">Dig the tile</div></div>
+    </div>
+    <div class="modal-row">
+        <div class="modal-row-emoji">👉</div>
+        <div><div class="modal-row-title">Flick</div><div class="modal-row-body">A tiny drag plants or pulls a flag</div></div>
+    </div>
+    <div class="modal-row">
+        <div class="modal-row-emoji">👆👆</div>
+        <div><div class="modal-row-title">Double-tap a number</div><div class="modal-row-body">Auto-clears its safe neighbors</div></div>
+    </div>
+    <div class="modal-row-body" style="margin-bottom:18px;color:var(--ink-faint);">On desktop, right-click also flags.</div>
+    <button class="primary-button" style="width:100%;" @onclick="Close">Got it</button>
+</ModalShell>
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private Task Close() => OnClose.InvokeAsync();
+}

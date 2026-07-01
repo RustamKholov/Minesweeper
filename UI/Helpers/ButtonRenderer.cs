@@ -4,20 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Text;
+using System.IO;
 using Minesweeper.Domain.Entities;
-using Minesweeper.Application.Interfaces;
 
 namespace Minesweeper
 {
     public class ButtonRenderer
     {
-        private IGameSettings _gameSettings;    
         private readonly TableLayoutPanel _tableGrid;
-        public ButtonRenderer(TableLayoutPanel tableLayoutPanel, IGameSettings gameSettings)
+        private readonly Font _tileFont;
+        public ButtonRenderer(TableLayoutPanel tableLayoutPanel)
         {
             _tableGrid = tableLayoutPanel;
-            _gameSettings = gameSettings;
+            _tileFont = LoadTileFont();
         }
+
+        private static Font LoadTileFont()
+        {
+            PrivateFontCollection pfc = new PrivateFontCollection();
+            string fontPath = Path.Combine(System.Windows.Forms.Application.StartupPath, "Assets", "Fonts", "mine-sweeper.ttf");
+            pfc.AddFontFile(fontPath);
+            return new Font("Sagoe", 13, FontStyle.Bold);
+        }
+
         public Button CreateCustomTile()
         {
             Button button = new Button();
@@ -25,7 +35,7 @@ namespace Minesweeper
             Flat(button);
             Unopened(button);
             button.Margin = new Padding(0);
-            button.Font = _gameSettings.Font;
+            button.Font = _tileFont;
             button.UseVisualStyleBackColor = false;
             return button;
         }

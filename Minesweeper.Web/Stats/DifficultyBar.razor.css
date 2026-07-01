@@ -1,0 +1,37 @@
+.difficulty-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.difficulty-bar-label {
+  width: 64px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+.difficulty-bar-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 5px;
+  background: #e6e9ee;
+  overflow: hidden;
+}
+
+.difficulty-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  background: var(--accent);
+}
+
+.difficulty-bar-value {
+  width: 38px;
+  text-align: right;
+  font-family: var(--font-lcd);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink);
+}

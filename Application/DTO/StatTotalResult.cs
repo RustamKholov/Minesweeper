@@ -18,11 +18,11 @@ namespace Minesweeper.Application.DTO
             grouper = new Dictionary<GameStatus, List<(int time, int tiles)>>();
             foreach (var record in records)
             {
-                if (!grouper.ContainsKey(record.status))
+                if (!grouper.ContainsKey(record.Status))
                 {
-                    grouper[record.status] = new List<(int time, int tiles)>();
+                    grouper[record.Status] = new List<(int time, int tiles)>();
                 }
-                grouper[record.status].Add((record.secondsInGame, record.tilesUncovered));
+                grouper[record.Status].Add((record.SecondsInGame, record.TilesUncovered));
             }
 
         }

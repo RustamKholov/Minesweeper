@@ -1,0 +1,25 @@
+<div class="win-rate-ring card">
+    <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#e1e5eb" stroke-width="10" />
+        <circle cx="60" cy="60" r="50" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round"
+                stroke-dasharray="@DashArray" transform="rotate(-90 60 60)" />
+        <text x="60" y="65" text-anchor="middle" font-family="Sora, sans-serif" font-weight="800" font-size="22" fill="var(--ink)">@WinRate%</text>
+    </svg>
+    <div class="win-rate-label">Win rate</div>
+</div>
+
+@code {
+    [Parameter] public int WinRate { get; set; }
+
+    private const double Radius = 50;
+    private static readonly double Circumference = 2 * Math.PI * Radius;
+
+    private string DashArray
+    {
+        get
+        {
+            double filled = WinRate / 100.0 * Circumference;
+            return $"{filled.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)} {Circumference.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)}";
+        }
+    }
+}

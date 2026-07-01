@@ -1,0 +1,17 @@
+<div class="empty-state">
+    <div class="empty-state-emoji">@Emoji</div>
+    <div class="empty-state-title">@Title</div>
+    <div class="empty-state-body">@Body</div>
+    <button class="primary-button" @onclick="GoToGame">@ButtonText</button>
+</div>
+
+@code {
+    [Parameter] public string Emoji { get; set; } = "";
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string Body { get; set; } = "";
+    [Parameter] public string ButtonText { get; set; } = "";
+
+    [Inject] private NavigationManager Nav { get; set; } = default!;
+
+    private void GoToGame() => Nav.NavigateTo("/");
+}

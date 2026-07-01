@@ -1,0 +1,14 @@
+@if (Show)
+{
+    <div class="game-banner @(Won ? "won" : "lost")">
+        <span class="game-banner-text">@(Won ? $"Cleared in {ElapsedSeconds}s!" : "Boom! You hit a mine.")</span>
+        <button class="primary-button" @onclick="OnPlayAgain">Play again</button>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Show { get; set; }
+    [Parameter] public bool Won { get; set; }
+    [Parameter] public int ElapsedSeconds { get; set; }
+    [Parameter] public EventCallback OnPlayAgain { get; set; }
+}

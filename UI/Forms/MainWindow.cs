@@ -16,6 +16,7 @@ namespace Minesweeper
         private Image _lastSmile = Properties.Resources.Smile;
         private readonly int _paddingWindth = 27;
         private readonly int _paddingHeight = 170;
+        private const float CellSize = 35f;
 
 
         public MainWindow(IGameSettings settings, IGameServiceGenerator gameEngineGenerator)
@@ -25,8 +26,8 @@ namespace Minesweeper
             _gameService = _serviceGenerator.CreateGameService();
             SubscribeComponents();
             InitializeComponent();
-            _buttonRenderer = new ButtonRenderer(tableGrid, settings);
-            _gridBuilder = new GridBuilder(tableGrid, settings, _buttonRenderer);
+            _buttonRenderer = new ButtonRenderer(tableGrid);
+            _gridBuilder = new GridBuilder(tableGrid, settings, _buttonRenderer, CellSize);
 
         }
         private void MainWindow_Load(object sender, EventArgs e)
@@ -53,8 +54,8 @@ namespace Minesweeper
         }
         private Size GetSize()
         {
-            return new Size((int)(_settings.Cols * _settings.CellSize + _paddingWindth)
-                , (int)(_settings.Rows * _settings.CellSize + _paddingHeight));
+            return new Size((int)(_settings.Cols * CellSize + _paddingWindth)
+                , (int)(_settings.Rows * CellSize + _paddingHeight));
         }
         private Cell GetRelatedCell(Button button)
         {
@@ -243,8 +244,8 @@ namespace Minesweeper
             if (clientPoint.X < 0 || clientPoint.Y < 0)
                 return;
 
-            int col = (int)(clientPoint.X / _settings.CellSize);
-            int row = (int)(clientPoint.Y / _settings.CellSize);
+            int col = (int)(clientPoint.X / CellSize);
+            int row = (int)(clientPoint.Y / CellSize);
 
             if (col < 0 || col >= _settings.Cols || row < 0 || row >= _settings.Rows)
                 return;
@@ -303,18 +304,21 @@ namespace Minesweeper
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
+            if (_settings.Difficulty == Difficulty.Hard) return;
             _settings = GameDifficulty.Hard;
             RebuildGame();
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
+            if (_settings.Difficulty == Difficulty.Medium) return;
             _settings = GameDifficulty.Medium;
             RebuildGame();
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            if (_settings.Difficulty == Difficulty.Easy) return;
             _settings = GameDifficulty.Easy;
             RebuildGame();
         }
@@ -336,6 +340,11 @@ namespace Minesweeper
 
         public void UpdateTime(int time)
         {
+            if (InvokeRequired)
+            {
+                Invoke(() => UpdateTime(time));
+                return;
+            }
             if (time > 999)
             {
                 Game_Timer_Label.Text = "999";  // maximum time to display

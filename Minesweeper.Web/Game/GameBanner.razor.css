@@ -1,0 +1,25 @@
+.game-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  animation: msPopIn 0.2s ease;
+}
+
+.game-banner.won {
+  background: rgba(31, 157, 85, 0.12);
+  color: #1f9d55;
+}
+
+.game-banner.lost {
+  background: rgba(214, 69, 69, 0.12);
+  color: #d64545;
+}
+
+.game-banner-text {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 14px;
+}

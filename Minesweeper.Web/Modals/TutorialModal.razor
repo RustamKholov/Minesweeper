@@ -1,0 +1,45 @@
+@inject TutorialFlagService TutorialFlags
+
+@if (_visible)
+{
+    <ModalShell IsOpen="true" OnClose="Dismiss">
+        <div class="modal-title" style="margin-bottom:6px;">Welcome, sweeper</div>
+        <div class="modal-row-body" style="margin-bottom:18px;">New here, no mouse buttons needed:</div>
+        <div class="modal-row">
+            <div class="modal-row-emoji">👆</div>
+            <div><div class="modal-row-title">Tap</div><div class="modal-row-body">Dig the tile</div></div>
+        </div>
+        <div class="modal-row">
+            <div class="modal-row-emoji">👉</div>
+            <div><div class="modal-row-title">Flick</div><div class="modal-row-body">A tiny drag plants or pulls a flag</div></div>
+        </div>
+        <div class="modal-row">
+            <div class="modal-row-emoji">👆👆</div>
+            <div><div class="modal-row-title">Double-tap a number</div><div class="modal-row-body">Auto-clears its safe neighbors</div></div>
+        </div>
+        <button class="primary-button" style="width:100%;" @onclick="Dismiss">Got it, let's dig</button>
+    </ModalShell>
+}
+
+@code {
+    private bool _visible;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            bool seen = await TutorialFlags.HasSeenTutorialAsync();
+            if (!seen)
+            {
+                _visible = true;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task Dismiss()
+    {
+        _visible = false;
+        await TutorialFlags.MarkSeenAsync();
+    }
+}

@@ -92,7 +92,7 @@ namespace Minesweeper
             // secondsInGameDataGridViewTextBoxColumn
             // 
             secondsInGameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            secondsInGameDataGridViewTextBoxColumn.DataPropertyName = "secondsInGame";
+            secondsInGameDataGridViewTextBoxColumn.DataPropertyName = "SecondsInGame";
             secondsInGameDataGridViewTextBoxColumn.FillWeight = 87.05584F;
             secondsInGameDataGridViewTextBoxColumn.HeaderText = "secondsInGame";
             secondsInGameDataGridViewTextBoxColumn.MinimumWidth = 6;
@@ -102,7 +102,7 @@ namespace Minesweeper
             // difficultyDataGridViewTextBoxColumn
             // 
             difficultyDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            difficultyDataGridViewTextBoxColumn.DataPropertyName = "difficulty";
+            difficultyDataGridViewTextBoxColumn.DataPropertyName = "Difficulty";
             difficultyDataGridViewTextBoxColumn.FillWeight = 87.05584F;
             difficultyDataGridViewTextBoxColumn.HeaderText = "difficulty";
             difficultyDataGridViewTextBoxColumn.MinimumWidth = 6;
@@ -112,7 +112,7 @@ namespace Minesweeper
             // statusDataGridViewTextBoxColumn
             // 
             statusDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            statusDataGridViewTextBoxColumn.DataPropertyName = "status";
+            statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
             statusDataGridViewTextBoxColumn.FillWeight = 87.05584F;
             statusDataGridViewTextBoxColumn.HeaderText = "status";
             statusDataGridViewTextBoxColumn.MinimumWidth = 6;
@@ -122,7 +122,7 @@ namespace Minesweeper
             // tilesUncoveredDataGridViewTextBoxColumn
             // 
             tilesUncoveredDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            tilesUncoveredDataGridViewTextBoxColumn.DataPropertyName = "tilesUncovered";
+            tilesUncoveredDataGridViewTextBoxColumn.DataPropertyName = "TilesUncovered";
             tilesUncoveredDataGridViewTextBoxColumn.FillWeight = 87.05584F;
             tilesUncoveredDataGridViewTextBoxColumn.HeaderText = "tilesUncovered";
             tilesUncoveredDataGridViewTextBoxColumn.MinimumWidth = 6;
@@ -132,7 +132,7 @@ namespace Minesweeper
             // clicksPerformedDataGridViewTextBoxColumn
             // 
             clicksPerformedDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            clicksPerformedDataGridViewTextBoxColumn.DataPropertyName = "clicksPerformed";
+            clicksPerformedDataGridViewTextBoxColumn.DataPropertyName = "ClicksPerformed";
             clicksPerformedDataGridViewTextBoxColumn.FillWeight = 87.05584F;
             clicksPerformedDataGridViewTextBoxColumn.HeaderText = "clicksPerformed";
             clicksPerformedDataGridViewTextBoxColumn.MinimumWidth = 6;
@@ -142,7 +142,7 @@ namespace Minesweeper
             // flaggsSetDataGridViewTextBoxColumn
             // 
             flaggsSetDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            flaggsSetDataGridViewTextBoxColumn.DataPropertyName = "flaggsSet";
+            flaggsSetDataGridViewTextBoxColumn.DataPropertyName = "FlaggsSet";
             flaggsSetDataGridViewTextBoxColumn.FillWeight = 87.05584F;
             flaggsSetDataGridViewTextBoxColumn.HeaderText = "flaggsSet";
             flaggsSetDataGridViewTextBoxColumn.MinimumWidth = 6;
@@ -213,7 +213,7 @@ namespace Minesweeper
             // 
             // secondsInGameDataGridViewTextBoxColumn1
             // 
-            secondsInGameDataGridViewTextBoxColumn1.DataPropertyName = "secondsInGame";
+            secondsInGameDataGridViewTextBoxColumn1.DataPropertyName = "SecondsInGame";
             secondsInGameDataGridViewTextBoxColumn1.HeaderText = "secondsInGame";
             secondsInGameDataGridViewTextBoxColumn1.MinimumWidth = 6;
             secondsInGameDataGridViewTextBoxColumn1.Name = "secondsInGameDataGridViewTextBoxColumn1";
@@ -221,7 +221,7 @@ namespace Minesweeper
             // 
             // difficultyDataGridViewTextBoxColumn1
             // 
-            difficultyDataGridViewTextBoxColumn1.DataPropertyName = "difficulty";
+            difficultyDataGridViewTextBoxColumn1.DataPropertyName = "Difficulty";
             difficultyDataGridViewTextBoxColumn1.HeaderText = "difficulty";
             difficultyDataGridViewTextBoxColumn1.MinimumWidth = 6;
             difficultyDataGridViewTextBoxColumn1.Name = "difficultyDataGridViewTextBoxColumn1";
@@ -229,7 +229,7 @@ namespace Minesweeper
             // 
             // statusDataGridViewTextBoxColumn1
             // 
-            statusDataGridViewTextBoxColumn1.DataPropertyName = "status";
+            statusDataGridViewTextBoxColumn1.DataPropertyName = "Status";
             statusDataGridViewTextBoxColumn1.HeaderText = "status";
             statusDataGridViewTextBoxColumn1.MinimumWidth = 6;
             statusDataGridViewTextBoxColumn1.Name = "statusDataGridViewTextBoxColumn1";
@@ -237,7 +237,7 @@ namespace Minesweeper
             // 
             // tilesUncoveredDataGridViewTextBoxColumn1
             // 
-            tilesUncoveredDataGridViewTextBoxColumn1.DataPropertyName = "tilesUncovered";
+            tilesUncoveredDataGridViewTextBoxColumn1.DataPropertyName = "TilesUncovered";
             tilesUncoveredDataGridViewTextBoxColumn1.HeaderText = "tilesUncovered";
             tilesUncoveredDataGridViewTextBoxColumn1.MinimumWidth = 6;
             tilesUncoveredDataGridViewTextBoxColumn1.Name = "tilesUncoveredDataGridViewTextBoxColumn1";
@@ -245,7 +245,7 @@ namespace Minesweeper
             // 
             // clicksPerformedDataGridViewTextBoxColumn1
             // 
-            clicksPerformedDataGridViewTextBoxColumn1.DataPropertyName = "clicksPerformed";
+            clicksPerformedDataGridViewTextBoxColumn1.DataPropertyName = "ClicksPerformed";
             clicksPerformedDataGridViewTextBoxColumn1.HeaderText = "clicksPerformed";
             clicksPerformedDataGridViewTextBoxColumn1.MinimumWidth = 6;
             clicksPerformedDataGridViewTextBoxColumn1.Name = "clicksPerformedDataGridViewTextBoxColumn1";
@@ -253,7 +253,7 @@ namespace Minesweeper
             // 
             // flaggsSetDataGridViewTextBoxColumn1
             // 
-            flaggsSetDataGridViewTextBoxColumn1.DataPropertyName = "flaggsSet";
+            flaggsSetDataGridViewTextBoxColumn1.DataPropertyName = "FlaggsSet";
             flaggsSetDataGridViewTextBoxColumn1.HeaderText = "flaggsSet";
             flaggsSetDataGridViewTextBoxColumn1.MinimumWidth = 6;
             flaggsSetDataGridViewTextBoxColumn1.Name = "flaggsSetDataGridViewTextBoxColumn1";

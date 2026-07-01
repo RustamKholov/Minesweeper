@@ -1,0 +1,51 @@
+.lcd-panel {
+  display: flex;
+  gap: 3px;
+  background: #1d0b0b;
+  border-radius: 8px;
+  padding: 6px 8px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.lcd-panel.lcd-small {
+  gap: 2px;
+  border-radius: 6px;
+  padding: 5px 6px;
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.6);
+  margin: 8px 0;
+}
+
+.lcd-slot {
+  position: relative;
+  width: 18px;
+  height: 28px;
+  font-family: var(--font-lcd);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 28px;
+  text-align: center;
+}
+
+.lcd-panel.lcd-small .lcd-slot {
+  width: 13px;
+  height: 20px;
+  font-size: 17px;
+  line-height: 20px;
+}
+
+.lcd-ghost {
+  position: absolute;
+  inset: 0;
+  color: rgba(255, 60, 60, 0.12);
+}
+
+.lcd-lit {
+  position: absolute;
+  inset: 0;
+  color: #ff3b30;
+  text-shadow: 0 0 6px rgba(255, 59, 48, 0.85);
+}
+
+.lcd-panel.lcd-small .lcd-lit {
+  text-shadow: 0 0 4px rgba(255, 59, 48, 0.85);
+}

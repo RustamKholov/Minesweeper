@@ -109,14 +109,14 @@ namespace Minesweeper
                 return;
             }
             var grouper = allRecords
-                .GroupBy(r => r.status)
+                .GroupBy(r => r.Status)
                 .ToDictionary(g => g.Key, g => new
                 {
-                    Time = g.Sum(r => r.secondsInGame),
-                    Tiles = g.Sum(r => r.tilesUncovered),
+                    Time = g.Sum(r => r.SecondsInGame),
+                    Tiles = g.Sum(r => r.TilesUncovered),
                 });
-            int totalTime = allRecords.Sum(r => r.secondsInGame);
-            int totalTiles = allRecords.Sum(r => r.tilesUncovered);
+            int totalTime = allRecords.Sum(r => r.SecondsInGame);
+            int totalTiles = allRecords.Sum(r => r.TilesUncovered);
 
             wonResultTimeLabel.Text = ToTime(grouper.TryGetValue(GameStatus.Win, out var win) ? win.Time : 0);
             lostResultTimeLabel.Text = ToTime(grouper.TryGetValue(GameStatus.Lose, out var lost) ? lost.Time : 0);
@@ -148,10 +148,10 @@ namespace Minesweeper
         private void BestRecordInitialize()
         {
             var bestRecord = SQLDataBase.GetBestRecord();
-            if (bestRecord != null && bestRecord.timeStamp.HasValue)
+            if (bestRecord != null && bestRecord.TimeStamp.HasValue)
             {
-                bestTimeLabel.Text = bestRecord.secondsInGame.ToString("00:00:00");
-                dateBestLabel.Text = bestRecord.timeStamp.ToString();
+                bestTimeLabel.Text = bestRecord.SecondsInGame.ToString("00:00:00");
+                dateBestLabel.Text = bestRecord.TimeStamp.ToString();
             }
         }
         private void BestRecordUpdate(List<Difficulty> selectedDifficulties)
@@ -172,9 +172,9 @@ namespace Minesweeper
             }
             if (bestRecords.Count > 0)
             {
-                var bestRecord = bestRecords.OrderBy(r => r.secondsInGame).First();
-                bestTimeLabel.Text = bestRecord.secondsInGame.ToString("00:00:00");
-                dateBestLabel.Text = bestRecord.timeStamp.ToString();
+                var bestRecord = bestRecords.OrderBy(r => r.SecondsInGame).First();
+                bestTimeLabel.Text = bestRecord.SecondsInGame.ToString("00:00:00");
+                dateBestLabel.Text = bestRecord.TimeStamp.ToString();
             }
             else
             {

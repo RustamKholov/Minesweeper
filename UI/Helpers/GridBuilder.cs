@@ -13,11 +13,13 @@ namespace Minesweeper
         private TableLayoutPanel _tableGrid;
         private IGameSettings _settings;
         private ButtonRenderer _buttonRenderer;
-        public GridBuilder(TableLayoutPanel tableLayoutPanel, IGameSettings settings, ButtonRenderer buttonRenderer)
+        private float _cellSize;
+        public GridBuilder(TableLayoutPanel tableLayoutPanel, IGameSettings settings, ButtonRenderer buttonRenderer, float cellSize)
         {
             _tableGrid = tableLayoutPanel;
             _settings = settings;
             _buttonRenderer = buttonRenderer;
+            _cellSize = cellSize;
         }
 
         public void Build()
@@ -30,10 +32,10 @@ namespace Minesweeper
             _tableGrid.Margin = new Padding(0);
 
             for (int i = 0; i < _settings.Cols; i++)
-                _tableGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, _settings.CellSize));
+                _tableGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, _cellSize));
 
             for (int i = 0; i < _settings.Rows; i++)
-                _tableGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, _settings.CellSize));
+                _tableGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, _cellSize));
 
             FillGridWithButtons();
         }

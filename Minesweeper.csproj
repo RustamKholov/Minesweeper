@@ -8,12 +8,13 @@
 	  <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>Assets\mine.ico</ApplicationIcon>
+    <!-- Sibling projects live in subfolders here so they stay under version control
+         together; without this they'd be swept up by this project's own implicit glob. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);Minesweeper.Core\**;Minesweeper.Infrastructure\**;Minesweeper.Api\**;Minesweeper.Web\**;Minesweeper.Tests\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Assets\staticstic.ico" />
-    <None Remove="Infrastructure\Data\Minesweeper.db" />
-    <None Remove="recordsDB.csv" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,12 +22,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\staticstic.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Infrastructure\Data\Minesweeper.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Infrastructure\Data\recordsDB.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -55,13 +50,17 @@
       <GeneratePathProperty>True</GeneratePathProperty>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Assets\Fonts\mine-sweeper.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="Minesweeper.Core\Minesweeper.Core.csproj" />
+    <ProjectReference Include="Minesweeper.Infrastructure\Minesweeper.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

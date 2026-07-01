@@ -1,0 +1,20 @@
+.stat-card {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stat-card-label {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+.stat-card-value {
+  font-family: var(--font-ui);
+  font-size: 20px;
+  color: var(--ink);
+  font-weight: 800;
+}

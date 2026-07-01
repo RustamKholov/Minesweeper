@@ -1,0 +1,12 @@
+<div class="card">
+    <div class="average-time-title">Average time to clear</div>
+    <DifficultyBar Label="Easy" SecondsValue="AverageByDifficulty.GetValueOrDefault(Difficulty.Easy)" MaxSecondsAcrossDifficulties="MaxSeconds" />
+    <DifficultyBar Label="Medium" SecondsValue="AverageByDifficulty.GetValueOrDefault(Difficulty.Medium)" MaxSecondsAcrossDifficulties="MaxSeconds" />
+    <DifficultyBar Label="Hard" SecondsValue="AverageByDifficulty.GetValueOrDefault(Difficulty.Hard)" MaxSecondsAcrossDifficulties="MaxSeconds" />
+</div>
+
+@code {
+    [Parameter] public Dictionary<Difficulty, int?> AverageByDifficulty { get; set; } = new();
+
+    private int MaxSeconds => Math.Max(1, AverageByDifficulty.Values.Where(v => v.HasValue).DefaultIfEmpty(1).Max(v => v ?? 1));
+}

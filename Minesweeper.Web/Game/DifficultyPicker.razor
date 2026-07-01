@@ -1,0 +1,10 @@
+<div class="difficulty-picker">
+    <button class="pill @(CurrentDifficulty == Difficulty.Easy ? "active" : "")" @onclick="() => OnSelected.InvokeAsync(Difficulty.Easy)">Easy</button>
+    <button class="pill @(CurrentDifficulty == Difficulty.Medium ? "active" : "")" @onclick="() => OnSelected.InvokeAsync(Difficulty.Medium)">Medium</button>
+    <button class="pill @(CurrentDifficulty == Difficulty.Hard ? "active" : "")" @onclick="() => OnSelected.InvokeAsync(Difficulty.Hard)">Hard</button>
+</div>
+
+@code {
+    [Parameter] public Difficulty CurrentDifficulty { get; set; }
+    [Parameter] public EventCallback<Difficulty> OnSelected { get; set; }
+}

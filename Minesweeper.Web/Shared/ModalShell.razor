@@ -1,0 +1,16 @@
+@if (IsOpen)
+{
+    <div class="modal-scrim" @onclick="Close">
+        <div class="modal-card" @onclick:stopPropagation="true">
+            @ChildContent
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private Task Close() => OnClose.InvokeAsync();
+}

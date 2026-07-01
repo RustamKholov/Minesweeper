@@ -1,0 +1,13 @@
+<div class="recent-game-row @(IsLast ? "last" : "")">
+    <span class="recent-game-dot @(Record.Status == GameStatus.Win ? "won" : "lost")"></span>
+    <span class="recent-game-difficulty">@Record.Difficulty</span>
+    <span class="recent-game-time">@(Record.SecondsInGame)s</span>
+    <span class="recent-game-date">@DateLabel</span>
+</div>
+
+@code {
+    [Parameter] public GameRecordDto Record { get; set; } = default!;
+    [Parameter] public bool IsLast { get; set; }
+
+    private string DateLabel => Record.TimeStamp?.ToString("MMM d") ?? "—";
+}

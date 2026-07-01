@@ -1,0 +1,15 @@
+.win-rate-ring {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.win-rate-label {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--ink-muted);
+  font-weight: 600;
+}

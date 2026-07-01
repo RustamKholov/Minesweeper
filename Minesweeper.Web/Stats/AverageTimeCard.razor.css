@@ -1,0 +1,7 @@
+.average-time-title {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+  margin-bottom: 12px;
+}

@@ -1,0 +1,11 @@
+<div class="record-card card">
+    <div class="record-card-label">@Label</div>
+    <LcdDisplay Value="BestSeconds ?? 0" Small="true" />
+    <div class="record-card-count">@PlayCount played</div>
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public int? BestSeconds { get; set; }
+    [Parameter] public int PlayCount { get; set; }
+}

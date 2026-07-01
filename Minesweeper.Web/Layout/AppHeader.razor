@@ -1,0 +1,26 @@
+<header class="app-header">
+    <div class="app-header-brand">
+        <div class="app-header-logo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <g stroke="#e7eaee" stroke-width="2" stroke-linecap="round">
+                    <line x1="12" y1="2" x2="12" y2="6" />
+                    <line x1="12" y1="18" x2="12" y2="22" />
+                    <line x1="2" y1="12" x2="6" y2="12" />
+                    <line x1="18" y1="12" x2="22" y2="12" />
+                    <line x1="5" y1="5" x2="8" y2="8" />
+                    <line x1="16" y1="16" x2="19" y2="19" />
+                    <line x1="5" y1="19" x2="8" y2="16" />
+                    <line x1="16" y1="8" x2="19" y2="5" />
+                </g>
+                <circle cx="12" cy="12" r="6.2" fill="#1c1f24" stroke="#e7eaee" stroke-width="1" />
+                <circle cx="9.7" cy="9.7" r="1.15" fill="#eef1f5" opacity="0.85" />
+            </svg>
+        </div>
+        <div class="app-header-title">Minesweeper</div>
+    </div>
+    <button class="help-button" @onclick="OnHelpClick">?</button>
+</header>
+
+@code {
+    [Parameter] public EventCallback OnHelpClick { get; set; }
+}

@@ -1,0 +1,9 @@
+<div class="stat-card card">
+    <span class="stat-card-label">@Label</span>
+    <span class="stat-card-value">@Value</span>
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public string Value { get; set; } = "";
+}

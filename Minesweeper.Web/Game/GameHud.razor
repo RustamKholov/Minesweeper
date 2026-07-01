@@ -1,0 +1,38 @@
+@inject GameStateService State
+@implements IDisposable
+
+<div class="game-hud">
+    <div class="hud-row">
+        <LcdDisplay Value="State.MinesLeft" AllowNegative="true" />
+        <FaceButton Mood="State.CurrentMood" OnClick="OnFaceClick" />
+        <LcdDisplay Value="State.ElapsedSeconds" />
+    </div>
+
+    <DifficultyPicker CurrentDifficulty="State.CurrentSettings.Difficulty" OnSelected="OnDifficultySelected" />
+
+    <GameBanner Show="State.IsGameOver" Won="State.IsGameWon" ElapsedSeconds="State.ElapsedSeconds" OnPlayAgain="OnFaceClick" />
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        State.Changed += HandleStateChanged;
+    }
+
+    private void HandleStateChanged() => InvokeAsync(StateHasChanged);
+
+    private void OnFaceClick() => State.RestartGame();
+
+    private void OnDifficultySelected(Difficulty difficulty)
+    {
+        var settings = difficulty switch
+        {
+            Difficulty.Easy => GameDifficulty.Easy,
+            Difficulty.Hard => GameDifficulty.Hard,
+            _ => GameDifficulty.Medium,
+        };
+        State.SwitchDifficulty(settings);
+    }
+
+    public void Dispose() => State.Changed -= HandleStateChanged;
+}

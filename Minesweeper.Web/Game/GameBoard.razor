@@ -1,0 +1,63 @@
+<div class="board-slot">
+    <div class="board-well">
+        <div class="board-grid" style="grid-template-columns: repeat(@State.CurrentSettings.Cols, @(CellPx)px); grid-auto-rows: @(CellPx)px;">
+            @for (int r = 0; r < State.CurrentSettings.Rows; r++)
+            {
+                for (int c = 0; c < State.CurrentSettings.Cols; c++)
+                {
+                    int row = r, col = c;
+                    var cell = State.GetCell(row, col);
+                    var visual = GetVisual(cell, row, col);
+                    <div class="@CellCssClass(cell, row, col, visual)"
+                         style="width:@(CellPx)px;height:@(CellPx)px;"
+                         @onpointerdown="e => OnPointerDown(e, row, col)"
+                         @onpointermove="e => OnPointerMove(e, row, col)"
+                         @onpointerup="e => OnPointerUp(e, row, col)"
+                         @onpointerleave="e => OnPointerLeave(e, row, col)"
+                         @oncontextmenu="e => OnContextMenu(e, row, col)"
+                         @oncontextmenu:preventDefault="true">
+                        @switch (visual)
+                        {
+                            case CellVisual.Number:
+                                <span class="cell-number">@cell.AdjacentMines</span>
+                                break;
+                            case CellVisual.MineExploded:
+                            case CellVisual.MinePlain:
+                                <svg width="@IconPx" height="@IconPx" viewBox="0 0 24 24">
+                                    <g stroke="#1a1a1a" stroke-width="2" stroke-linecap="round">
+                                        <line x1="12" y1="2" x2="12" y2="6" /><line x1="12" y1="18" x2="12" y2="22" />
+                                        <line x1="2" y1="12" x2="6" y2="12" /><line x1="18" y1="12" x2="22" y2="12" />
+                                        <line x1="5" y1="5" x2="8" y2="8" /><line x1="16" y1="16" x2="19" y2="19" />
+                                        <line x1="5" y1="19" x2="8" y2="16" /><line x1="16" y1="8" x2="19" y2="5" />
+                                    </g>
+                                    <circle cx="12" cy="12" r="6.2" fill="#1a1a1a" />
+                                    <circle cx="9.6" cy="9.6" r="1.2" fill="#eef1f5" opacity="0.85" />
+                                </svg>
+                                break;
+                            case CellVisual.Flag:
+                                <svg width="@IconPx" height="@IconPx" viewBox="0 0 24 24">
+                                    <line x1="7" y1="3" x2="7" y2="21" stroke="#3a3f47" stroke-width="2" stroke-linecap="round" />
+                                    <path d="M7 4 L19 8 L7 12 Z" fill="#d64545" />
+                                </svg>
+                                break;
+                            case CellVisual.GhostFlag:
+                                <svg width="@IconPx" height="@IconPx" viewBox="0 0 24 24" style="opacity:0.45;">
+                                    <line x1="7" y1="3" x2="7" y2="21" stroke="#3a3f47" stroke-width="2" stroke-linecap="round" />
+                                    <path d="M7 4 L19 8 L7 12 Z" fill="#d64545" />
+                                </svg>
+                                break;
+                            case CellVisual.WrongFlag:
+                                <svg width="@IconPx" height="@IconPx" viewBox="0 0 24 24">
+                                    <line x1="7" y1="3" x2="7" y2="21" stroke="#3a3f47" stroke-width="2" stroke-linecap="round" />
+                                    <path d="M7 4 L19 8 L7 12 Z" fill="#9aa1ab" />
+                                    <line x1="3" y1="3" x2="21" y2="21" stroke="#d64545" stroke-width="2.4" stroke-linecap="round" />
+                                    <line x1="21" y1="3" x2="3" y2="21" stroke="#d64545" stroke-width="2.4" stroke-linecap="round" />
+                                </svg>
+                                break;
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

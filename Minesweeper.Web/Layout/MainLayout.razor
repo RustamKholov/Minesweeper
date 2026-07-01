@@ -1,0 +1,27 @@
+@inherits LayoutComponentBase
+@inject ThemeState Theme
+
+<div class="app-root" style="--accent: @Theme.CurrentAccentHex;">
+    <AppHeader OnHelpClick="OpenHelp" />
+    <main class="app-main">
+        @Body
+    </main>
+    <BottomNav />
+</div>
+
+<HelpModal IsOpen="_helpOpen" OnClose="CloseHelp" />
+<TutorialModal />
+
+@code {
+    private bool _helpOpen;
+
+    protected override void OnInitialized()
+    {
+        Theme.Changed += OnThemeChanged;
+    }
+
+    private void OnThemeChanged() => InvokeAsync(StateHasChanged);
+
+    private void OpenHelp() => _helpOpen = true;
+    private void CloseHelp() => _helpOpen = false;
+}

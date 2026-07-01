@@ -1,0 +1,41 @@
+@page "/stats"
+@inject RecordsApiClient RecordsApi
+
+<PageTitle>Statistics</PageTitle>
+
+<div class="stats-page">
+    <div class="stats-title">Statistics</div>
+
+    @if (_loading)
+    {
+        <p>Loading...</p>
+    }
+    else if (_stats is null || _stats.Total == 0)
+    {
+        <EmptyState Emoji="📊" Title="No games yet" Body="Play a round and your stats will show up here." ButtonText="Start playing" />
+    }
+    else
+    {
+        <div class="stats-top-row">
+            <WinRateRing WinRate="_stats.WinRate" />
+            <div class="stats-cards-column">
+                <StatCard Label="Games played" Value="@_stats.Total.ToString()" />
+                <StatCard Label="Wins / Losses" Value="@($"{_stats.Wins} / {_stats.Losses}")" />
+                <StatCard Label="Win streak" Value="@_stats.Streak.ToString()" />
+            </div>
+        </div>
+        <AverageTimeCard AverageByDifficulty="_stats.AverageSecondsByDifficulty" />
+    }
+</div>
+
+@code {
+    private bool _loading = true;
+    private StatsResult? _stats;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var history = await RecordsApi.GetAllAsync();
+        _stats = StatsCalculator.Compute(history);
+        _loading = false;
+    }
+}

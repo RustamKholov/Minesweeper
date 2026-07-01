@@ -1,0 +1,17 @@
+@if (Records.Count == 0)
+{
+    <EmptyState Emoji="🏆" Title="No games recorded" Body="Finish a game to start your leaderboard." ButtonText="Go play" />
+}
+else
+{
+    <div class="recent-games-card card">
+        @for (int i = 0; i < Records.Count; i++)
+        {
+            <RecentGameRow Record="Records[i]" IsLast="i == Records.Count - 1" />
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public List<GameRecordDto> Records { get; set; } = new();
+}

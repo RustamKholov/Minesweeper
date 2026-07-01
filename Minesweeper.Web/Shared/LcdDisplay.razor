@@ -1,0 +1,28 @@
+<div class="lcd-panel @(Small ? "lcd-small" : "")">
+    @foreach (var digit in Digits())
+    {
+        <div class="lcd-slot">
+            <span class="lcd-ghost">8</span>
+            <span class="lcd-lit">@digit</span>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int Value { get; set; }
+    [Parameter] public bool AllowNegative { get; set; }
+    [Parameter] public bool Small { get; set; }
+
+    private IEnumerable<string> Digits()
+    {
+        int v = Value;
+        if (AllowNegative && v < 0)
+        {
+            string digits = Math.Min(99, -v).ToString().PadLeft(2, '0');
+            return new[] { "-", digits[0].ToString(), digits[1].ToString() };
+        }
+        v = Math.Max(0, Math.Min(999, v));
+        string padded = v.ToString().PadLeft(3, '0');
+        return new[] { padded[0].ToString(), padded[1].ToString(), padded[2].ToString() };
+    }
+}

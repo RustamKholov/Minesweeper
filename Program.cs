@@ -3,6 +3,7 @@ using Minesweeper.Application.Services;
 using Minesweeper.Infrastructure.Configuration;
 using Minesweeper.Application.Interfaces;
 using Minesweeper.Infrastructure.Services;
+using Minesweeper.Domain.Logic.MineGeneration;
 
 namespace Minesweeper.UI.Forms
 {
@@ -26,6 +27,8 @@ namespace Minesweeper.UI.Forms
         {
             services.AddSingleton<IGameServiceGenerator, GameServiceGenerator>();
             services.AddSingleton<IGameSettings, Settings>();
+            services.AddSingleton<IMineGenerator, NoGuessMineGenerator>();
+            services.AddSingleton<IGameOverService, GameOverService>();
             services.AddSingleton<MainWindow>();
         }
     }
