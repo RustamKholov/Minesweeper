@@ -42,7 +42,26 @@ html, body {
   /* Stop pull-to-refresh/rubber-band scrolling from hijacking gameplay touches - the app
      owns its own scroll areas (the board well) explicitly instead. */
   overscroll-behavior: none;
-  height: 100%;
+}
+
+html { height: 100%; }
+
+/* The page itself must never scroll. The Castle ecosystem header is a sticky first child of
+   <body>, so a rigid 100dvh app underneath it overflowed the viewport by exactly the header's
+   height - a phantom vertical scroll even when the board fits. Making <body> a flex column that
+   owns the viewport lets the app take only the space left under the header. */
+body {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#app {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 * {

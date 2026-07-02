@@ -1,5 +1,7 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using Minesweeper.Domain.Entities;
 using Minesweeper.Web.Services;
 
@@ -8,6 +10,7 @@ namespace Minesweeper.Web.Game
     public partial class GameBoard : ComponentBase, IDisposable
     {
         [Inject] private GameStateService State { get; set; } = default!;
+        [Inject] private IJSRuntime JS { get; set; } = default!;
 
         // Shape/distance-based gesture recognition only - no timers anywhere in this file.
         // Gesture category (tap vs flick) is decided purely by displacement from the touch
@@ -20,41 +23,25 @@ namespace Minesweeper.Web.Game
         private bool _flickCommitted;
         private (int Row, int Col)? _ghostFlagCell;
 
-        // Two-finger pan. Gesture category is decided by finger count "at gesture start" - but
-        // with no timers, "start" can't mean a time window. Instead it's decided by distance:
-        // if a second pointer arrives before the first has moved past the flick threshold, the
-        // two are treated as arriving together (promoted to pan). If the first has already
-        // committed to a flick, a second pointer arriving after that is a stray/palm-brush and
-        // is ignored, letting the flick resolve normally - same distance-based logic the single-
-        // finger path already uses, just applied to the "did anything else move yet" question.
-        private const double PanCoherenceMinDisplacementPx = 15.0;
-        private const double PanCoherenceMinCosine = 0.3;
-
-        private long? _panPointerIdA, _panPointerIdB;
-        private double _panStartAX, _panStartAY, _panStartBX, _panStartBY;
-        private double _panPrevAX, _panPrevAY, _panPrevBX, _panPrevBY;
-        private bool _isPanning;
-        private double _panOffsetX, _panOffsetY;
-
         private readonly HashSet<(int Row, int Col)> _shakingCells = new();
 
-        // Board dimensions are the fixed classic presets (see GameDifficulty) - only the pixel
-        // size of each cell adapts here, purely a rendering concern, not a solver/logic one.
-        private int CellPx => State.CurrentSettings.Cols switch
-        {
-            <= 9 => 36,
-            <= 16 => 28,
-            _ => 18,
-        };
+        // Camera-follow navigation. There is no manual panning: the board never responds to
+        // drags with a pan (a single-finger drag is already "flick to flag"). Instead the camera
+        // glides to keep the cell the player just acted on centred in the viewport, so bigger
+        // boards are navigated simply by playing across them. The offset is a translate applied
+        // to the board-well; the CSS transition on .board-well makes the move a glide, not a jump.
+        private const int CellSizePx = 36;   // fixed - identical for every difficulty (only board extent grows)
+        private const double GridGapPx = 2;  // must match .board-grid gap
+        private const double WellPadPx = 10; // must match .board-well padding
 
+        private ElementReference _slotRef;
+        private double _cameraX, _cameraY;
+
+        private int CellPx => CellSizePx;
         private int IconPx => Math.Max(12, (int)Math.Round(CellPx * 0.62));
 
-        private double BoardWidthPx => State.CurrentSettings.Cols * CellPx + (State.CurrentSettings.Cols - 1) * 2;
-        private double BoardHeightPx => State.CurrentSettings.Rows * CellPx + (State.CurrentSettings.Rows - 1) * 2;
-
-        // Inline (not scoped CSS) because the offset is per-instance render state, not a style
-        // rule - and deliberately no transition, so the board tracks the fingers 1:1 with no lag.
-        private string BoardWellStyle => $"transform: translate({_panOffsetX.ToString(System.Globalization.CultureInfo.InvariantCulture)}px, {_panOffsetY.ToString(System.Globalization.CultureInfo.InvariantCulture)}px);";
+        // Inline (not scoped CSS) because the offset is per-instance render state, not a style rule.
+        private string BoardWellStyle => $"transform: translate({_cameraX.ToString(CultureInfo.InvariantCulture)}px, {_cameraY.ToString(CultureInfo.InvariantCulture)}px);";
 
         protected override void OnInitialized()
         {
@@ -66,66 +53,45 @@ namespace Minesweeper.Web.Game
 
         private void HandleGameStarted()
         {
-            _panOffsetX = 0;
-            _panOffsetY = 0;
+            _cameraX = 0;
+            _cameraY = 0;
             InvokeAsync(StateHasChanged);
         }
 
         private void OnPointerDown(PointerEventArgs e, int row, int col)
         {
             if (State.IsGameOver) return;
+
+            // Only the primary button starts a gesture. A mouse right-click reports Button == 2
+            // and is handled solely by OnContextMenu (flag) - letting it start the primary tap
+            // path here meant the right-button pointerup fired RevealCell, racing the contextmenu
+            // flag. Touch and pen contacts report Button == 0, so this never affects them.
+            if (e.Button != 0) return;
+
             long pointerId = (long)e.PointerId;
 
-            if (_panPointerIdA is not null && _panPointerIdB is not null) return; // a 3rd+ contact - ignore
+            // One gesture at a time. There is no manual pan any more, so any extra contact while
+            // a gesture is in flight is a stray/palm-brush and is simply ignored.
+            if (_primaryPointerId is not null) return;
 
-            if (_panPointerIdA is null && _primaryPointerId is null)
+            var cell = State.GetCell(row, col);
+            if (cell.IsFlagged)
             {
-                var cell = State.GetCell(row, col);
-                if (cell.IsFlagged)
-                {
-                    _ = TriggerShakeAsync(row, col);
-                    return;
-                }
-
-                _activeCell = (row, col);
-                _primaryPointerId = pointerId;
-                _pointerDownX = e.ClientX;
-                _pointerDownY = e.ClientY;
-                _flickCommitted = false;
-                State.SetPressActive(true);
+                _ = TriggerShakeAsync(row, col);
                 return;
             }
 
-            if (_primaryPointerId is not null && !_flickCommitted && _panPointerIdA is null)
-            {
-                // Second contact arrived before the first moved anywhere - treat as two fingers
-                // arriving together and promote to pan tracking. The first finger's pending tap
-                // is abandoned; it will not reveal/flag when it eventually lifts.
-                _panPointerIdA = _primaryPointerId;
-                _panStartAX = _panPrevAX = _pointerDownX;
-                _panStartAY = _panPrevAY = _pointerDownY;
-
-                _panPointerIdB = pointerId;
-                _panStartBX = _panPrevBX = e.ClientX;
-                _panStartBY = _panPrevBY = e.ClientY;
-
-                ClearPressState();
-                return;
-            }
-
-            // Second contact arrived after the first already committed to a flick (or some
-            // other odd ordering) - a stray/palm-brush. Ignore it; let the active gesture resolve.
+            _activeCell = (row, col);
+            _primaryPointerId = pointerId;
+            _pointerDownX = e.ClientX;
+            _pointerDownY = e.ClientY;
+            _flickCommitted = false;
+            State.SetPressActive(true);
         }
 
         private void OnPointerMove(PointerEventArgs e, int row, int col)
         {
             long pointerId = (long)e.PointerId;
-
-            if (pointerId == _panPointerIdA || pointerId == _panPointerIdB)
-            {
-                UpdatePan(pointerId, e.ClientX, e.ClientY);
-                return;
-            }
 
             if (_primaryPointerId != pointerId || _activeCell != (row, col)) return;
 
@@ -141,54 +107,9 @@ namespace Minesweeper.Web.Game
             }
         }
 
-        private void UpdatePan(long pointerId, double x, double y)
-        {
-            double prevX, prevY;
-            if (pointerId == _panPointerIdA) { prevX = _panPrevAX; prevY = _panPrevAY; _panPrevAX = x; _panPrevAY = y; }
-            else { prevX = _panPrevBX; prevY = _panPrevBY; _panPrevBX = x; _panPrevBY = y; }
-
-            if (_panPointerIdA is null || _panPointerIdB is null) return;
-
-            if (!_isPanning)
-            {
-                // Coherence check: both fingers must have moved a meaningful distance from
-                // where THEY individually started, in roughly the same direction (positive
-                // cosine similarity). This is what naturally excludes a pinch/zoom gesture
-                // (fingers moving apart = opposing vectors = negative cosine) without needing
-                // a separate explicit pinch check.
-                double dispAX = _panPrevAX - _panStartAX, dispAY = _panPrevAY - _panStartAY;
-                double dispBX = _panPrevBX - _panStartBX, dispBY = _panPrevBY - _panStartBY;
-                double magA = Math.Sqrt(dispAX * dispAX + dispAY * dispAY);
-                double magB = Math.Sqrt(dispBX * dispBX + dispBY * dispBY);
-                if (magA < PanCoherenceMinDisplacementPx || magB < PanCoherenceMinDisplacementPx) return;
-
-                double cosine = (dispAX * dispBX + dispAY * dispBY) / (magA * magB);
-                if (cosine < PanCoherenceMinCosine) return; // opposed/unrelated motion - not a pan
-
-                _isPanning = true;
-                return; // start clean on the next move rather than jumping by this frame's delta
-            }
-
-            // Each finger's own move event contributes half its step - a coherent two-finger
-            // drag fires two move events per animation frame (one per finger) that each report
-            // roughly the same delta, so halving keeps the board tracking actual finger speed
-            // instead of panning twice as fast as the fingers are moving.
-            double boardMaxX = BoardWidthPx / 2;
-            double boardMaxY = BoardHeightPx / 2;
-            _panOffsetX = Math.Clamp(_panOffsetX + (x - prevX) / 2.0, -boardMaxX, boardMaxX);
-            _panOffsetY = Math.Clamp(_panOffsetY + (y - prevY) / 2.0, -boardMaxY, boardMaxY);
-            StateHasChanged();
-        }
-
         private void OnPointerUp(PointerEventArgs e, int row, int col)
         {
             long pointerId = (long)e.PointerId;
-
-            if (pointerId == _panPointerIdA || pointerId == _panPointerIdB)
-            {
-                EndPan();
-                return;
-            }
 
             if (_primaryPointerId != pointerId || _activeCell != (row, col))
             {
@@ -221,31 +142,17 @@ namespace Minesweeper.Web.Game
             }
 
             State.RevealCell(row, col);
+            _ = CenterCameraOnAsync(row, col);
         }
 
         private void OnPointerLeave(PointerEventArgs e, int row, int col)
         {
             long pointerId = (long)e.PointerId;
 
-            if (pointerId == _panPointerIdA || pointerId == _panPointerIdB)
-            {
-                EndPan();
-                return;
-            }
-
             if (_primaryPointerId == pointerId && _activeCell == (row, col))
             {
                 ClearPressState();
             }
-        }
-
-        private void EndPan()
-        {
-            _panPointerIdA = null;
-            _panPointerIdB = null;
-            _isPanning = false;
-            // The panned view intentionally persists after fingers lift - it doesn't snap back,
-            // it only resets on a fresh game (see HandleGameStarted).
         }
 
         private void TryChord(int row, int col, Cell cell)
@@ -256,6 +163,72 @@ namespace Minesweeper.Web.Game
                 return;
             }
             State.RevealCell(row, col);
+            _ = CenterCameraOnAsync(row, col);
+        }
+
+        // Relaxed, edge-triggered camera. Rather than re-centring on every tap (which fought the
+        // player's own tracking of where they'd just aimed), the camera holds still while the
+        // acted-on cell stays within a generous central dead-zone, and only nudges - by the
+        // minimum amount - when that cell drifts close to a viewport edge. Boards that fit
+        // entirely never move (clamp range collapses to 0). Measures the live viewport each call
+        // so rotation/resize are handled for free; any interop hiccup is swallowed harmlessly.
+        private async Task CenterCameraOnAsync(int row, int col)
+        {
+            double[]? size;
+            try
+            {
+                size = await JS.InvokeAsync<double[]>("msBoard.measure", _slotRef);
+            }
+            catch
+            {
+                return;
+            }
+            if (size is null || size.Length < 2) return;
+
+            double viewportW = size[0];
+            double viewportH = size[1];
+
+            int cols = State.CurrentSettings.Cols;
+            int rows = State.CurrentSettings.Rows;
+            double gridW = cols * CellPx + (cols - 1) * GridGapPx;
+            double gridH = rows * CellPx + (rows - 1) * GridGapPx;
+            double wellW = gridW + WellPadPx * 2;
+            double wellH = gridH + WellPadPx * 2;
+
+            // Camera value that would put this cell dead-centre. Padding is symmetric so it cancels.
+            double cellCenterX = col * (CellPx + GridGapPx) + CellPx / 2.0;
+            double cellCenterY = row * (CellPx + GridGapPx) + CellPx / 2.0;
+            double centerX = gridW / 2.0 - cellCenterX;
+            double centerY = gridH / 2.0 - cellCenterY;
+
+            // Where the cell currently sits relative to the viewport centre, given the live camera.
+            double screenOffX = _cameraX - centerX;
+            double screenOffY = _cameraY - centerY;
+
+            // Dead-zone half-extent: the cell may roam freely until it comes within `margin` of an
+            // edge. Small margin => large dead-zone => the camera stays put most of the time.
+            double marginX = Math.Min(viewportW * 0.18, CellPx * 1.5);
+            double marginY = Math.Min(viewportH * 0.18, CellPx * 1.5);
+            double deadHalfX = Math.Max(0, viewportW / 2.0 - marginX);
+            double deadHalfY = Math.Max(0, viewportH / 2.0 - marginY);
+
+            double newX = _cameraX, newY = _cameraY;
+            if (screenOffX > deadHalfX) newX = centerX + deadHalfX;
+            else if (screenOffX < -deadHalfX) newX = centerX - deadHalfX;
+            if (screenOffY > deadHalfY) newY = centerY + deadHalfY;
+            else if (screenOffY < -deadHalfY) newY = centerY - deadHalfY;
+
+            double maxX = Math.Max(0, (wellW - viewportW) / 2.0);
+            double maxY = Math.Max(0, (wellH - viewportH) / 2.0);
+            newX = Math.Clamp(newX, -maxX, maxX);
+            newY = Math.Clamp(newY, -maxY, maxY);
+
+            // No meaningful change - leave the view (and the render) alone.
+            if (Math.Abs(newX - _cameraX) < 0.5 && Math.Abs(newY - _cameraY) < 0.5) return;
+
+            _cameraX = newX;
+            _cameraY = newY;
+            StateHasChanged();
         }
 
         private async Task TriggerShakeAsync(int row, int col)

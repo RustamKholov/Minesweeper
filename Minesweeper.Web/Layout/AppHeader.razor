@@ -1,7 +1,7 @@
 <header class="app-header">
     <div class="app-header-brand">
         <div class="app-header-logo">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <g stroke="#e7eaee" stroke-width="2" stroke-linecap="round">
                     <line x1="12" y1="2" x2="12" y2="6" />
                     <line x1="12" y1="18" x2="12" y2="22" />
@@ -16,8 +16,17 @@
                 <circle cx="9.7" cy="9.7" r="1.15" fill="#eef1f5" opacity="0.85" />
             </svg>
         </div>
-        <div class="app-header-title">Minesweeper</div>
     </div>
+
+    @* Primary navigation lives here now - the fixed bottom footer was removed so the board
+       gets that space back. The Castle ecosystem header above already brands the page, so the
+       "Minesweeper" title text is dropped to keep this bar slim. *@
+    <nav class="app-nav">
+        <NavLink class="app-tab" ActiveClass="active" href="/" Match="NavLinkMatch.All">Game</NavLink>
+        <NavLink class="app-tab" ActiveClass="active" href="/stats">Stats</NavLink>
+        <NavLink class="app-tab" ActiveClass="active" href="/records">Records</NavLink>
+    </nav>
+
     <div class="app-header-actions">
         @if (_fullscreenSupported)
         {

@@ -1,21 +1,28 @@
 .game-banner {
+  /* Floated overlay over the play area - anchored to .game-page - so appearing
+     on game-over never pushes the board down. Centered with left/right + margin
+     (not translateX) so it doesn't fight the msPopIn transform. */
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 44px;
+  margin: 0 auto;
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
   padding: 10px 16px;
   border-radius: 12px;
+  box-shadow: 0 10px 28px rgba(20, 24, 32, 0.22);
   animation: msPopIn 0.2s ease;
 }
 
 .game-banner.won {
-  background: rgba(31, 157, 85, 0.12);
+  background: #e7f6ee;
   color: #1f9d55;
-}
-
-.game-banner.lost {
-  background: rgba(214, 69, 69, 0.12);
-  color: #d64545;
 }
 
 .game-banner-text {

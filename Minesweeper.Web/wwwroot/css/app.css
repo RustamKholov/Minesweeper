@@ -81,7 +81,8 @@ code {
 .app-root {
   display: flex;
   flex-direction: column;
-  height: 100dvh;
+  flex: 1 1 auto;
+  min-height: 0;
   width: 100%;
   overflow: hidden;
   background: var(--root-bg);
@@ -92,8 +93,8 @@ code {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: 10px;
+  padding: 6px 12px;
   background: var(--header-bg);
   border-bottom: 1px solid rgba(20, 24, 32, 0.10);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset;
@@ -104,7 +105,7 @@ code {
 .app-header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .app-header-brand {
@@ -114,9 +115,9 @@ code {
 }
 
 .app-header-logo {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
   background: linear-gradient(150deg, #3a3f47, #20232a);
   display: flex;
   align-items: center;
@@ -124,12 +125,28 @@ code {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
-.app-header-title {
+/* Primary nav tabs, moved from the removed bottom footer into the top bar. */
+.app-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.app-tab {
+  padding: 6px 12px;
+  border-radius: 10px;
   font-family: var(--font-ui);
-  font-weight: 800;
-  font-size: 18px;
-  letter-spacing: 0.3px;
-  color: var(--ink);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink-nav-inactive);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.app-tab.active {
+  background: rgba(217, 146, 44, 0.12);
+  color: var(--accent);
 }
 
 .help-button {
@@ -155,46 +172,6 @@ code {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
-
-.bottom-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
-  background: var(--header-bg);
-  border-top: 1px solid rgba(20, 24, 32, 0.10);
-  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.7) inset;
-}
-
-.nav-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  padding: 6px 22px;
-  border-radius: 12px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: var(--ink-nav-inactive);
-  text-decoration: none;
-}
-
-.nav-button.active {
-  background: rgba(217, 146, 44, 0.12);
-  color: var(--accent);
-}
-
-.nav-button svg {
-  fill: currentColor;
-}
-
-.nav-button-label {
-  font-family: var(--font-ui);
-  font-weight: 700;
-  font-size: 11px;
 }
 
 /* ---- Shared widgets ---- */
