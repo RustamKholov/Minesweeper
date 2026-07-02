@@ -41,6 +41,15 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+    <!-- Board viewport measurement for the camera-follow navigation (GameBoard). -->
+    <script>
+        window.msBoard = {
+            measure: function (el) {
+                if (!el) return [0, 0];
+                return [el.clientWidth, el.clientHeight];
+            }
+        };
+    </script>
     <script src="_framework/blazor.webassembly.js"></script>
     <!-- Castle of Glass ecosystem header (brand → portal, app-switcher, sign out).
          Hidden automatically when the game goes browser-fullscreen. -->

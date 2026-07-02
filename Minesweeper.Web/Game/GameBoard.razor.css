@@ -5,7 +5,8 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 10px;
+  /* The field is the focus: give it room to breathe under the control deck. */
+  padding: 18px 12px;
 }
 
 .board-well {
@@ -13,6 +14,10 @@
   border-radius: 16px;
   background: var(--well-bg);
   box-shadow: var(--well-shadow);
+  /* Camera-follow glide: the board translates smoothly to the cell just played
+     (offset set in GameBoard.razor.cs). */
+  transition: transform 220ms ease-out;
+  will-change: transform;
 }
 
 .board-grid {

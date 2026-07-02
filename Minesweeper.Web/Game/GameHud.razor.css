@@ -1,13 +1,21 @@
+/* Slim, fixed HUD - it never scrolls and takes minimal vertical space so the board
+   dominates the screen, especially in fullscreen. Styled as a "control deck" that reads as
+   one surface with the app header above it, with a defined bottom edge + soft drop shadow so
+   there's a clean separation from the board field below. */
 .game-hud {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 14px 14px 0;
+  gap: 8px;
+  padding: 10px 14px 12px;
+  background: var(--header-bg);
+  border-bottom: 1px solid rgba(20, 24, 32, 0.10);
+  box-shadow: 0 4px 10px rgba(20, 24, 32, 0.07);
+  z-index: 1;
 }
 
 .hud-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 12px;
 }

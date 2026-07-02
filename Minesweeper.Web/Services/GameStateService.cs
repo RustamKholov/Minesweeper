@@ -85,6 +85,13 @@ namespace Minesweeper.Web.Services
         public void RestartGame()
         {
             _gameService.RestartGame();
+            // GameEngine.RestartGame() runs GameOver(), which unsubscribes ALL cell and timer
+            // observers. Re-subscribe (as SwitchDifficulty does) or the restarted game has no
+            // timer observer at all - and unlike cell reveals (which also refresh the UI via
+            // Changed/AfterMutation), the timer's only update path is UpdateTime, so the clock
+            // would silently stay frozen at 0 for every game after the first.
+            _gameService.SubscribeCellObserver(this);
+            _gameService.SubscribeTimerObserver(this);
             MinesLeft = CurrentSettings.Mines;
             ElapsedSeconds = 0;
             IsGameOver = false;

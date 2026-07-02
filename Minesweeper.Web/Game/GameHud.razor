@@ -10,7 +10,7 @@
 
     <DifficultyPicker CurrentDifficulty="State.CurrentSettings.Difficulty" OnSelected="OnDifficultySelected" />
 
-    <GameBanner Show="State.IsGameOver" Won="State.IsGameWon" ElapsedSeconds="State.ElapsedSeconds" OnPlayAgain="OnFaceClick" />
+    <GameBanner Show="State.IsGameOver && State.IsGameWon" ElapsedSeconds="State.ElapsedSeconds" OnPlayAgain="OnFaceClick" />
 </div>
 
 @code {

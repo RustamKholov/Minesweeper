@@ -1,14 +1,15 @@
+@* Win-only. A loss is conveyed by the dead face + revealed mines; there is no "Boom" banner,
+   and restarting after a loss is done with the smiley. *@
 @if (Show)
 {
-    <div class="game-banner @(Won ? "won" : "lost")">
-        <span class="game-banner-text">@(Won ? $"Cleared in {ElapsedSeconds}s!" : "Boom! You hit a mine.")</span>
+    <div class="game-banner won">
+        <span class="game-banner-text">Cleared in @ElapsedSeconds s!</span>
         <button class="primary-button" @onclick="OnPlayAgain">Play again</button>
     </div>
 }
 
 @code {
     [Parameter] public bool Show { get; set; }
-    [Parameter] public bool Won { get; set; }
     [Parameter] public int ElapsedSeconds { get; set; }
     [Parameter] public EventCallback OnPlayAgain { get; set; }
 }
