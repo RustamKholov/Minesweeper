@@ -1,5 +1,6 @@
 @inherits LayoutComponentBase
 @inject ThemeState Theme
+@inject FullscreenService Fullscreen
 
 <div class="app-root" style="--accent: @Theme.CurrentAccentHex;">
     <AppHeader OnHelpClick="OpenHelp" />
@@ -7,6 +8,14 @@
         @Body
     </main>
 </div>
+
+@* Only visible in immersive (fullscreen) mode - see .immersive-exit in app.css. Lives outside
+   .app-header so it isn't stripped when the chrome is hidden. *@
+<button class="immersive-exit" @onclick="ExitFullscreen" title="Exit full screen" aria-label="Exit full screen">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 21h4a2 2 0 0 0 2-2v-4" />
+    </svg>
+</button>
 
 <HelpModal IsOpen="_helpOpen" OnClose="CloseHelp" />
 <TutorialModal />
@@ -23,4 +32,6 @@
 
     private void OpenHelp() => _helpOpen = true;
     private void CloseHelp() => _helpOpen = false;
+
+    private async Task ExitFullscreen() => await Fullscreen.ExitAsync();
 }

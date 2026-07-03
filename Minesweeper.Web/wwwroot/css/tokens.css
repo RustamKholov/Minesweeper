@@ -31,7 +31,7 @@
   --well-bg: linear-gradient(150deg, #dde2e9, #bcc2cc);
   --well-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.65), inset 0 -2px 5px rgba(20, 24, 32, 0.18), 0 14px 30px rgba(20, 24, 34, 0.20);
 
-  --shake-duration: 300ms;
+  --shake-duration: 180ms;
 }
 
 html, body {
@@ -78,7 +78,7 @@ body {
 }
 
 @keyframes msPopIn {
-  0% { opacity: 0; transform: translateY(6px) scale(0.98); }
+  0% { opacity: 0; transform: translateY(4px) scale(0.985); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 

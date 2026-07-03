@@ -14,9 +14,8 @@
   border-radius: 16px;
   background: var(--well-bg);
   box-shadow: var(--well-shadow);
-  /* Camera-follow glide: the board translates smoothly to the cell just played
-     (offset set in GameBoard.razor.cs). */
-  transition: transform 220ms ease-out;
+  /* No transition: grab-to-pan translates the board 1:1 with the finger, so any
+     easing here would just add lag. will-change keeps the transform on the GPU. */
   will-change: transform;
 }
 
@@ -37,7 +36,7 @@
   font-weight: 700;
   position: relative;
   touch-action: none;
-  transition: transform 60ms ease, box-shadow 60ms ease;
+  transition: transform 35ms ease, box-shadow 35ms ease;
   cursor: pointer;
 }
 
@@ -68,7 +67,7 @@
 }
 
 .cell.shake {
-  animation: msShake 0.32s ease;
+  animation: msShake var(--shake-duration) ease;
 }
 
 .cell-number {
