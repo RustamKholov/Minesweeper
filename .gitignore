@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# Local test-harness scratch (Playwright driver, screenshots)
+.playdrive/
+.run-screens/
