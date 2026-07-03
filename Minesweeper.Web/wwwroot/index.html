@@ -21,10 +21,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="css/tokens.css" />
-    <link rel="stylesheet" href="css/lcd.css" />
-    <link rel="stylesheet" href="css/app.css" />
-    <link href="Minesweeper.Web.styles.css" rel="stylesheet" />
+    <!-- ?v= busts any stale cached copy on redeploy; bump when these files change. The nginx
+         config also sends no-cache for these, so this is mainly a one-shot cache breaker. -->
+    <link rel="stylesheet" href="css/tokens.css?v=20260703" />
+    <link rel="stylesheet" href="css/lcd.css?v=20260703" />
+    <link rel="stylesheet" href="css/app.css?v=20260703" />
+    <link href="Minesweeper.Web.styles.css?v=20260703" rel="stylesheet" />
 </head>
 
 <body>
@@ -81,7 +83,7 @@
     <script src="_framework/blazor.webassembly.js"></script>
     <!-- Castle of Glass ecosystem header (brand → portal, app-switcher, sign out).
          Hidden automatically when the game goes browser-fullscreen. -->
-    <script src="castle-header.js" data-app-name="Minesweeper"
+    <script src="castle-header.js?v=20260703" data-app-name="Minesweeper"
             data-portal="https://rh-cloud.org/portal"
             data-auth="https://auth.rh-cloud.org"
             data-catalog="https://rh-cloud.org/apps.json"></script>
