@@ -17,7 +17,7 @@
   padding: 10px 16px;
   border-radius: 12px;
   box-shadow: 0 10px 28px rgba(20, 24, 32, 0.22);
-  animation: msPopIn 0.2s ease;
+  animation: msPopIn 0.12s ease;
 }
 
 .game-banner.won {

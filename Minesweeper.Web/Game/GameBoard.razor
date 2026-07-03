@@ -13,7 +13,7 @@
                          @onpointerdown="e => OnPointerDown(e, row, col)"
                          @onpointermove="e => OnPointerMove(e, row, col)"
                          @onpointerup="e => OnPointerUp(e, row, col)"
-                         @onpointerleave="e => OnPointerLeave(e, row, col)"
+                         @onpointercancel="e => OnPointerCancel(e, row, col)"
                          @oncontextmenu="e => OnContextMenu(e, row, col)"
                          @oncontextmenu:preventDefault="true">
                         @switch (visual)

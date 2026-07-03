@@ -47,6 +47,26 @@
             measure: function (el) {
                 if (!el) return [0, 0];
                 return [el.clientWidth, el.clientHeight];
+            },
+            // Capture the pointer to the cell under (x,y) so a drag keeps reporting to that same
+            // origin cell even as the board slides beneath the finger (used by grab-to-pan).
+            capture: function (x, y, pointerId) {
+                try {
+                    var el = document.elementFromPoint(x, y);
+                    if (el && el.setPointerCapture) el.setPointerCapture(pointerId);
+                } catch (e) { /* capture is best-effort */ }
+            }
+        };
+        // Notify .NET whenever fullscreen state changes (button, Esc, or system gesture) so the
+        // header's fullscreen toggle icon and the immersive exit button stay in sync.
+        window.msFullscreen = {
+            watch: function (dotnetRef) {
+                var fire = function () {
+                    dotnetRef.invokeMethodAsync('OnFullscreenChanged',
+                        !!(document.fullscreenElement || document.webkitFullscreenElement));
+                };
+                document.addEventListener('fullscreenchange', fire);
+                document.addEventListener('webkitfullscreenchange', fire);
             }
         };
     </script>

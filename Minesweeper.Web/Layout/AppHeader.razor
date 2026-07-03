@@ -49,13 +49,17 @@
     </div>
 </header>
 
+@implements IDisposable
+
 @code {
     [Parameter] public EventCallback OnHelpClick { get; set; }
 
     [Inject] private FullscreenService Fullscreen { get; set; } = default!;
+    [Inject] private IJSRuntime JS { get; set; } = default!;
 
     private bool _fullscreenSupported;
     private bool _isFullscreen;
+    private DotNetObjectReference<AppHeader>? _selfRef;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -64,6 +68,10 @@
             _fullscreenSupported = await Fullscreen.IsSupportedAsync();
             if (_fullscreenSupported)
             {
+                // Watch actual fullscreen state so the icon stays correct however it changed -
+                // the header's own button, the immersive exit button, Escape, or a system gesture.
+                _selfRef = DotNetObjectReference.Create(this);
+                await JS.InvokeVoidAsync("msFullscreen.watch", _selfRef);
                 StateHasChanged();
             }
         }
@@ -79,9 +87,16 @@
         {
             await Fullscreen.EnterAsync();
         }
-        // Optimistic: reflects the requested state rather than polling the browser, since
-        // listening for the fullscreenchange event (e.g. the user pressing Escape) would need
-        // an extra JS callback registration for a "nice to have" edge case.
+        // OnFullscreenChanged will reconcile the real state; this keeps the icon snappy meanwhile.
         _isFullscreen = !_isFullscreen;
     }
+
+    [JSInvokable]
+    public Task OnFullscreenChanged(bool isFullscreen)
+    {
+        _isFullscreen = isFullscreen;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose() => _selfRef?.Dispose();
 }
