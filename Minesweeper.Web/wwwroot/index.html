@@ -55,6 +55,11 @@
                     var el = document.elementFromPoint(x, y);
                     if (el && el.setPointerCapture) el.setPointerCapture(pointerId);
                 } catch (e) { /* capture is best-effort */ }
+            },
+            // Set the board translate directly, bypassing a Blazor re-render of every cell. This
+            // is what keeps grab-to-pan (and its inertia glide) smooth on large boards.
+            setTransform: function (el, x, y) {
+                if (el) el.style.transform = 'translate(' + x + 'px,' + y + 'px)';
             }
         };
         // Notify .NET whenever fullscreen state changes (button, Esc, or system gesture) so the
@@ -62,8 +67,11 @@
         window.msFullscreen = {
             watch: function (dotnetRef) {
                 var fire = function () {
-                    dotnetRef.invokeMethodAsync('OnFullscreenChanged',
-                        !!(document.fullscreenElement || document.webkitFullscreenElement));
+                    var fs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+                    // Drive immersive CSS off a class rather than the :fullscreen pseudo, which is
+                    // inconsistent across mobile browsers for element-fullscreen.
+                    document.documentElement.classList.toggle('ms-fullscreen', fs);
+                    dotnetRef.invokeMethodAsync('OnFullscreenChanged', fs);
                 };
                 document.addEventListener('fullscreenchange', fire);
                 document.addEventListener('webkitfullscreenchange', fire);

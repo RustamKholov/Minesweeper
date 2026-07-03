@@ -25,7 +25,7 @@ builder.Services.AddScoped<IGameOverService, NoOpGameOverService>();
 builder.Services.AddScoped<IGameServiceGenerator, GameServiceGenerator>();
 builder.Services.AddScoped<GameStateService>();
 builder.Services.AddScoped<RecordsApiClient>();
-builder.Services.AddScoped<ThemeState>();
+builder.Services.AddScoped<SettingsService>();
 builder.Services.AddScoped<TutorialFlagService>();
 builder.Services.AddScoped<FullscreenService>();
 

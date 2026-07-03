@@ -6,7 +6,4 @@
   /* No gap: the HUD deck sits flush under the app header (one cohesive control area) and the
      board field takes everything below it. */
   gap: 0;
-  /* Anchor for the game-over banner, which floats as an overlay so it never
-     reflows the board (see GameBanner.razor.css). */
-  position: relative;
 }

@@ -36,7 +36,7 @@
   font-weight: 700;
   position: relative;
   touch-action: none;
-  transition: transform 35ms ease, box-shadow 35ms ease;
+  transition: transform var(--dur-press) ease, box-shadow var(--dur-press) ease;
   cursor: pointer;
 }
 

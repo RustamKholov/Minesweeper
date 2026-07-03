@@ -5,8 +5,9 @@
 .game-hud {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 10px 14px 12px;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px 8px;
   background: var(--header-bg);
   border-bottom: 1px solid rgba(20, 24, 32, 0.10);
   box-shadow: 0 4px 10px rgba(20, 24, 32, 0.07);
@@ -17,5 +18,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
+}
+
+/* Landscape / short viewports: lay the scoreboard and the difficulty picker side by side in
+   one band so the limited vertical space goes to the board. */
+@media (orientation: landscape) and (max-height: 540px) {
+  .game-hud {
+    flex-direction: row;
+    justify-content: center;
+    gap: 18px;
+    padding: 4px 10px;
+  }
 }

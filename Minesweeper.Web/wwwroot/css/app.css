@@ -89,12 +89,24 @@ code {
   font-family: var(--font-ui);
 }
 
+/* Animation speed setting - scales the shared timing variables. */
+.app-root.anim-fast {
+  --dur-press: 18ms;
+  --shake-duration: 100ms;
+  --dur-pop: 0.07s;
+}
+.app-root.anim-off {
+  --dur-press: 0ms;
+  --shake-duration: 0ms;
+  --dur-pop: 0ms;
+}
+
 .app-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 6px 12px;
+  padding: 3px 12px;
   background: var(--header-bg);
   border-bottom: 1px solid rgba(20, 24, 32, 0.10);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset;
@@ -115,9 +127,9 @@ code {
 }
 
 .app-header-logo {
-  width: 28px;
-  height: 28px;
-  border-radius: 9px;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
   background: linear-gradient(150deg, #3a3f47, #20232a);
   display: flex;
   align-items: center;
@@ -150,15 +162,15 @@ code {
 }
 
 .help-button {
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   border: 1px solid rgba(20, 24, 32, 0.14);
   background: linear-gradient(#fdfefe, #dfe3e9);
   color: #4b5160;
   font-family: var(--font-ui);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8);
   cursor: pointer;
   display: flex;
@@ -174,42 +186,43 @@ code {
   overflow: hidden;
 }
 
+/* Trim the (shared) Castle ecosystem header on this page only - it's the biggest single chunk
+   of top chrome. Higher-specificity + !important because castle-header.js injects its own
+   <style> after ours. */
+body > .cog-h {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+body > .cog-h .cog-h-mk {
+  width: 24px !important;
+  height: 24px !important;
+}
+
 /* ---- Immersive fullscreen ----
    In fullscreen the browser only removes its own chrome; strip everything else too so the
    board owns the whole screen, leaving just the tiny mines/smiley/clock HUD and a floating
-   exit button. Rules are duplicated with the -webkit- prefix because a selector list is
-   dropped whole if any selector is unknown to the browser. */
+   exit button. Driven by the .ms-fullscreen class (toggled in index.html on fullscreenchange)
+   rather than the :fullscreen pseudo, which is unreliable for element-fullscreen on mobile. */
 .immersive-exit { display: none; }
 
-:fullscreen .cog-h,
-:fullscreen .app-header,
-:fullscreen .difficulty-picker { display: none !important; }
-:-webkit-full-screen .cog-h,
-:-webkit-full-screen .app-header,
-:-webkit-full-screen .difficulty-picker { display: none !important; }
+html.ms-fullscreen .cog-h,
+html.ms-fullscreen .app-header { display: none !important; }
 
-:fullscreen .game-hud {
+html.ms-fullscreen .game-hud {
   background: transparent;
   border-bottom: none;
   box-shadow: none;
-  padding: 6px 10px 0;
-}
-:-webkit-full-screen .game-hud {
-  background: transparent;
-  border-bottom: none;
-  box-shadow: none;
-  padding: 6px 10px 0;
+  padding: 4px 10px 0;
 }
 
-:fullscreen .immersive-exit,
-:-webkit-full-screen .immersive-exit {
+html.ms-fullscreen .immersive-exit {
   display: flex;
   position: fixed;
   top: calc(8px + env(safe-area-inset-top));
   right: calc(8px + env(safe-area-inset-right));
   z-index: 2000;
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
@@ -311,7 +324,7 @@ code {
   max-width: 340px;
   width: 100%;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-  animation: msPopIn 0.12s ease;
+  animation: msPopIn var(--dur-pop) ease;
 }
 
 .modal-title {
@@ -344,4 +357,163 @@ code {
   font-family: var(--font-ui);
   font-size: 13px;
   color: var(--ink-muted);
+}
+
+/* ---- Settings ---- */
+
+.settings-body {
+  max-height: 62vh;
+  overflow-y: auto;
+  margin: 0 -6px;
+  padding: 0 6px;
+}
+
+.settings-section-title {
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 14px 0 6px;
+}
+.settings-section-title:first-child { margin-top: 0; }
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+  border-top: 1px solid rgba(20, 24, 32, 0.07);
+}
+
+.setting-row.setting-stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.setting-name {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.setting-hint {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--ink-muted);
+  margin-top: 2px;
+}
+
+.setting-control { display: flex; align-items: center; gap: 8px; }
+
+.setting-slider { flex: 1; max-width: 190px; }
+.setting-slider input[type=range] { flex: 1; accent-color: var(--accent); }
+.setting-value {
+  font-family: var(--font-lcd);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink-muted);
+  min-width: 46px;
+  text-align: right;
+}
+
+.custom-fields { display: flex; gap: 8px; }
+.custom-fields label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-muted);
+}
+.custom-fields input {
+  width: 100%;
+  padding: 7px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(20, 24, 32, 0.16);
+  background: #fff;
+  font-family: var(--font-lcd);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink);
+}
+.custom-start { width: 100%; }
+
+.accent-swatches { display: flex; gap: 8px; }
+.swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  padding: 0;
+}
+.swatch.active {
+  border-color: #fff;
+  box-shadow: 0 0 0 2px var(--ink), 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.segmented {
+  display: inline-flex;
+  background: #e9edf2;
+  border-radius: 10px;
+  padding: 2px;
+  gap: 2px;
+}
+.seg {
+  border: none;
+  background: transparent;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+.seg.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.switch {
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  border: none;
+  background: #cfd5dd;
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+  transition: background var(--dur-press) ease;
+  flex: none;
+}
+.switch.on { background: var(--accent); }
+.switch-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform var(--dur-press) ease;
+}
+.switch.on .switch-knob { transform: translateX(18px); }
+
+.settings-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
 }
