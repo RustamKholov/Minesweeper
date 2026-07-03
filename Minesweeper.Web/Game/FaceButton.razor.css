@@ -6,15 +6,20 @@
   background: transparent;
   padding: 0;
   cursor: pointer;
+  flex: none;
 }
 
 .face-circle {
+  /* Keep the exact 40px the face shapes are positioned for (no flex-shrink, no scale) so it
+     never renders as an ellipse and the eyes/mouth stay aligned. */
   width: 40px;
   height: 40px;
   border-radius: 50%;
   background: linear-gradient(150deg, #ffe27a, #f2b93b);
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.6), inset 0 -3px 4px rgba(150, 90, 10, 0.25);
   position: relative;
+  flex: none;
+  margin: 0 auto;
 }
 
 .face-shape {

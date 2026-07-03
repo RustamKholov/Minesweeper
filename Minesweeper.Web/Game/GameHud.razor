@@ -3,14 +3,12 @@
 
 <div class="game-hud">
     <div class="hud-row">
-        <LcdDisplay Value="State.MinesLeft" AllowNegative="true" />
+        <LcdDisplay Value="State.MinesLeft" AllowNegative="true" Small="true" />
         <FaceButton Mood="State.CurrentMood" OnClick="OnFaceClick" />
-        <LcdDisplay Value="State.ElapsedSeconds" />
+        <LcdDisplay Value="State.ElapsedSeconds" Small="true" />
     </div>
 
     <DifficultyPicker CurrentDifficulty="State.CurrentSettings.Difficulty" OnSelected="OnDifficultySelected" />
-
-    <GameBanner Show="State.IsGameOver && State.IsGameWon" ElapsedSeconds="State.ElapsedSeconds" OnPlayAgain="OnFaceClick" />
 </div>
 
 @code {

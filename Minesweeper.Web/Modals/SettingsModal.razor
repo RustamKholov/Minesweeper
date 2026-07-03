@@ -1,0 +1,135 @@
+@inject SettingsService Settings
+@inject GameStateService State
+
+<ModalShell IsOpen="IsOpen" OnClose="Close">
+    <div class="modal-title">Settings</div>
+
+    <div class="settings-body">
+
+        <div class="settings-section-title">Board</div>
+
+        <div class="setting-row">
+            <div class="setting-label">
+                <div class="setting-name">Tile size</div>
+                <div class="setting-hint">Zoom in or out — the board just scrolls more</div>
+            </div>
+            <div class="setting-control setting-slider">
+                <input type="range" min="@SettingsService.MinTile" max="@SettingsService.MaxTile"
+                       value="@Settings.TileSize"
+                       @oninput="OnTileInput" />
+                <span class="setting-value">@Settings.TileSize px</span>
+            </div>
+        </div>
+
+        <div class="setting-row setting-stack">
+            <div class="setting-label">
+                <div class="setting-name">Custom level</div>
+                <div class="setting-hint">@SettingsService.MinDim–@SettingsService.MaxDim per side. Custom games aren't recorded.</div>
+            </div>
+            <div class="custom-fields">
+                <label>Rows<input type="number" min="@SettingsService.MinDim" max="@SettingsService.MaxDim" @bind="_rows" /></label>
+                <label>Cols<input type="number" min="@SettingsService.MinDim" max="@SettingsService.MaxDim" @bind="_cols" /></label>
+                <label>Mines<input type="number" min="1" max="@MaxMines" @bind="_mines" /></label>
+            </div>
+            <button class="primary-button custom-start" @onclick="StartCustom">Start custom game</button>
+        </div>
+
+        <div class="settings-section-title">Appearance</div>
+
+        <div class="setting-row">
+            <div class="setting-label"><div class="setting-name">Accent</div></div>
+            <div class="setting-control accent-swatches">
+                @foreach (var kv in Settings.Accents)
+                {
+                    var key = kv.Key;
+                    <button class="swatch @(Settings.AccentKey == key ? "active" : "")"
+                            style="background:@kv.Value;" title="@key"
+                            @onclick="() => Settings.SetAccent(key)"></button>
+                }
+            </div>
+        </div>
+
+        <div class="setting-row">
+            <div class="setting-label"><div class="setting-name">Animations</div></div>
+            <div class="setting-control segmented">
+                <button class="seg @(Settings.Animations == AnimSpeed.Off ? "active" : "")" @onclick="() => Settings.SetAnimations(AnimSpeed.Off)">Off</button>
+                <button class="seg @(Settings.Animations == AnimSpeed.Fast ? "active" : "")" @onclick="() => Settings.SetAnimations(AnimSpeed.Fast)">Fast</button>
+                <button class="seg @(Settings.Animations == AnimSpeed.Normal ? "active" : "")" @onclick="() => Settings.SetAnimations(AnimSpeed.Normal)">Normal</button>
+            </div>
+        </div>
+
+        <div class="settings-section-title">Controls</div>
+
+        <div class="setting-row">
+            <div class="setting-label">
+                <div class="setting-name">Flag with</div>
+                <div class="setting-hint">How you plant a flag on touch</div>
+            </div>
+            <div class="setting-control segmented">
+                <button class="seg @(Settings.Flag == FlagGestureMode.Flick ? "active" : "")" @onclick="() => Settings.SetFlag(FlagGestureMode.Flick)">Flick</button>
+                <button class="seg @(Settings.Flag == FlagGestureMode.LongPress ? "active" : "")" @onclick="() => Settings.SetFlag(FlagGestureMode.LongPress)">Hold</button>
+            </div>
+        </div>
+
+        <div class="setting-row">
+            <div class="setting-label">
+                <div class="setting-name">Chording</div>
+                <div class="setting-hint">Tap a satisfied number to clear its neighbours</div>
+            </div>
+            <button class="switch @(Settings.ChordEnabled ? "on" : "")" role="switch" aria-checked="@Settings.ChordEnabled"
+                    @onclick="() => Settings.SetChord(!Settings.ChordEnabled)"><span class="switch-knob"></span></button>
+        </div>
+
+        <div class="setting-row">
+            <div class="setting-label">
+                <div class="setting-name">Pan inertia</div>
+                <div class="setting-hint">Let the board coast after a flick-drag</div>
+            </div>
+            <button class="switch @(Settings.PanInertia ? "on" : "")" role="switch" aria-checked="@Settings.PanInertia"
+                    @onclick="() => Settings.SetInertia(!Settings.PanInertia)"><span class="switch-knob"></span></button>
+        </div>
+
+    </div>
+
+    <div class="settings-footer">
+        <button class="pill" @onclick="Settings.ResetDefaults">Reset defaults</button>
+        <button class="primary-button" @onclick="Close">Done</button>
+    </div>
+</ModalShell>
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private int _rows = 12;
+    private int _cols = 12;
+    private int _mines = 24;
+
+    private int MaxMines => Math.Max(1, _rows * _cols - 9);
+
+    protected override void OnParametersSet()
+    {
+        // Seed the custom fields from the current board the first time the modal opens.
+        if (IsOpen && State.CurrentSettings is { } s && !_seeded)
+        {
+            _rows = s.Rows;
+            _cols = s.Cols;
+            _mines = s.Mines;
+            _seeded = true;
+        }
+    }
+    private bool _seeded;
+
+    private void OnTileInput(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var px)) Settings.SetTileSize(px);
+    }
+
+    private void StartCustom()
+    {
+        State.SwitchToCustom(_rows, _cols, _mines);
+        Close();
+    }
+
+    private Task Close() => OnClose.InvokeAsync();
+}

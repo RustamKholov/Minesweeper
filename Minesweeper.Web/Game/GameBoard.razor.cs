@@ -11,19 +11,22 @@ namespace Minesweeper.Web.Game
     {
         [Inject] private GameStateService State { get; set; } = default!;
         [Inject] private IJSRuntime JS { get; set; } = default!;
+        [Inject] private SettingsService Settings { get; set; } = default!;
 
-        // Shape/distance-based gesture recognition only - no timers anywhere in this file.
-        // Gesture category (tap vs flick vs pan) is decided purely by displacement from the
-        // touch origin (plus what kind of cell it started on); duration is never part of it.
+        // Shape/distance-based gesture recognition only. Gesture category (tap vs flick vs pan) is
+        // decided purely by displacement from the touch origin (plus what kind of cell it started
+        // on). The one exception is the optional long-press-to-flag control, which does use a timer.
         private const double MoveThresholdPx = 15.0;
+        private const int LongPressMs = 350;
 
-        private enum Gesture { None, Flick, Pan }
+        private enum Gesture { None, Flick, Pan, Cancelled }
 
         private (int Row, int Col)? _activeCell;
         private double _pointerDownX, _pointerDownY;
         private long? _primaryPointerId;
         private Gesture _gesture;
         private bool _originRevealed;
+        private bool _longFlagged;
         private (int Row, int Col)? _ghostFlagCell;
 
         private readonly HashSet<(int Row, int Col)> _shakingCells = new();
@@ -33,16 +36,22 @@ namespace Minesweeper.Web.Game
         // and sliding the map under you. A drag that starts on fog (unrevealed) is a flick-to-flag,
         // and a stationary press is a tap (dig fog / chord a number). No modes, no second finger,
         // no auto-follow - the meaning is decided by the cell under the finger at touch-down.
-        private const int CellSizePx = 36;   // fixed - identical for every difficulty (only board extent grows)
         private const double GridGapPx = 2;  // must match .board-grid gap
         private const double WellPadPx = 10; // must match .board-well padding
+        private int _lastTileSize;
 
         private ElementReference _slotRef;
+        private ElementReference _wellRef;
         private double _cameraX, _cameraY;
         private double _panStartCameraX, _panStartCameraY;
         private double _viewportW, _viewportH;
 
-        private int CellPx => CellSizePx;
+        // Per-frame pan velocity (smoothed) so a release can coast with inertia. A monotonically
+        // increasing sequence number cancels an in-flight glide the instant a new gesture starts.
+        private double _panVelX, _panVelY;
+        private int _gestureSeq;
+
+        private int CellPx => Settings.TileSize;
         private int IconPx => Math.Max(12, (int)Math.Round(CellPx * 0.62));
 
         // Inline (not scoped CSS) because the offset is per-instance render state, not a style
@@ -54,6 +63,21 @@ namespace Minesweeper.Web.Game
         {
             State.Changed += HandleStateChanged;
             State.GameStarted += HandleGameStarted;
+            Settings.Changed += HandleSettingsChanged;
+            _lastTileSize = Settings.TileSize;
+        }
+
+        private void HandleSettingsChanged()
+        {
+            // A tile-size change resizes the whole board, so any existing pan offset may now be
+            // out of bounds - recentre. Other settings don't affect board geometry.
+            if (Settings.TileSize != _lastTileSize)
+            {
+                _lastTileSize = Settings.TileSize;
+                _cameraX = 0;
+                _cameraY = 0;
+            }
+            InvokeAsync(StateHasChanged);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -88,6 +112,12 @@ namespace Minesweeper.Web.Game
             // One gesture at a time; any extra contact mid-gesture is a stray/palm-brush - ignore.
             if (_primaryPointerId is not null) return;
 
+            // Any new contact cancels an in-flight inertia glide (bumping the sequence the glide
+            // loop watches) so a touch always immediately stops a coasting board.
+            _gestureSeq++;
+            _panVelX = 0;
+            _panVelY = 0;
+
             var cell = State.GetCell(row, col);
             if (cell.IsFlagged)
             {
@@ -101,6 +131,7 @@ namespace Minesweeper.Web.Game
             _pointerDownY = e.ClientY;
             _gesture = Gesture.None;
             _originRevealed = cell.IsRevealed;
+            _longFlagged = false;
             _ghostFlagCell = null;
             _panStartCameraX = _cameraX;
             _panStartCameraY = _cameraY;
@@ -112,7 +143,26 @@ namespace Minesweeper.Web.Game
 
             // Fog presses show dig/flag feedback; a cleared cell only shows chord feedback on a
             // number (handled in CellCssClass), so no press-active toggle needed there.
-            if (!_originRevealed) State.SetPressActive(true);
+            if (!_originRevealed)
+            {
+                State.SetPressActive(true);
+                // Optional long-press-to-flag control: schedule a flag if the finger stays put.
+                if (Settings.Flag == FlagGestureMode.LongPress)
+                {
+                    _ = LongPressAsync(_gestureSeq, row, col);
+                }
+            }
+        }
+
+        // Flags the origin cell if the finger is still pressing it (no move, not lifted) after the
+        // long-press delay. Only used when the flag control is set to long-press.
+        private async Task LongPressAsync(int seq, int row, int col)
+        {
+            await Task.Delay(LongPressMs);
+            if (seq != _gestureSeq || _gesture != Gesture.None || _activeCell != (row, col)) return;
+            _longFlagged = true;
+            State.SetPressActive(false);
+            State.FlagCell(State.GetCell(row, col));
         }
 
         private void OnPointerMove(PointerEventArgs e, int row, int col)
@@ -134,6 +184,14 @@ namespace Minesweeper.Web.Game
                     _gesture = Gesture.Pan;
                     _ = MeasureViewportAsync(); // refresh clamp bounds (handles rotate) for this drag
                 }
+                else if (Settings.Flag == FlagGestureMode.LongPress)
+                {
+                    // In long-press mode a drag off a fog cell isn't a flick - it just cancels the
+                    // pending long-press flag and does nothing.
+                    _gesture = Gesture.Cancelled;
+                    State.SetPressActive(false);
+                    return;
+                }
                 else
                 {
                     _gesture = Gesture.Flick;
@@ -146,9 +204,16 @@ namespace Minesweeper.Web.Game
             if (_gesture == Gesture.Pan)
             {
                 (double maxX, double maxY) = PanBounds();
-                _cameraX = Math.Clamp(_panStartCameraX + dx, -maxX, maxX);
-                _cameraY = Math.Clamp(_panStartCameraY + dy, -maxY, maxY);
-                StateHasChanged();
+                double newX = Math.Clamp(_panStartCameraX + dx, -maxX, maxX);
+                double newY = Math.Clamp(_panStartCameraY + dy, -maxY, maxY);
+                // Smoothed per-frame velocity for the release glide.
+                _panVelX = _panVelX * 0.4 + (newX - _cameraX) * 0.6;
+                _panVelY = _panVelY * 0.4 + (newY - _cameraY) * 0.6;
+                _cameraX = newX;
+                _cameraY = newY;
+                // Update the transform directly - re-rendering every cell each move is what made
+                // dragging feel heavy. Blazor state (_cameraX/Y) stays in sync for the next render.
+                _ = SetTransformAsync();
             }
         }
 
@@ -158,11 +223,21 @@ namespace Minesweeper.Web.Game
             if (_primaryPointerId != pointerId || _activeCell != (row, col)) return;
 
             var gesture = _gesture;
+            bool longFlagged = _longFlagged;
+            int seq = _gestureSeq;
             ClearGesture();
 
-            // A pan resolves nothing; the view has already moved. Action always resolves on the
-            // touch-origin cell, never wherever the pointer happened to lift.
-            if (gesture == Gesture.Pan) return;
+            // A pan resolves nothing; the view has already moved. On release it coasts with
+            // inertia. Action always resolves on the touch-origin cell, never where it lifted.
+            if (gesture == Gesture.Pan)
+            {
+                _ = GlideAsync(seq);
+                return;
+            }
+
+            // Long-press already planted the flag during the hold, or the gesture was cancelled -
+            // either way the lift does nothing further.
+            if (longFlagged || gesture == Gesture.Cancelled) return;
 
             if (gesture == Gesture.Flick)
             {
@@ -171,11 +246,11 @@ namespace Minesweeper.Web.Game
             }
 
             // A stationary press = tap. On fog it digs; on a revealed number it chords (an
-            // otherwise dead gesture); on a cleared blank it does nothing.
+            // otherwise dead gesture, and only if chording is enabled); a cleared blank does nothing.
             var cell = State.GetCell(row, col);
             if (cell.IsRevealed)
             {
-                if (cell.AdjacentMines > 0) TryChord(row, col, cell);
+                if (cell.AdjacentMines > 0 && Settings.ChordEnabled) TryChord(row, col, cell);
                 return;
             }
 
@@ -213,6 +288,42 @@ namespace Minesweeper.Web.Game
             return (Math.Max(0, (wellW - vw) / 2.0), Math.Max(0, (wellH - vh) / 2.0));
         }
 
+        // Inertia: after a pan release, keep sliding in the release direction with exponential
+        // decay until it slows to a stop or hits an edge. A new gesture (which bumps _gestureSeq)
+        // cancels it instantly. Runs off the JS transform to stay smooth, then reconciles state.
+        private async Task GlideAsync(int seq)
+        {
+            double vx = _panVelX, vy = _panVelY;
+            if (!Settings.PanInertia || Math.Sqrt(vx * vx + vy * vy) < 3)
+            {
+                StateHasChanged(); // inertia off, or no real fling - just reconcile the transform
+                return;
+            }
+
+            (double maxX, double maxY) = PanBounds();
+            while (seq == _gestureSeq && (Math.Abs(vx) > 0.35 || Math.Abs(vy) > 0.35))
+            {
+                double nx = Math.Clamp(_cameraX + vx, -maxX, maxX);
+                double ny = Math.Clamp(_cameraY + vy, -maxY, maxY);
+                if (nx == _cameraX) vx = 0; // hit an edge - kill that axis
+                if (ny == _cameraY) vy = 0;
+                _cameraX = nx;
+                _cameraY = ny;
+                await SetTransformAsync();
+                vx *= 0.90;
+                vy *= 0.90;
+                await Task.Delay(16);
+            }
+
+            if (seq == _gestureSeq) StateHasChanged();
+        }
+
+        private async Task SetTransformAsync()
+        {
+            try { await JS.InvokeVoidAsync("msBoard.setTransform", _wellRef, _cameraX, _cameraY); }
+            catch { /* transform will be reconciled on the next render */ }
+        }
+
         private async Task MeasureViewportAsync()
         {
             try
@@ -245,6 +356,7 @@ namespace Minesweeper.Web.Game
             _ghostFlagCell = null;
             _gesture = Gesture.None;
             _originRevealed = false;
+            _longFlagged = false;
             State.SetPressActive(false);
         }
 
@@ -309,6 +421,7 @@ namespace Minesweeper.Web.Game
         {
             State.Changed -= HandleStateChanged;
             State.GameStarted -= HandleGameStarted;
+            Settings.Changed -= HandleSettingsChanged;
         }
     }
 }

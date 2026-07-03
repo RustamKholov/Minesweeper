@@ -1,5 +1,6 @@
 using Minesweeper.Application.Interfaces;
 using Minesweeper.Domain.Entities;
+using Minesweeper.Infrastructure.Configuration;
 using Minesweeper.Web.Models;
 
 namespace Minesweeper.Web.Services
@@ -17,6 +18,10 @@ namespace Minesweeper.Web.Services
         public int ElapsedSeconds { get; private set; }
         public bool IsGameOver { get; private set; }
         public bool IsGameWon { get; private set; }
+
+        // Custom-sized games aren't one of the classic presets, so they're excluded from records
+        // and stats (which are grouped by the fixed Easy/Medium/Hard difficulties).
+        public bool IsCustom { get; private set; }
 
         public event Action? Changed;
 
@@ -69,6 +74,23 @@ namespace Minesweeper.Web.Services
 
         public void SwitchDifficulty(IGameSettings newSettings)
         {
+            IsCustom = false;
+            ApplySettings(newSettings);
+        }
+
+        // A one-off board of arbitrary size. Clamped to sane bounds so no-guess generation stays
+        // feasible/fast; not recorded (see IsCustom).
+        public void SwitchToCustom(int rows, int cols, int mines)
+        {
+            rows = Math.Clamp(rows, 5, 30);
+            cols = Math.Clamp(cols, 5, 30);
+            mines = Math.Clamp(mines, 1, rows * cols - 9);
+            IsCustom = true;
+            ApplySettings(new Settings { Rows = rows, Cols = cols, Mines = mines, Difficulty = Difficulty.Medium });
+        }
+
+        private void ApplySettings(IGameSettings newSettings)
+        {
             CurrentSettings = newSettings;
             _gameService.RebuildGameEngine(newSettings);
             _gameService.SubscribeCellObserver(this);
@@ -107,7 +129,7 @@ namespace Minesweeper.Web.Services
             {
                 IsGameOver = true;
                 IsGameWon = _gameService.CheckIfGameWon();
-                _ = SubmitRecordAsync();
+                if (!IsCustom) _ = SubmitRecordAsync();
             }
             Changed?.Invoke();
         }

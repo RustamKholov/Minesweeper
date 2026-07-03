@@ -1,9 +1,10 @@
 @inherits LayoutComponentBase
-@inject ThemeState Theme
+@implements IDisposable
+@inject SettingsService Settings
 @inject FullscreenService Fullscreen
 
-<div class="app-root" style="--accent: @Theme.CurrentAccentHex;">
-    <AppHeader OnHelpClick="OpenHelp" />
+<div class="app-root @Settings.AnimClass" style="--accent: @Settings.AccentHexValue;">
+    <AppHeader OnHelpClick="OpenHelp" OnSettingsClick="OpenSettings" />
     <main class="app-main">
         @Body
     </main>
@@ -18,20 +19,35 @@
 </button>
 
 <HelpModal IsOpen="_helpOpen" OnClose="CloseHelp" />
+<SettingsModal IsOpen="_settingsOpen" OnClose="CloseSettings" />
 <TutorialModal />
 
 @code {
     private bool _helpOpen;
+    private bool _settingsOpen;
 
     protected override void OnInitialized()
     {
-        Theme.Changed += OnThemeChanged;
+        Settings.Changed += OnSettingsChanged;
     }
 
-    private void OnThemeChanged() => InvokeAsync(StateHasChanged);
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Settings.LoadAsync();
+        }
+    }
+
+    private void OnSettingsChanged() => InvokeAsync(StateHasChanged);
 
     private void OpenHelp() => _helpOpen = true;
     private void CloseHelp() => _helpOpen = false;
 
+    private void OpenSettings() => _settingsOpen = true;
+    private void CloseSettings() => _settingsOpen = false;
+
     private async Task ExitFullscreen() => await Fullscreen.ExitAsync();
+
+    public void Dispose() => Settings.Changed -= OnSettingsChanged;
 }
